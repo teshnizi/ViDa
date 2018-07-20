@@ -2,6 +2,8 @@
 // Created by teshnizi on 20/07/18.
 //
 
+#include <sstream>
+
 using namespace std;
 
 struct date{
@@ -19,6 +21,12 @@ struct date{
         year= d_year;
         month = d_month;
         day = d_day;
+    }
+
+    date(string s){
+        istringstream iss(s);
+        char tmp;
+        iss >> year >> tmp >> month >> tmp >> day;
     }
 
     friend bool operator<(date x, date y){
