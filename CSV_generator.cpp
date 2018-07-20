@@ -22,7 +22,7 @@ int main(){
     fout.open("test_data.csv");
 
     for (int i = 0; i < test_size; ++i) {
-        float extended_price = 0.99 + (rand()%100) * 5;
+        int extended_price = (rand()%100) * 5;
         float discount = (rand()%20)/40.0;
         int year = 1990 + (rand()%28);
         int month = (rand()%12) + 1;
