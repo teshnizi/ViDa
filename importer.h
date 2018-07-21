@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void import_from_csv(){
+void create_indices_from_csv(){
 
     ifstream fin;
     fin.open("test_data.csv");
@@ -63,4 +63,42 @@ void import_from_csv(){
     key_table.close();
     date_table.close();
     fin.close();
+}
+
+set<pair<string, int>> read_string_indices_from_file(string file_address){
+
+    set<pair<string, int>> ret;
+    ifstream fin;
+    fin.open(file_address);
+
+    string line;
+    string x;
+    int y;
+
+    while(getline(fin, line, '\n')){
+        fin >> x;
+        fin >> y;
+        ret.insert(make_pair(x,y));
+    }
+
+    return ret;
+}
+
+set<pair<int, int>> read_int_indices_from_file(int file_address){
+
+    set<pair<int, int>> ret;
+    ifstream fin;
+    fin.open(file_address);
+
+    string line;
+    int x;
+    int y;
+
+    while(getline(fin, line, '\n')){
+        fin >> x;
+        fin >> y;
+        ret.insert(make_pair(x,y));
+    }
+
+    return ret;
 }
