@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -47,17 +48,24 @@ struct date{
 struct line_item{
 
     int key;
-    date ship_date;
+    string ship_date;
     int extended_price;
     float discount;
     int quantity;
 
-    line_item(int item_key, date item_ship_date, int item_extended_price, float item_discount, int item_quantity){
+    line_item(int item_key, string item_ship_date, int item_extended_price, float item_discount, int item_quantity){
         key = item_key;
         ship_date = item_ship_date;
         extended_price = item_extended_price;
         discount = item_discount;
         quantity = item_quantity;
+    }
+
+    line_item(string csv){
+        replace(csv.begin(), csv.end(), ',', ' ');
+        istringstream iss(csv);
+        string date_string;
+        iss >> key >> extended_price >> discount >> ship_date >> quantity;
     }
 
     friend bool operator<(line_item x, line_item y){
@@ -69,6 +77,11 @@ struct line_item{
                 && x.extended_price == y.extended_price
                 && x.discount == y.discount
                 && x.quantity == y.quantity);
+    }
+
+    string to_str(){
+        return "Key: " + to_string(key) + "   Ship date: " + ship_date +
+               "  price: " + to_string(extended_price) + "  discount: " + to_string(discount) + " quantity: " + to_string(quantity);
     }
 
 };
