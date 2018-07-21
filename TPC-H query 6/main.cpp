@@ -20,7 +20,6 @@ int main(){
 
 
 
-
 //    start = chrono::system_clock::now();
 //    cout<<"\nReading CSV file and creating indices on \"key\" and \"date\"...\n";
 //    create_indices_from_csv();

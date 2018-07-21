@@ -16,6 +16,9 @@
 
 using namespace std;
 
+
+//Creates indices from csv file and stores them in "date_indices.txt" and "key_indices.txt"
+
 void create_indices_from_csv(){
 
     ifstream fin;
