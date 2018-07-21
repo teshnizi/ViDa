@@ -18,6 +18,14 @@ using namespace std;
 
 const int test_size = 6000007;
 
+const float discount_mean = 0.05;
+const float discount_var = 0.01;
+
+const float extended_price_mean = 50;
+const float extended_price_var = 10;
+
+const float quantity_mean = 20;
+const float quantity_var = 5;
 
 int main(){
 
@@ -34,13 +42,29 @@ int main(){
 
     shuffle(v.begin(), v.end(), std::mt19937(std::random_device()()));
 
+    default_random_engine generator;
+    normal_distribution<double> distribution(5.0,2.0);
+    normal_distribution<double> price_dist(extended_price_mean, extended_price_var);
+    normal_distribution<double> quantity_dist(quantity_mean, quantity_var);
+    normal_distribution<float> discount_dist(discount_mean, discount_var);
+
+
     for (int i = 0; i < test_size; ++i) {
-        int extended_price = (rand()%100) * 5;
-        float discount = (rand()%20)/200.0;
+
+        int extended_price = int(price_dist(generator));
+        if( extended_price < 1 ) extended_price = 1;
+
+        float discount = discount_dist(generator);
+        if( discount < 0 ) discount = 0;
+
+
         int year = 1990 + (rand()%28);
         int month = (rand()%12) + 1;
         int day = (rand()%30) + 1;
-        int quantity = (rand()%100) + 1;
+
+
+        int quantity = int(quantity_dist(generator));
+        if ( quantity < 1 ) quantity = 1;
 
         string d = to_string(year) + "-";
         if ( month < 10) d = d + "0";
