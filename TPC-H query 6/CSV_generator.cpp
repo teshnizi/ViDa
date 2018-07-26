@@ -13,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
+#include "tuples.h"
+
 
 using namespace std;
 
@@ -58,7 +60,7 @@ int main(){
         if( discount < 0 ) discount = 0;
 
 
-        int year = 1990 + (rand()%28);
+        int year = 90 + (rand()%28);
         int month = (rand()%12) + 1;
         int day = (rand()%30) + 1;
 
@@ -66,11 +68,7 @@ int main(){
         int quantity = int(quantity_dist(generator));
         if ( quantity < 1 ) quantity = 1;
 
-        string d = to_string(year) + "-";
-        if ( month < 10) d = d + "0";
-        d = d + to_string(month) + "-";
-        if ( day < 10) d = d + "0";
-        d = d + to_string(day);
+        int d = year * 365 + month * 30 + day;
 
         fout<<v[i]<<","<<extended_price<<","<<discount<<","<<d<<","<<quantity<<endl;
     }
@@ -79,5 +77,4 @@ int main(){
     chrono::duration<double> diff = end - start;
 
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
-
 }
