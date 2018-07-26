@@ -94,3 +94,39 @@ vector <double> generate_data_based_on_normal_distribution(double mean, double v
     }
     return ret;
 }
+
+vector <line_item> execute_query(int min_ship_date, int max_ship_date,
+                                        double min_price, double max_price,
+                                        double min_discount, double max_discount,
+                                        double min_quantity, double max_quantity){
+
+    //assume that date are uniformly distributed from year 1990 to 2020
+    double day_ratio = (max_ship_date - min_ship_date) / (30.0 * 365.0);
+    double discount_ratio = CDF((max_discount-discount_mean)/sqrt(discount_var)) - CDF((min_discount-discount_mean)/sqrt(discount_var));
+    double quantity_ratio = CDF((max_quantity-quantity_mean)/sqrt(quantity_var)) - CDF((min_quantity-quantity_mean)/sqrt(quantity_var));
+    double price_ratio = CDF((max_price-extended_price_mean)/sqrt(extended_price_var)) - CDF((min_price-extended_price_mean)/sqrt(extended_price_var));
+
+    int num = (double)test_size * day_ratio * discount_ratio * quantity_ratio * price_ratio;
+
+    //num shows that how many rows should we generate.
+
+    vector <int> dates;
+    int interval = max_ship_date - min_ship_date;
+
+    for (int i = 0; i < num; ++i)
+        dates.push_back(min_ship_date + ((rand()%interval)));
+
+    vector <double> discounts = generate_data_based_on_normal_distribution(discount_mean, discount_var, num,
+                                                                            min_discount, max_discount);
+    vector <double> quantities = generate_data_based_on_normal_distribution(quantity_mean, quantity_var, num,
+                                                                            min_quantity, max_quantity);
+    vector <double> prices = generate_data_based_on_normal_distribution(extended_price_mean, extended_price_var, num,
+                                                                            min_price, max_price);
+
+    vector <line_item> ret;
+    for (int i = 0; i < num; ++i) {
+        ret.push_back(line_item(i, dates[i], prices[i], discounts[i], quantities[i]));
+    }
+
+    return ret;
+}
