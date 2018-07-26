@@ -15,7 +15,7 @@ const int month_days_acc[] = {31, 31+28, 31+28+31, 31+28+31+30, 31+28+31+30+31,
                               31+28+31+30+31+30+31+31+30+31+30, 31+28+31+30+31+30+31+31+30+31+30+31};
 
 
-string days_to_string(int days){
+string days_to_date(int days){
     int year = (days / 365);
     days -= year * 365;
     int month = (lower_bound(month_days_acc,month_days_acc+12, days+1) - month_days_acc);
@@ -25,7 +25,7 @@ string days_to_string(int days){
     return to_string(year + 1900) + "-" + to_string(month + 1) + "-" + to_string(days + 1);
 }
 
-int string_date_to_days(string date){
+int date_to_days(string date){
     replace(date.begin(), date.end(), '-', ' ');
     istringstream iss(date);
     int year, month, day, days;
@@ -72,7 +72,7 @@ struct line_item{
     }
 
     string to_str(){
-        return "Key: " + to_string(key) + "   Ship date: " + days_to_string(ship_date) +
+        return "Key: " + to_string(key) + "   Ship date: " + days_to_date(ship_date) +
                "  price: " + to_string(extended_price) + "  discount: " + to_string(discount) + " quantity: " + to_string(quantity);
     }
 

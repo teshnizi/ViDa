@@ -19,7 +19,7 @@ const double quantity_mean = 22;
 const double quantity_var = 5;
 
 
-double RationalApproximation(double t)
+double rational_approximation(double t)
 {
     // Abramowitz and Stegun formula 26.2.23.
     // The absolute value of the error should be less than 4.5 e-4.
@@ -29,7 +29,8 @@ double RationalApproximation(double t)
                (((d[2]*t + d[1])*t + d[0])*t + 1.0);
 }
 
-double NormalCDFInverse(double p)
+
+double Normal_CDF_Inverse(double p)
 {
     if (p <= 0.0 || p >= 1.0)
     {
@@ -39,14 +40,14 @@ double NormalCDFInverse(double p)
     // See article above for explanation of this section.
     if (p < 0.5)
         // F^-1(p) = - G^-1(p)
-        return -RationalApproximation( sqrt(-2.0*log(p)) );
+        return -rational_approximation( sqrt(-2.0*log(p)) );
     else
         // F^-1(p) = G^-1(1-p)
-        return RationalApproximation( sqrt(-2.0*log(1-p)) );
+        return rational_approximation( sqrt(-2.0*log(1-p)) );
 }
 
 
-double CDF(double x)
+double Normal_CDF(double x)
 {
     // constants
     double a1 =  0.254829592;
@@ -79,15 +80,15 @@ vector <double> generate_data_based_on_normal_distribution(double mean, double v
     min /= sqrt(var);
     max /= sqrt(var);
 
-    double d_prob = CDF(min);
-    double u_prob = CDF(max);
+    double d_prob = Normal_CDF(min);
+    double u_prob = Normal_CDF(max);
 //    cout<< d_prob << " " << u_prob <<endl;
 
     for (int i = 0; i < num; ++i) {
         double k = (rand()%10000)/10000.0;
         k *= u_prob - d_prob;
         k += d_prob;
-        k = NormalCDFInverse(k);
+        k = Normal_CDF_Inverse(k);
         k *= sqrt(var);
         k += mean;
         ret.push_back(k);
@@ -102,12 +103,14 @@ vector <line_item> execute_query(int min_ship_date, int max_ship_date,
 
     //assume that date are uniformly distributed from year 1990 to 2020
     double day_ratio = (max_ship_date - min_ship_date) / (30.0 * 365.0);
-    double discount_ratio = CDF((max_discount-discount_mean)/sqrt(discount_var)) - CDF((min_discount-discount_mean)/sqrt(discount_var));
-    double quantity_ratio = CDF((max_quantity-quantity_mean)/sqrt(quantity_var)) - CDF((min_quantity-quantity_mean)/sqrt(quantity_var));
-    double price_ratio = CDF((max_price-extended_price_mean)/sqrt(extended_price_var)) - CDF((min_price-extended_price_mean)/sqrt(extended_price_var));
+    double discount_ratio = Normal_CDF((max_discount-discount_mean)/sqrt(discount_var)) - Normal_CDF((min_discount-discount_mean)/sqrt(discount_var));
+    double quantity_ratio = Normal_CDF((max_quantity-quantity_mean)/sqrt(quantity_var)) - Normal_CDF((min_quantity-quantity_mean)/sqrt(quantity_var));
+    double price_ratio = Normal_CDF((max_price-extended_price_mean)/sqrt(extended_price_var)) - Normal_CDF((min_price-extended_price_mean)/sqrt(extended_price_var));
 
     int num = (double)test_size * day_ratio * discount_ratio * quantity_ratio * price_ratio;
-
+    srand(time(NULL));
+    double tolerance = Normal_CDF_Inverse((rand()%10000)/10000.0) * (num/(sqrt(10000)));
+    num += tolerance;
     //num shows that how many rows should we generate.
 
     vector <int> dates;
