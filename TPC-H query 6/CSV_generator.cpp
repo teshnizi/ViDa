@@ -18,7 +18,7 @@
 
 using namespace std;
 
-const int test_size = 6007;
+const int test_size = 60007;
 
 const float discount_mean = 0.05;
 const float discount_var = 0.01;

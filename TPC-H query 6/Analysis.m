@@ -1,4 +1,4 @@
-load("generated_data.csv");
+load("cmake-build-debug/generated_data.csv");
 dates = generated_data(:,2);
 prices = generated_data(:,3);
 discounts = generated_data(:,4);
