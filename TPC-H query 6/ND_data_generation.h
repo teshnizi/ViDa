@@ -68,3 +68,29 @@ double CDF(double x)
 
     return 0.5*(1.0 + sign*y);
 }
+
+vector <double> generate_data_based_on_normal_distribution(double mean, double var, double num, double min, double max, unsigned seed = time(NULL)){
+
+    vector <double> ret;
+
+    srand(seed);
+    min -= mean;
+    max -= mean;
+    min /= sqrt(var);
+    max /= sqrt(var);
+
+    double d_prob = CDF(min);
+    double u_prob = CDF(max);
+//    cout<< d_prob << " " << u_prob <<endl;
+
+    for (int i = 0; i < num; ++i) {
+        double k = (rand()%10000)/10000.0;
+        k *= u_prob - d_prob;
+        k += d_prob;
+        k = NormalCDFInverse(k);
+        k *= sqrt(var);
+        k += mean;
+        ret.push_back(k);
+    }
+    return ret;
+}
