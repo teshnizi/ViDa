@@ -9,13 +9,11 @@
 #include "ND_data_generation.h"
 #include <fstream>
 
+
 using namespace std;
 
 
 int main(){
-
-
-
 
 
     auto start = chrono::system_clock::now();
@@ -23,8 +21,25 @@ int main(){
     chrono::duration<double> diff;
 
     start = chrono::system_clock::now();
-    cout<<"reading table from file...\n";
+    vector <line_item> v = execute_query(string_date_to_days("1994-01-01"), string_date_to_days("1995-01-01"),0,1000,0.06-0.01, 0.06+0.01 ,0,24);
+    cout << "generating virtual data..." << endl;
+    ofstream gen_data_file("generated_data.csv");
+    for (int i = 0; i < v.size(); ++i) {
 
+        gen_data_file << v[i].key << "," << v[i].ship_date << "," <<
+                      v[i].extended_price << "," << v[i].discount << "," << v[i].quantity << endl;
+    }
+    gen_data_file.close();
+
+    end = chrono::system_clock::now();
+    diff = end-start;
+    cout<<v.size() << " tuples generated\n";
+    cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
+
+
+
+    start = chrono::system_clock::now();
+    cout<<"reading table from file...\n";
     ifstream fin;
     fin.open("test_data.csv");
     string line;
