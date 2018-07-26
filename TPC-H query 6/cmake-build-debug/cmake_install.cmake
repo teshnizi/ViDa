@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/teshnizi/Projects/Test/TPC-H query 6/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/teshnizi/Projects/Test/TPC-H query 6/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
