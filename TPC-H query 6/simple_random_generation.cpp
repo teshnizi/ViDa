@@ -12,7 +12,6 @@ which satisfy query conditions.
 
 int main(){
 
-    ofstream time_log("time_log.txt");
     auto start = chrono::system_clock::now();
     auto end = chrono::system_clock::now();
     chrono::duration<double> diff;
@@ -29,20 +28,20 @@ int main(){
     fin.open("edited_lineitem.tbl");
     string line;
     int orderkey, quantity, ship_date;
-    float discount, extendedprice;
+    float discount, extended_price;
     int table_size = 0;
 
     while (getline(fin,line,'\n')) {
 
         table_size++;
         istringstream iss(line);
-        iss >> orderkey >> quantity >> extendedprice >> discount >> ship_date;
+        iss >> orderkey >> quantity >> extended_price >> discount >> ship_date;
 
         min_discount = min(min_discount, discount);
         max_discount = max(max_discount, discount);
 
-        min_price = min(min_price, extendedprice);
-        max_price = max(max_price, extendedprice);
+        min_price = min(min_price, extended_price);
+        max_price = max(max_price, extended_price);
 
         min_ship_date = min(min_ship_date, ship_date);
         max_ship_date = max(max_ship_date, ship_date);
@@ -72,7 +71,7 @@ int main(){
 
 //    cout << min_discount << " " << max_discount << " " << min_quantity << " " << max_quantity << " " << min_price << " " << max_price << " " << min_ship_date << " " << max_ship_date << endl;
     for (int i = 0; i < table_size; ++i){
-        extendedprice = (rand()/(float)RAND_MAX) * price_range + min_price;
+        extended_price = (rand()/(float)RAND_MAX) * price_range + min_price;
         discount = (rand()/(float)RAND_MAX) * discount_range + min_discount;
         ship_date = (rand()/(float)RAND_MAX) * ship_date_range + min_ship_date;
         quantity = (rand()/(float)RAND_MAX) * quantity_range + min_quantity;
@@ -80,7 +79,7 @@ int main(){
         if ( start_date <= ship_date && ship_date < end_date)
             if ( quantity < 24)
                 if ( (0.06 - 0.01) < discount && discount < (0.06 + 0.01) )
-                    ans += extendedprice * discount;
+                    ans += extended_price * discount;
     }
 
     cout<<"Total revenue: " << ans<<endl;

@@ -27,17 +27,17 @@ int main(){
     fin.open("edited_lineitem.tbl");
     string line;
     int orderkey, quantity, ship_date;
-    float discount, extendedprice;
+    float discount, extended_price;
     int table_size = 0;
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> orderkey >> quantity >> extendedprice >> discount >> ship_date;
+        iss >> orderkey >> quantity >> extended_price >> discount >> ship_date;
         if ( start_date <= ship_date && ship_date < end_date)
             if ( quantity < 24)
                 if ( (0.06 - 0.01) < discount && discount < (0.06 + 0.01) )
-                    ans += extendedprice * discount;
+                    ans += extended_price * discount;
     }
 
     cout<<"Total revenue: " << ans<<endl;
