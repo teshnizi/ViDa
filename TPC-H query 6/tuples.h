@@ -37,15 +37,15 @@ int date_to_days(string date){
 }
 
 
-struct line_item{
+struct lineitem{
 
     int key;
     int ship_date;
-    int extended_price;
+    float extended_price;
     float discount;
     int quantity;
 
-    line_item(int item_key, int item_ship_date, int item_extended_price, float item_discount, int item_quantity){
+    lineitem(int item_key, int item_ship_date, float item_extended_price, float item_discount, int item_quantity){
         key = item_key;
         ship_date = item_ship_date;
         extended_price = item_extended_price;
@@ -53,17 +53,17 @@ struct line_item{
         quantity = item_quantity;
     }
 
-    line_item(string csv){
+    lineitem(string csv){
         replace(csv.begin(), csv.end(), ',', ' ');
         istringstream iss(csv);
         iss >> key >> extended_price >> discount >> ship_date >> quantity;
     }
 
-    friend bool operator<(line_item x, line_item y){
+    friend bool operator<(lineitem x, lineitem y){
         return x.key < y.key;
     }
 
-    friend bool operator==(line_item x, line_item y){
+    friend bool operator==(lineitem x, lineitem y){
         return (x.key == y.key
                 && x.ship_date == y.ship_date
                 && x.extended_price == y.extended_price
@@ -77,3 +77,17 @@ struct line_item{
     }
 
 };
+
+
+lineitem create_lineitem_from_original_tuple(string s){
+
+    int orderkey, quantity, x, shipdate;
+    float discount, extendedprice, y;
+    string z;
+
+    istringstream iss(s);
+
+    iss >> orderkey >> x >> x >> x >> quantity >> extendedprice >> discount >> y >> z >> z >> shipdate;
+    lineitem ll = lineitem(orderkey, shipdate, extendedprice, discount, quantity);
+    return ll;
+}

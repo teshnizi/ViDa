@@ -96,7 +96,7 @@ vector <double> generate_data_based_on_normal_distribution(double mean, double v
     return ret;
 }
 
-vector <line_item> execute_query(int min_ship_date, int max_ship_date,
+vector <lineitem> execute_query(int min_ship_date, int max_ship_date,
                                         double min_price, double max_price,
                                         double min_discount, double max_discount,
                                         double min_quantity, double max_quantity){
@@ -126,9 +126,9 @@ vector <line_item> execute_query(int min_ship_date, int max_ship_date,
     vector <double> prices = generate_data_based_on_normal_distribution(extended_price_mean, extended_price_var, num,
                                                                             min_price, max_price);
 
-    vector <line_item> ret;
+    vector <lineitem> ret;
     for (int i = 0; i < num; ++i) {
-        ret.push_back(line_item(i, dates[i], prices[i], discounts[i], quantities[i]));
+        ret.push_back(lineitem(i, dates[i], prices[i], discounts[i], quantities[i]));
     }
 
     return ret;

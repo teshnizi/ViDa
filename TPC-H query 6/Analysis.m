@@ -1,8 +1,8 @@
-load("cmake-build-debug/generated_data.csv");
-dates = generated_data(:,2);
-prices = generated_data(:,3);
-discounts = generated_data(:,4);
-quantities = generated_data(:,5);
+#load("cmake-build-debug/edited_lineitem.tbl");
+dates = edited_lineitem(:,5);
+prices = edited_lineitem(:,3);
+discounts = edited_lineitem(:,4);
+quantities = edited_lineitem(:,2);
 
 hist(prices);
 title("prices");
