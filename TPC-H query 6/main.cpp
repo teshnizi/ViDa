@@ -43,7 +43,7 @@ int main(){
 // executing query on a real table:
 
     start = chrono::system_clock::now();
-    cout<<"reading table from file...\n";
+    cout<<"\nreading table from file...\n";
     ifstream fin;
     fin.open("edited_lineitem.tbl");
     string line;
