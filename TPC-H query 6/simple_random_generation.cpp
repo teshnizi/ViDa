@@ -16,70 +16,63 @@ int main(){
     auto end = chrono::system_clock::now();
     chrono::duration<double> diff;
 
-    float min_price=1e9, max_price=0,
-            min_discount=1e9, max_discount=0;
-
-    int min_quantity=1e7, max_quantity=0,
-        min_ship_date=1e7, max_ship_date=0;
-
+    float min_value[5], max_value[5];
+    for (int i = 0; i < 5; ++i) {
+        min_value[i] = 1e9;
+        max_value[i] = 0;
+    }
 
     cout<<"\nreading table from file in order to find min and max...\n";
     ifstream fin;
     fin.open("edited_lineitem.tbl");
     string line;
-    int orderkey, quantity, ship_date;
-    float discount, extended_price;
+    float tmp[5];
     int table_size = 0;
 
     while (getline(fin,line,'\n')) {
-
         table_size++;
         istringstream iss(line);
-        iss >> orderkey >> quantity >> extended_price >> discount >> ship_date;
 
-        min_discount = min(min_discount, discount);
-        max_discount = max(max_discount, discount);
-
-        min_price = min(min_price, extended_price);
-        max_price = max(max_price, extended_price);
-
-        min_ship_date = min(min_ship_date, ship_date);
-        max_ship_date = max(max_ship_date, ship_date);
-
-        min_quantity = min(min_quantity, quantity);
-        max_quantity = max(max_quantity, quantity);
+        for (int i = 0; i < 5; ++i) {
+            iss >> tmp[i];
+        }
+        for (int i = 1; i < 5; ++i) {
+            min_value[i] = min(min_value[i], tmp[i]);
+            max_value[i] = max(max_value[i], tmp[i]);
+        }
     }
 
     end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
 
-
-
-
     start = chrono::system_clock::now();
     srand(time(NULL));
     cout << "Generating random data...\n";
 
-    float price_range = max_price - min_price;
-    float discount_range = max_discount - min_discount;
-    int ship_date_range = max_ship_date - min_ship_date;
-    int quantity_range = max_quantity - min_quantity;
+    float range[5];
+    for (int i = 0; i < 5; ++i)
+        range[i] = max_value[i] - min_value[i];
+
     int start_date = date_to_days("1994-01-01");
     int end_date = date_to_days("1995-01-01");
     int ans = 0;
 
+    for (int i = 0; i < 5; ++i) {
+        cout << min_value[i] << " " << max_value[i] << endl;
+    }
 //    cout << min_discount << " " << max_discount << " " << min_quantity << " " << max_quantity << " " << min_price << " " << max_price << " " << min_ship_date << " " << max_ship_date << endl;
     for (int i = 0; i < table_size; ++i){
-        extended_price = (rand()/(float)RAND_MAX) * price_range + min_price;
-        discount = (rand()/(float)RAND_MAX) * discount_range + min_discount;
-        ship_date = (rand()/(float)RAND_MAX) * ship_date_range + min_ship_date;
-        quantity = (rand()/(float)RAND_MAX) * quantity_range + min_quantity;
+        float textended_price = (rand()/(float)RAND_MAX) * range[price] + min_value[price];
+        float tdiscount = (rand()/(float)RAND_MAX) * range[discount] + min_value[discount];
+        float tship_date = (rand()/(float)RAND_MAX) * range[ship_date] + min_value[ship_date];
+        float tquantity = (rand()/(float)RAND_MAX) * range[quantity] + min_value[quantity];
 
-        if ( start_date <= ship_date && ship_date < end_date)
-            if ( quantity < 24)
-                if ( (0.06 - 0.01) < discount && discount < (0.06 + 0.01) )
-                    ans += extended_price * discount;
+
+        if ( start_date <= tship_date && tship_date < end_date)
+            if ( tquantity < 24)
+                if ( (0.06 - 0.01) < tdiscount && tdiscount < (0.06 + 0.01) )
+                    ans += textended_price * tdiscount;
     }
 
     cout<<"Total revenue: " << ans<<endl;

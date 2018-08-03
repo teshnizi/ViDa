@@ -3,8 +3,6 @@ Created by teshnizi on 31/07/18.
  iterates over original table in order to find acceptable rows
 */
 
-
-
 #include <iostream>
 #include <fstream>
 #include "tuples.h"
@@ -14,10 +12,9 @@ Created by teshnizi on 31/07/18.
 int main(){
 
     auto start = chrono::system_clock::now();
+    chrono::duration<double> diff;
 
     cout<<"\nReading table from file and checking tuples..."<<endl;
-
-    chrono::duration<double> diff;
 
     int ans = 0;
     int start_date = date_to_days("1994-01-01");

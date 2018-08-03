@@ -36,5 +36,4 @@ float get_random_data_by_hist(vector<int> cml_hist, float block_size, float lowe
     int k = rand() % cml_hist[cml_hist.size()-1];
     k = lower_bound(cml_hist.begin(), cml_hist.end(), k) - cml_hist.begin();
     return ((rand()/(float)RAND_MAX) * block_size + (float)k * block_size + lower_bnd);
-
 }

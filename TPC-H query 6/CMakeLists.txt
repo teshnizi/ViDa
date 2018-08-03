@@ -9,3 +9,5 @@ add_executable(file_editor file_editor.cpp)
 add_executable(simple_random simple_random_generation.cpp)
 add_executable(linear_check linear_iteration.cpp)
 add_executable(simple_hist simple_hist_random_generation.cpp)
+add_executable(enhanced_hist enhanced_hist_generation.cpp)
+

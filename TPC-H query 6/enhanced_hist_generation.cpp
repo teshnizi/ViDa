@@ -1,26 +1,31 @@
 //
 // Created by teshnizi on 31/07/18.
-// Generates data based on original data approximate distributions
 //
+
 
 #include <iostream>
 #include <fstream>
 #include "tuples.h"
-#include <math.h>
+#include <cmath>
 #include "chrono"
 #include <vector>
 #include "statistics.h"
 #include <algorithm>
+#include <iomanip>
 
 
-const int segment_count = 30;
+using namespace std;
 
+const int segment_count = 10;
 
-int main(){
+float query_lower_bounds[5] = {0, 0, 0, 0.06 - 0.01, date_to_days("1994-01-01")};
+float query_upper_bounds[5] = {0, 24, 1e9, 0.06 + 0.01, date_to_days("1995-01-01")};
+
+int main(int argc, char** argv)
+{
     auto start = chrono::system_clock::now();
     auto end = chrono::system_clock::now();
     chrono::duration<double> diff;
-
     cout<<"\nreading table from file...\n";
     ifstream fin;
     fin.open("edited_lineitem.tbl");
@@ -44,48 +49,45 @@ int main(){
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
 
-
     start = chrono::system_clock::now();
     cout<<"Finding histograms...\n";
 
-    float block_size[5];
-    float lower_bounds[5];
-    vector<int> hist[5];
+
+    for (int i = 1; i < 5; ++i)
+        sort(table[i].begin(), table[i].end());
+
+    float ratios[5];
+    int lower_indices[5];
+    int upper_indices[5];
+    int ranges[5];
 
     for (int i = 1; i < 5; ++i) {
-        sort(table[i].begin(), table[i].end());
-        hist[i] = quantize(table[i], segment_count, block_size[i], lower_bounds[i]);
+        upper_indices[i] = upper_bound(table[i].begin(), table[i].end(), query_upper_bounds[i]) - table[i].begin();
+        lower_indices[i] = lower_bound(table[i].begin(), table[i].end(), query_lower_bounds[i]) - table[i].begin();
+        ranges[i] = upper_indices[i] - lower_indices[i];
+        ratios[i] = (float)ranges[i]/(float)table_size;
     }
 
-    //converting histograms to cumulative histograms:
-    for (int j = 1; j < 5; ++j) {
-        for (int i = 1; i < segment_count; ++i) {
-            hist[j][i] += hist[j][i-1];
-        }
-    }
+    float output_size = table_size;
+    for (int i = 1; i < 5; ++i)
+        output_size *= ratios[i];
 
     end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
 
 
+
     start = chrono::system_clock::now();
     srand(time(NULL));
     cout << "Generating random data...\n";
-
-    int start_date = date_to_days("1994-01-01");
-    int end_date = date_to_days("1995-01-01");
     int ans = 0;
-
-    for (int i = 0; i < table_size; ++i){
-
-        for (int j = 1; j < 5; ++j)
-            tmp[j] = get_random_data_by_hist(hist[j], block_size[j], lower_bounds[j]);
-
-        if ( start_date <= tmp[ship_date] && tmp[ship_date] < end_date)
-            if ( tmp[quantity] < 24)
-                if ( (0.06 - 0.01) < tmp[discount] && tmp[discount] < (0.06 + 0.01) )
-                    ans += tmp[price] * tmp[discount];
+    for (int i = 0; i < output_size; ++i) {
+        for (int j = 1; j < 5; ++j) {
+            int x = (rand() % ranges[j]) + lower_indices[j];
+            tmp[j] = table[j][x];
+        }
+        ans += tmp[price] * tmp[discount];
     }
 
     cout<<"Total revenue: " << ans<<endl;
@@ -93,3 +95,4 @@ int main(){
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\nOriginal table size: " << table_size << endl;
 }
+

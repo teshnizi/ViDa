@@ -18,7 +18,7 @@ using namespace std;
 
 //Creates indices from csv file and stores them in "date_indices.txt" and "key_indices.txt"
 
-void tbl_to_space_separated(string name){
+void edit_table(string name){
     ifstream fin(name);
     ofstream fout("edited_" + name);
     string line;
@@ -35,11 +35,12 @@ void tbl_to_space_separated(string name){
 
     fin.close();
     fout.close();
+    cout << "original TPC-H table " + name + " was edited and saved as edited_" + name << endl;
 }
 //Generic type could also be used for index readers, by the way due to limited number of types used in code,
 // I preferred separate functions.
 
 
 int main(){
-    tbl_to_space_separated("lineitem.tbl");
+    edit_table("lineitem.tbl");
 }
