@@ -10,13 +10,12 @@ Created by teshnizi on 31/07/18.
 #include "chrono"
 
 int main(){
-
     auto start = chrono::system_clock::now();
     chrono::duration<double> diff;
 
     cout<<"\nReading table from file and checking tuples..."<<endl;
 
-    int ans = 0;
+    long ans = 0;
     int start_date = date_to_days("1994-01-01");
     int end_date = date_to_days("1995-01-01");
 
@@ -44,4 +43,3 @@ int main(){
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\nTable size: " << table_size << endl;
 
 }
-
