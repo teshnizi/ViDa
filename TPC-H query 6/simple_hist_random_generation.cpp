@@ -75,7 +75,7 @@ int main(){
 
     int start_date = date_to_days("1994-01-01");
     int end_date = date_to_days("1995-01-01");
-    int ans = 0;
+    long ans = 0;
 
     for (int i = 0; i < table_size; ++i){
 

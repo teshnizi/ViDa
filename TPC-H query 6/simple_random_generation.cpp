@@ -56,12 +56,8 @@ int main(){
 
     int start_date = date_to_days("1994-01-01");
     int end_date = date_to_days("1995-01-01");
-    int ans = 0;
+    long ans = 0;
 
-    for (int i = 0; i < 5; ++i) {
-        cout << min_value[i] << " " << max_value[i] << endl;
-    }
-//    cout << min_discount << " " << max_discount << " " << min_quantity << " " << max_quantity << " " << min_price << " " << max_price << " " << min_ship_date << " " << max_ship_date << endl;
     for (int i = 0; i < table_size; ++i){
         float textended_price = (rand()/(float)RAND_MAX) * range[price] + min_value[price];
         float tdiscount = (rand()/(float)RAND_MAX) * range[discount] + min_value[discount];

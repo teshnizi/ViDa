@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     start = chrono::system_clock::now();
     srand(time(NULL));
     cout << "Generating random data...\n";
-    int ans = 0;
+    long ans = 0;
     for (int i = 0; i < output_size; ++i) {
         for (int j = 1; j < 5; ++j) {
             int x = (rand() % ranges[j]) + lower_indices[j];
