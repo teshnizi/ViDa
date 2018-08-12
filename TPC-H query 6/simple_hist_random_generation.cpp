@@ -13,8 +13,7 @@
 #include <algorithm>
 
 
-const int segment_count = 30;
-
+const int segment_count = 32;
 
 int main(){
     auto start = chrono::system_clock::now();
@@ -25,17 +24,19 @@ int main(){
     ifstream fin;
     fin.open("edited_lineitem.tbl");
     string line;
-    float tmp[5];
+    int tmp[5];
     int table_size = 0;
+    float float_tmp[2];
 
-    vector <float> table[5];
+    vector <int> table[5];
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> tmp[0];
+        iss >> tmp[0] >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> tmp[4];
+        tmp[2] = 10 * float_tmp[0];
+        tmp[3] = 100 * float_tmp[1];
         for (int i = 1; i < 5; ++i) {
-            iss >> tmp[i];
             table[i].push_back(tmp[i]);
         }
     }
@@ -48,8 +49,8 @@ int main(){
     start = chrono::system_clock::now();
     cout<<"Finding histograms...\n";
 
-    float block_size[5];
-    float lower_bounds[5];
+    int block_size[5];
+    int lower_bounds[5];
     vector<int> hist[5];
 
     for (int i = 1; i < 5; ++i) {
@@ -73,22 +74,44 @@ int main(){
     srand(time(NULL));
     cout << "Generating random data...\n";
 
+    auto ss = chrono::system_clock::now();
+    auto ee = chrono::system_clock::now();
+
     int start_date = date_to_days("1994-01-01");
     int end_date = date_to_days("1995-01-01");
     long ans = 0;
+    int k;
+    int valid_num =0;
+    int hist_sizes[5];
 
+    for (int m = 1; m < 5; ++m) {
+        hist_sizes[m] = hist[m][hist[m].size() - 1];
+    }
     for (int i = 0; i < table_size; ++i){
+        k = rand() % hist_sizes[ship_date];
+        k = lower_bound(hist[ship_date].begin(), hist[ship_date].end(), k) - hist[ship_date].begin();
+        tmp[ship_date] = ((((float)rand() / RAND_MAX) + k ) * block_size[ship_date] + lower_bounds[ship_date]);
 
-        for (int j = 1; j < 5; ++j)
-            tmp[j] = get_random_data_by_hist(hist[j], block_size[j], lower_bounds[j]);
-
-        if ( start_date <= tmp[ship_date] && tmp[ship_date] < end_date)
-            if ( tmp[quantity] < 24)
-                if ( (0.06 - 0.01) < tmp[discount] && tmp[discount] < (0.06 + 0.01) )
+        if ( start_date <= tmp[ship_date] && tmp[ship_date] < end_date) {
+            k = rand() % hist_sizes[quantity];
+            k = lower_bound(hist[quantity].begin(), hist[quantity].end(), k) - hist[quantity].begin();
+            tmp[quantity] = ((((float)rand() / RAND_MAX) + k ) * block_size[quantity] + lower_bounds[quantity]);
+            if (tmp[quantity] < 24) {
+                k = rand() % hist_sizes[discount];
+                k = lower_bound(hist[discount].begin(), hist[discount].end(), k) - hist[discount].begin();
+                tmp[discount] = ((((float)rand() / RAND_MAX) + k ) * block_size[discount] + lower_bounds[discount]);
+                if (5 < tmp[discount] && tmp[discount] < 7) {
+                    k = rand() % hist_sizes[price];
+                    k = lower_bound(hist[price].begin(), hist[price].end(), k) - hist[price].begin();
+                    tmp[price] = ((((float)rand() / RAND_MAX) + k ) * block_size[price] + lower_bounds[price]);
                     ans += tmp[price] * tmp[discount];
+                    valid_num++;
+                }
+            }
+        }
     }
 
-    cout<<"Total revenue: " << ans<<endl;
+    cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
     end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\nOriginal table size: " << table_size << endl;

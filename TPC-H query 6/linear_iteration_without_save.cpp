@@ -9,6 +9,7 @@ Created by teshnizi on 31/07/18.
 #include <math.h>
 #include "chrono"
 
+const float eps = 1e-6;
 int main(){
     auto start = chrono::system_clock::now();
     chrono::duration<double> diff;
@@ -23,20 +24,25 @@ int main(){
     fin.open("edited_lineitem.tbl");
     string line;
     int orderkey, quantity, ship_date;
-    float discount, extended_price;
+    int discount, extended_price;
+    float float_tmp[2];
     int table_size = 0;
-
+    int valid_num = 0;
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> orderkey >> quantity >> extended_price >> discount >> ship_date;
+        iss >> orderkey >> quantity >> float_tmp[0] >> float_tmp[1] >> ship_date;
+        extended_price = float_tmp[0] * 10;
+        discount = float_tmp[1] * 100;
         if ( start_date <= ship_date && ship_date < end_date)
             if ( quantity < 24)
-                if ( (0.06 - 0.01) < discount && discount < (0.06 + 0.01) )
+                if ( 5 < discount && discount < 7 ) {
                     ans += extended_price * discount;
+                    valid_num++;
+                }
     }
 
-    cout<<"Total revenue: " << ans<<endl;
+    cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
     auto end = chrono::system_clock::now();
     diff = end-start;
 

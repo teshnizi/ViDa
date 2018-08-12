@@ -11,3 +11,5 @@ add_executable(linear_check_without_RAM_saving "linear_iteration_without_save.cp
 add_executable(simple_hist simple_hist_random_generation.cpp)
 add_executable(enhanced_hist enhanced_hist_generation.cpp)
 add_executable(linear_iteration linear_iteration_with_save.cpp)
+add_executable(string_gen string_generator.cpp)
+add_executable(dist_gen generate_from_distribution.cpp)

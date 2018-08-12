@@ -18,8 +18,9 @@ using namespace std;
 
 const int segment_count = 10;
 
-float query_lower_bounds[5] = {0, 0, 0, 0.06 - 0.01, date_to_days("1994-01-01")};
-float query_upper_bounds[5] = {0, 24, 1e9, 0.06 + 0.01, date_to_days("1995-01-01")};
+//ranges are defined as [a,b) :
+float query_lower_bounds[5] = {0, 0, 0, 6, date_to_days("1994-01-01")};
+float query_upper_bounds[5] = {0, 24, 1e9, 7, date_to_days("1995-01-01")};
 
 int main(int argc, char** argv)
 {
@@ -30,17 +31,19 @@ int main(int argc, char** argv)
     ifstream fin;
     fin.open("edited_lineitem.tbl");
     string line;
-    float tmp[5];
+    int tmp[5];
     int table_size = 0;
+    float float_tmp[2];
 
-    vector <float> table[5];
+    vector <int> table[5];
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> tmp[0];
+        iss >> tmp[0] >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> tmp[4];
+        tmp[2] = 10 * float_tmp[0];
+        tmp[3] = 100 * float_tmp[1];
         for (int i = 1; i < 5; ++i) {
-            iss >> tmp[i];
             table[i].push_back(tmp[i]);
         }
     }
@@ -62,16 +65,16 @@ int main(int argc, char** argv)
     int ranges[5];
 
     for (int i = 1; i < 5; ++i) {
-        upper_indices[i] = upper_bound(table[i].begin(), table[i].end(), query_upper_bounds[i]) - table[i].begin();
+        upper_indices[i] = lower_bound(table[i].begin(), table[i].end(), query_upper_bounds[i]) - table[i].begin();
         lower_indices[i] = lower_bound(table[i].begin(), table[i].end(), query_lower_bounds[i]) - table[i].begin();
         ranges[i] = upper_indices[i] - lower_indices[i];
         ratios[i] = (float)ranges[i]/(float)table_size;
+        cout << ranges[i] << endl;
     }
 
     float output_size = table_size;
     for (int i = 1; i < 5; ++i)
         output_size *= ratios[i];
-
     end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
@@ -90,7 +93,7 @@ int main(int argc, char** argv)
         ans += tmp[price] * tmp[discount];
     }
 
-    cout<<"Total revenue: " << ans<<endl;
+    cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << output_size/table_size * 100 <<endl;
     end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\nOriginal table size: " << table_size << endl;

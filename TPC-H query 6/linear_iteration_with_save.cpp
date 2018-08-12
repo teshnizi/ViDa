@@ -19,17 +19,20 @@ int main(){
     ifstream fin;
     fin.open("edited_lineitem.tbl");
     string line;
-    float tmp[5];
+    int tmp[5];
+    float float_tmp[2];
     int table_size = 0;
+    int valid_num = 0;
 
-    vector <float> table[5];
+    vector <int> table[5];
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> tmp[0];
+        iss >> tmp[0] >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> tmp[4];
+        tmp[2] = 10 * float_tmp[0];
+        tmp[3] = 100 * float_tmp[1];
         for (int i = 1; i < 5; ++i) {
-            iss >> tmp[i];
             table[i].push_back(tmp[i]);
         }
     }
@@ -48,11 +51,13 @@ int main(){
     for (int i = 0; i < table_size; ++i) {
         if ( start_date <= table[ship_date][i] && table[ship_date][i] < end_date)
             if ( table[quantity][i] < 24)
-                if ( (0.06 - 0.01) < table[discount][i] && table[discount][i] < (0.06 + 0.01) )
+                if ( (5) < table[discount][i] && table[discount][i] < (7) ) {
                     ans += table[price][i] * table[discount][i];
+                    valid_num++;
+                }
     }
 
-    cout<<"Total revenue: " << ans<<endl;
+    cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
     end = chrono::system_clock::now();
     diff = end-start;
 
