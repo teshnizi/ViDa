@@ -28,12 +28,15 @@ int main(){
     int tmp[5];
     float float_tmp[2];
     int table_size = 0;
+    int x;
+    float y;
+    char z;
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
 
-        iss >> tmp[0] >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> tmp[4];
+        iss >> tmp[0] >> x >> x >> x >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> y >> z >> z >> tmp[4];
         tmp[2] = float_tmp[0] * 10;
         tmp[3] = float_tmp[1] * 100;
         for (int i = 1; i < 5; ++i) {
@@ -61,15 +64,15 @@ int main(){
 
     for (int i = 0; i < table_size; ++i){
 
-        int tship_date = (rand()/(float)RAND_MAX) * range[ship_date] + min_value[ship_date];
+        int tship_date = (rand()/(float)RAND_MAX) * range[l_shipdate] + min_value[l_shipdate];
 
 
         if ( start_date <= tship_date && tship_date < end_date) {
-            int tquantity = (rand() / (float) RAND_MAX) * range[quantity] + min_value[quantity];
+            int tquantity = (rand() / (float) RAND_MAX) * range[l_quantity] + min_value[l_quantity];
             if (tquantity < 24) {
-                int tdiscount = (rand()/(float)RAND_MAX) * range[discount] + min_value[discount];
+                int tdiscount = (rand()/(float)RAND_MAX) * range[l_discount] + min_value[l_discount];
                 if (5 < tdiscount && tdiscount < 7) {
-                    int textended_price = (rand()/(float)RAND_MAX) * range[price] + min_value[price];
+                    int textended_price = (rand()/(float)RAND_MAX) * range[l_price] + min_value[l_price];
                     ans += textended_price * tdiscount;
                     valid_num++;
                 }
@@ -77,8 +80,8 @@ int main(){
         }
     }
 
-    cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
-    end = chrono::system_clock::now();
+        cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
+        end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\nOriginal table size: " << table_size << endl;
 

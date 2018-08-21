@@ -3,41 +3,26 @@
 // Contains statistical methods.
 //
 
-#ifndef CMAKE_BUILD_DEBUG_CMAKEFILES_VIDAG_STATISTICS_H
-#define CMAKE_BUILD_DEBUG_CMAKEFILES_VIDAG_STATISTICS_H
-
-#endif //CMAKE_BUILD_DEBUG_CMAKEFILES_VIDAG_STATISTICS_H
 
 #include <vector>
+#include <algorithm>
+
+using namespace std;
 
 
 //gets a sorted vector data and returns an approximate distribution function, as a histogram with "segment_count" segments:
-vector <int> quantize(vector<int> data, int segment_count, int &block_size, int &lower_bound){
-    lower_bound = data[data.size()/10];
-    int upper_bound = data[9 * (data.size()/10)];
-    if(upper_bound - lower_bound <= (segment_count - 2))
-        upper_bound = lower_bound + segment_count - 2;
-    block_size = (upper_bound - lower_bound) / (segment_count - 2);
+vector <int>quantize(vector<int> data, int segment_count, int &block_size, int &lower_bound){
+    lower_bound = data[0];
+    int upper_bound = data[data.size()-1];
+    if(upper_bound - lower_bound <= (segment_count))
+        upper_bound = lower_bound + segment_count;
+    block_size = (upper_bound - lower_bound) / (segment_count);
     vector <int> hist(segment_count);
-
     for (int i = 0; i < data.size(); ++i) {
-
-        if( data[i] < lower_bound )
-            hist[0]++;
-        else if( data[i] > upper_bound )
-            hist[segment_count - 1]++;
-        else hist[(data[i]-lower_bound)/block_size] += 1;
+        hist[(data[i]-lower_bound)/block_size] += 1;
     }
-    lower_bound -= block_size;
+    cout << lower_bound << " " << upper_bound << endl;
     return hist;
-}
-
-
-float get_random_data_by_hist(vector<int> cml_hist, float block_size, float lower_bnd){
-
-    int k = rand() % cml_hist[cml_hist.size()-1];
-    k = lower_bound(cml_hist.begin(), cml_hist.end(), k) - cml_hist.begin();
-    return ((rand()/(float)RAND_MAX) * block_size + (float)k * block_size + lower_bnd);
 }
 
 vector <string> string_generator(vector <string> table, vector <string> valid_strings){

@@ -5,16 +5,47 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <vector>
+#include <fstream>
 
 using namespace std;
 
-enum {
-    key = 0,
-    quantity = 1,
-    price = 2,
-    discount = 3,
-    ship_date = 4
+const int discount_coefficient = 100;
+const int tax_coefficient = 100;
+const int price_coefficient = 10;
+const int retailprice_coefficient = 100;
+
+enum lineitem{
+    l_orderkey = 0,
+    l_quantity,
+    l_price,
+    l_discount,
+    l_shipdate,
+    l_partkey,
+    l_suppkey,
+    l_linenumber,
+    l_tax,
+    l_returnflag,
+    l_linestatus,
+    l_commitdate,
+    l_receiptdate,
+    l_shipinstruct,
+    l_shipmode,
 };
+
+enum part{
+    p_partkey= 0,
+    p_name,
+    p_mfgr,
+    p_brand,
+    p_type,
+    p_size,
+    p_container,
+    p_retailprice,
+    p_comment
+};
+
+
 
 const int month_days_acc[] = {31, 31+28, 31+28+31, 31+28+31+30, 31+28+31+30+31,
                               31+28+31+30+31+30, 31+28+31+30+31+30+31, 31+28+31+30+31+30+31+31,
@@ -30,7 +61,6 @@ string days_to_date(int days){
         days -= month_days_acc[month-1];
     return to_string(year + 1900) + "-" + to_string(month + 1) + "-" + to_string(days + 1);
 }
-
 int date_to_days(string date){
     replace(date.begin(), date.end(), '-', ' ');
     istringstream iss(date);
@@ -42,29 +72,56 @@ int date_to_days(string date){
     return days;
 }
 
+void read_lineitems_from_file(vector<int> *table_ints, vector<string> *table_strings, string name,
+int *int_attributes, int num_of_int_attributes, int *string_attributes, int num_of_string_attributes){
+    ifstream fin;
+    fin.open(name);
+    string line;
+    int int_tmp[20];
+    float float_tmp[20];
+    char char_tmp[20];
+    string string_tmp[20];
 
-struct lineitem{
+    while (getline(fin,line,'\n')) {
+        istringstream iss(line);
+        iss >> int_tmp[l_orderkey] >> int_tmp[l_partkey] >> int_tmp[l_suppkey] >> int_tmp[l_linenumber] >> int_tmp[l_quantity] >> float_tmp[l_price] >>
+            float_tmp[l_discount] >> float_tmp[l_tax] >> char_tmp[l_returnflag] >> char_tmp[l_linestatus] >> int_tmp[l_shipdate] >>
+            int_tmp[l_commitdate] >> int_tmp[l_receiptdate] >> string_tmp[l_shipinstruct] >> string_tmp[l_shipmode];
 
-    float attributes[5];    // 0.key  1.quantity 2.price 3.discount 4.ship_date
+        int_tmp[l_discount] = discount_coefficient * float_tmp[l_discount];
+        int_tmp[l_tax] = tax_coefficient * float_tmp[l_tax];
+        int_tmp[l_price] = price_coefficient * float_tmp[l_price];
+        int_tmp[l_returnflag] = char_tmp[l_returnflag];
+        int_tmp[l_linestatus] = char_tmp[l_linestatus];
 
-    lineitem(int item_key, int item_quantity, float item_extended_price, float item_discount, int item_ship_date){
-        attributes[key] = item_key;
-        attributes[ship_date] = item_ship_date;
-        attributes[price] = item_extended_price;
-        attributes[discount] = item_discount;
-        attributes[quantity] = item_quantity;
+        for (int i = 0; i < num_of_int_attributes; ++i)
+            table_ints[int_attributes[i]].push_back(int_tmp[int_attributes[i]]);
+        for (int i = 0; i < num_of_string_attributes; ++i)
+            table_strings[string_attributes[i]].push_back(string_tmp[string_attributes[i]]);
     }
+}
 
-    lineitem(string csv){
-        replace(csv.begin(), csv.end(), ',', ' ');
-        istringstream iss(csv);
-        iss >> attributes[key] >> attributes[quantity] >> attributes[price] >> attributes[discount] >> attributes[ship_date];
+void read_parts_from_file(vector<int> *table_ints, vector<string> *table_strings, string name,
+                          int *int_attributes, int num_of_int_attributes, int *string_attributes, int num_of_string_attributes){
+    ifstream fin;
+    fin.open(name);
+    string line;
+    int int_tmp[10];
+    string string_tmp[10];
+    float float_tmp[10];
+
+    while (getline(fin,line,'\n')) {
+        istringstream iss(line);
+        iss >> int_tmp[p_partkey] >> string_tmp[p_name] >> string_tmp[p_mfgr] >> string_tmp[p_brand] >> string_tmp[p_type] >> int_tmp[p_size] >>
+            string_tmp[p_container] >> float_tmp[p_retailprice] >> string_tmp[p_comment];
+        int_tmp[p_retailprice] = retailprice_coefficient * float_tmp[p_retailprice];
+
+        for (int i = 0; i < num_of_int_attributes; ++i) {
+            table_ints[int_attributes[i]].push_back(int_tmp[int_attributes[i]]);
+        }
+        for (int i = 0; i < num_of_string_attributes; ++i) {
+            table_strings[string_attributes[i]].push_back(string_tmp[string_attributes[i]]);
+        }
+
     }
-
-    string to_str(){
-        return "Key: " + to_string(attributes[key]) + "  quantity: " + to_string(attributes[quantity]) +
-               "  price: " + to_string(attributes[price]) + "  discount: " + to_string(attributes[discount]) +
-               "  ship date: " + days_to_date(attributes[ship_date]);
-    }
-
-};
+}

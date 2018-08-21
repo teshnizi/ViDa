@@ -24,13 +24,19 @@ void edit_lineitem_table(string name){
     string line;
 
     while(getline(fin, line)){
+        replace(line.begin(), line.end(), ' ', '_');
         replace(line.begin(), line.end(), '|', ' ');
-        int orderkey, quantity, x;
-        float discount, extendedprice, y;
-        string shipdate, z;
+        int orderkey, partkey, suppkey, quantity, linenumber;
+        float discount, extendedprice, tax;
+        char returnflag, linestatus;
+        string shipdate, commitdate, receiptdate, shipinstruct, shipmode, z;
         istringstream iss(line);
-        iss >> orderkey >> x >> x >> x >> quantity >> extendedprice >> discount >> y >> z >> z >> shipdate;
-        fout << orderkey << " " << quantity << " " << extendedprice << " " << discount << " " << date_to_days(shipdate) << endl;
+        iss >> orderkey >> partkey >> suppkey >> linenumber >> quantity >> extendedprice >> discount >> tax >> returnflag >> linestatus >> shipdate
+                >> commitdate >> receiptdate >> shipinstruct >> shipmode >> z;
+        fout << orderkey << " " << partkey << " " << suppkey << " " << linenumber << " " << quantity << " " <<
+             extendedprice << " " << discount << " " << tax << " " << returnflag << " " << linestatus << " " <<
+             date_to_days(shipdate) << " " << date_to_days(commitdate) << " " << date_to_days(receiptdate) << " " <<
+                shipinstruct << " " << shipmode << endl;
     }
 
     fin.close();
@@ -47,11 +53,11 @@ void edit_part_table(string name){
         replace(line.begin(), line.end(), ' ', '_');
         replace(line.begin(), line.end(), '|', ' ');
         fout << line <<endl;
-//        int partkey, size, retail_price;
+//        int l_partkey, size, retail_price;
 //        string name, MFGR, brand, type, container, comment;
-//        string shipdate, z;
+//        string l_shipdate, z;
 //        istringstream iss(line);
-//        iss >> partkey >> name >> MFGR >> brand >> type >> size >> container >> retail_price >> comment;
+//        iss >> l_partkey >> name >> MFGR >> brand >> type >> size >> container >> retail_price >> comment;
 
     }
 

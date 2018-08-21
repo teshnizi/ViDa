@@ -12,10 +12,6 @@ const float e = 2.71828182;
 
 const float precision = 1000;
 
-int normal_generate(float mean, float var, float table_size, float m, float M);
-int uniform_generate(float a, float b, float table_size, float m, float M);
-
-
 
 double Normal_CDF(double x);
 double rational_approximation(double t) {
@@ -40,7 +36,6 @@ double Normal_CDF_Inverse(double p) {
         // F^-1(p) = G^-1(1-p)
         return rational_approximation( sqrt(-2.0*log(1-p)) );
 }
-
 
 double Normal_CDF(double x) {
     // constants
@@ -67,8 +62,9 @@ double Normal_pdf(float mean, float var, float x){
     return 1/(sqrt(var * 2 * pie)) * pow(e, -(x - mean) * (x - mean) / (2 * var));
 }
 
-int normal_generate(float mean, float var, int table_size, float m, float M){
 
+//[m, M), time complexity: O(precision)
+int normal_generate(float mean, float var, int table_size, float m, float M){
     float d_prob = Normal_CDF((m-mean)/sqrt(var));
     float u_prob = Normal_CDF((M-mean)/sqrt(var));
     int num = (u_prob - d_prob) * table_size;
@@ -89,7 +85,7 @@ int uniform_generate(float a, float b, float table_size, float m, float M){
 }
 
 //[m,M), time complexity: O(N)
-int zipf(int N, float s, int table_size, int m, int M){
+int zipf_generate(int N, float s, int table_size, int m, int M){
     float H = 0;
     float ratio = 0;
     for (int i = 1; i <= N; ++i) {
@@ -109,5 +105,5 @@ int zipf(int N, float s, int table_size, int m, int M){
 int main(){
     cout << normal_generate(0,1,1000,0,1) << endl;
     cout << uniform_generate(0,1,100,0,0.5) << endl;
-    cout << zipf(10, 2, 1000, 2, 3);
+    cout << zipf_generate(10, 2, 1000, 2, 3);
 }

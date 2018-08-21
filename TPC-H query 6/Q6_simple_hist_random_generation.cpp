@@ -13,7 +13,7 @@
 #include <algorithm>
 
 
-const int segment_count = 32;
+const int segment_count = 32000;
 
 int main(){
     auto start = chrono::system_clock::now();
@@ -24,16 +24,17 @@ int main(){
     ifstream fin;
     fin.open("edited_lineitem.tbl");
     string line;
-    int tmp[5];
+    int tmp[5], x;
     int table_size = 0;
-    float float_tmp[2];
+    char z;
+    float float_tmp[2], y;
 
     vector <int> table[5];
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> tmp[0] >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> tmp[4];
+        iss >> tmp[0] >> x >> x >> x >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> y >> z >> z >> tmp[4];
         tmp[2] = 10 * float_tmp[0];
         tmp[3] = 100 * float_tmp[1];
         for (int i = 1; i < 5; ++i) {
@@ -88,23 +89,22 @@ int main(){
         hist_sizes[m] = hist[m][hist[m].size() - 1];
     }
     for (int i = 0; i < table_size; ++i){
-        k = rand() % hist_sizes[ship_date];
-        k = lower_bound(hist[ship_date].begin(), hist[ship_date].end(), k) - hist[ship_date].begin();
-        tmp[ship_date] = ((((float)rand() / RAND_MAX) + k ) * block_size[ship_date] + lower_bounds[ship_date]);
-
-        if ( start_date <= tmp[ship_date] && tmp[ship_date] < end_date) {
-            k = rand() % hist_sizes[quantity];
-            k = lower_bound(hist[quantity].begin(), hist[quantity].end(), k) - hist[quantity].begin();
-            tmp[quantity] = ((((float)rand() / RAND_MAX) + k ) * block_size[quantity] + lower_bounds[quantity]);
-            if (tmp[quantity] < 24) {
-                k = rand() % hist_sizes[discount];
-                k = lower_bound(hist[discount].begin(), hist[discount].end(), k) - hist[discount].begin();
-                tmp[discount] = ((((float)rand() / RAND_MAX) + k ) * block_size[discount] + lower_bounds[discount]);
-                if (5 < tmp[discount] && tmp[discount] < 7) {
-                    k = rand() % hist_sizes[price];
-                    k = lower_bound(hist[price].begin(), hist[price].end(), k) - hist[price].begin();
-                    tmp[price] = ((((float)rand() / RAND_MAX) + k ) * block_size[price] + lower_bounds[price]);
-                    ans += tmp[price] * tmp[discount];
+        k = rand() % hist_sizes[l_shipdate];
+        k = lower_bound(hist[l_shipdate].begin(), hist[l_shipdate].end(), k) - hist[l_shipdate].begin();
+        tmp[l_shipdate] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_shipdate] + lower_bounds[l_shipdate]);
+        if ( start_date <= tmp[l_shipdate] && tmp[l_shipdate] < end_date) {
+            k = rand() % hist_sizes[l_quantity];
+            k = lower_bound(hist[l_quantity].begin(), hist[l_quantity].end(), k) - hist[l_quantity].begin();
+            tmp[l_quantity] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_quantity] + lower_bounds[l_quantity]);
+            if (tmp[l_quantity] < 24) {
+                k = rand() % hist_sizes[l_discount];
+                k = lower_bound(hist[l_discount].begin(), hist[l_discount].end(), k) - hist[l_discount].begin();
+                tmp[l_discount] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_discount] + lower_bounds[l_discount]);
+                if (5 < tmp[l_discount] && tmp[l_discount] < 7) {
+                    k = rand() % hist_sizes[l_price];
+                    k = lower_bound(hist[l_price].begin(), hist[l_price].end(), k) - hist[l_price].begin();
+                    tmp[l_price] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_price] + lower_bounds[l_price]);
+                    ans += tmp[l_price] * tmp[l_discount];
                     valid_num++;
                 }
             }

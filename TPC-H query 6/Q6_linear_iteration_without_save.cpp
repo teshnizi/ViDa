@@ -28,15 +28,19 @@ int main(){
     float float_tmp[2];
     int table_size = 0;
     int valid_num = 0;
+    int x;
+    float y;
+    char z;
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> orderkey >> quantity >> float_tmp[0] >> float_tmp[1] >> ship_date;
+        iss >> orderkey >> x >> x >> x >> quantity >> float_tmp[0] >> float_tmp[1] >> y >> z >> z >> ship_date;
         extended_price = float_tmp[0] * 10;
         discount = float_tmp[1] * 100;
         if ( start_date <= ship_date && ship_date < end_date)
             if ( quantity < 24)
-                if ( 5 < discount && discount < 7 ) {
+                if (5 < discount && discount < 7)
+                {
                     ans += extended_price * discount;
                     valid_num++;
                 }

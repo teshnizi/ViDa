@@ -13,7 +13,6 @@
 #include <algorithm>
 #include <iomanip>
 
-
 using namespace std;
 
 const int segment_count = 10;
@@ -34,13 +33,15 @@ int main(int argc, char** argv)
     int tmp[5];
     int table_size = 0;
     float float_tmp[2];
-
+    int x;
+    float y;
+    char z;
     vector <int> table[5];
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> tmp[0] >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> tmp[4];
+        iss >> tmp[0] >> x >> x >> x >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> y >> z >> z >> tmp[4];
         tmp[2] = 10 * float_tmp[0];
         tmp[3] = 100 * float_tmp[1];
         for (int i = 1; i < 5; ++i) {
@@ -79,8 +80,6 @@ int main(int argc, char** argv)
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
 
-
-
     start = chrono::system_clock::now();
     srand(time(NULL));
     cout << "Generating random data...\n";
@@ -90,7 +89,7 @@ int main(int argc, char** argv)
             int x = (rand() % ranges[j]) + lower_indices[j];
             tmp[j] = table[j][x];
         }
-        ans += tmp[price] * tmp[discount];
+        ans += tmp[l_price] * tmp[l_discount];
     }
 
     cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << output_size/table_size * 100 <<endl;

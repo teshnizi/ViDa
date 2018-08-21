@@ -23,13 +23,15 @@ int main(){
     float float_tmp[2];
     int table_size = 0;
     int valid_num = 0;
-
+    int x;
+    float y;
+    char z;
     vector <int> table[5];
 
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
-        iss >> tmp[0] >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> tmp[4];
+        iss >> tmp[0] >> x >> x >> x >> tmp[1] >> float_tmp[0] >> float_tmp[1] >> y >> z >> z >> tmp[4];
         tmp[2] = 10 * float_tmp[0];
         tmp[3] = 100 * float_tmp[1];
         for (int i = 1; i < 5; ++i) {
@@ -48,11 +50,13 @@ int main(){
     int start_date = date_to_days("1994-01-01");
     int end_date = date_to_days("1995-01-01");
 
+
     for (int i = 0; i < table_size; ++i) {
-        if ( start_date <= table[ship_date][i] && table[ship_date][i] < end_date)
-            if ( table[quantity][i] < 24)
-                if ( (5) < table[discount][i] && table[discount][i] < (7) ) {
-                    ans += table[price][i] * table[discount][i];
+        if ( start_date <= table[l_shipdate][i] && table[l_shipdate][i] < end_date)
+            if ( table[l_quantity][i] < 24)
+                if ( (5) < table[l_discount][i] && table[l_discount][i] < (7) )
+                {
+                    ans += table[l_price][i] * table[l_discount][i];
                     valid_num++;
                 }
     }

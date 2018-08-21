@@ -4,11 +4,10 @@
 
 
 #include <iostream>
+#include <sstream>
 #include <fstream>
-#include "tuples.h"
 #include <cmath>
 #include "chrono"
-#include <vector>
 #include "statistics.h"
 #include <algorithm>
 #include <iomanip>
@@ -49,7 +48,6 @@ int main(int argc, char** argv) {
     end = chrono::system_clock::now();
     diff = end - start;
     cout << "Done! elapsed time: " << diff.count() << "s\n\n";
-
 
     start = chrono::system_clock::now();
     cout <<"Generating data...\n";
