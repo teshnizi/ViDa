@@ -69,7 +69,6 @@ void edit_part_table(string name){
 //Generic type could also be used for index readers, by the way due to limited number of types used in code,
 // I preferred separate functions.
 
-
 int main(){
     edit_lineitem_table("lineitem.tbl");
     edit_part_table("part.tbl");

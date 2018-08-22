@@ -7,10 +7,10 @@
 
 using namespace std;
 
-const float pie = 3.14159265;
-const float e = 2.71828182;
+const double pie = 3.14159265;
+const double e = 2.71828182;
 
-const float precision = 1000;
+const double precision = 1000;
 
 
 double Normal_CDF(double x);
@@ -58,36 +58,40 @@ double Normal_CDF(double x) {
 
     return 0.5*(1.0 + sign*y);
 }
-double Normal_pdf(float mean, float var, float x){
+double Normal_pdf(double mean, double var, double x){
     return 1/(sqrt(var * 2 * pie)) * pow(e, -(x - mean) * (x - mean) / (2 * var));
 }
 
 
 //[m, M), time complexity: O(precision)
-int normal_generate(float mean, float var, int table_size, float m, float M){
-    float d_prob = Normal_CDF((m-mean)/sqrt(var));
-    float u_prob = Normal_CDF((M-mean)/sqrt(var));
+int normal_generate(double mean, double var, int table_size, double m, double M){
+    double d_prob = Normal_CDF((m-mean)/sqrt(var));
+    double u_prob = Normal_CDF((M-mean)/sqrt(var));
     int num = (u_prob - d_prob) * table_size;
-    float expected_value = 0;
+    double expected_value = 0;
 
-    float bucket_size = (M-m)/precision;
+    double bucket_size = (M-m)/precision;
 
-    for (float i = m; i < M; i += bucket_size) {
+    for (double i = m; i < M; i += bucket_size) {
         expected_value += bucket_size * Normal_pdf(mean, var, i) * i;
     }
     return num * expected_value;
 }
 
-int uniform_generate(float a, float b, float table_size, float m, float M){
+double normal_probability(double mean, double var, double m, double M){
+    return Normal_CDF((M-mean)/sqrt(var)) - Normal_CDF((m-mean)/sqrt(var));
+}
+
+int uniform_generate(double a, double b, double table_size, double m, double M){
     int num = ((M - m )/(b - a)) * table_size;
-    float mean = (M+m)/2;
+    double mean = (M+m)/2;
     return num * mean;
 }
 
 //[m,M), time complexity: O(N)
-int zipf_generate(int N, float s, int table_size, int m, int M){
-    float H = 0;
-    float ratio = 0;
+int zipf_generate(int N, double s, int table_size, int m, int M){
+    double H = 0;
+    double ratio = 0;
     for (int i = 1; i <= N; ++i) {
         if (i == m) ratio -= H;
         if (i == M) ratio += H;
@@ -95,15 +99,8 @@ int zipf_generate(int N, float s, int table_size, int m, int M){
     }
     ratio /= H;
     int num = table_size * ratio;
-    float expected_value = 0;
+    double expected_value = 0;
     for (int i = m; i < M; i++)
         expected_value += (1/(pow(i,s)))/H * i;
     return num * expected_value;
-}
-
-
-int main(){
-    cout << normal_generate(0,1,1000,0,1) << endl;
-    cout << uniform_generate(0,1,100,0,0.5) << endl;
-    cout << zipf_generate(10, 2, 1000, 2, 3);
 }

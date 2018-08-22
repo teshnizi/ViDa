@@ -6,7 +6,7 @@
 #include <map>
 #include <iostream>
 #include <chrono>
-
+#include "generate_from_distribution.h"
 
 const int max_attribute_count = 30;
 const int num_of_conditions = 3;
@@ -92,6 +92,31 @@ void set_query(){
     for (int i = 0; i < num_of_conditions; ++i) {
         dist_table_probs[i] = 1;
     }
+
+    for (int i = 0; i < max_attribute_count; ++i) {
+        params[i].push_back(10); //mean
+        params[i].push_back(25); //variance
+    }
+}
+
+void strings_preprocess(){
+    for (int i = 0; i < part_table_size; ++i) {
+        for (int j = 0; j < part_strings.size(); ++j) {
+            string_frequencies[part_strings[j]][table_strings[part_strings[j]][i]]++;
+        }
+    }
+    for (int i = 0; i < num_of_conditions; ++i) {
+        for (int j = 0; j < part_strings.size(); ++j) {
+            int att = part_strings[j];
+            if (valid_strings[att][i].size() == 0)continue;
+            int total_valids = 0;
+            for (int k = 0; k < valid_strings[att][i].size(); ++k) {
+                string s = valid_strings[att][i][k];
+                total_valids += string_frequencies[att][s];
+            }
+            dist_table_probs[i] *= (float) total_valids / table_strings[att].size();
+        }
+    }
 }
 
 void preprocess_using_real_table(){
@@ -103,24 +128,9 @@ void preprocess_using_real_table(){
         }
     }
 
-    for (int i = 0; i < part_table_size; ++i) {
-        for (int j = 0; j < part_strings.size(); ++j) {
-            string_frequencies[part_strings[j]][table_strings[part_strings[j]][i]]++;
-        }
-    }
+    strings_preprocess();
 
     for (int i = 0; i < num_of_conditions; ++i) {
-        for (int j = 0; j < part_strings.size(); ++j) {
-            int att = part_strings[j];
-            if (valid_strings[att][i].size() == 0)continue;
-            int total_valids = 0;
-            for (int k = 0; k < valid_strings[att][i].size(); ++k) {
-                string s = valid_strings[att][i][k];
-                total_valids += string_frequencies[att][s];
-            }
-            dist_table_probs[i] *= (float)total_valids/table_strings[att].size();
-        }
-
         for (int j = 0; j < part_ints.size(); ++j) {
             int att = part_ints[j];
             if (valid_int_ranges[att][i].first == valid_int_ranges[att][i].second)continue;
@@ -131,7 +141,17 @@ void preprocess_using_real_table(){
     }
 }
 
-void preprocess_using_distribution_parameters()
+void preprocess_using_distribution_parameters(){
+    strings_preprocess();
+    for (int i = 0; i < num_of_conditions; ++i) {
+        for (int j = 0; j < part_ints.size(); ++j) {
+            int att = part_ints[j];
+            if (valid_int_ranges[att][i].first == valid_int_ranges[att][i].second)continue;
+            dist_table_probs[i] *= normal_probability(
+                    params[att][0], params[att][1], valid_int_ranges[att][i].first, valid_int_ranges[att][i].second);
+        }
+    }
+}
 
 int main(){
 
@@ -153,9 +173,10 @@ int main(){
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
 
     start = chrono::system_clock::now();
-    cout <<"finding string distributions...\n";
+    cout <<"preprocessing...\n";
 
     preprocess_using_real_table();
+//    preprocess_using_distribution_parameters();
 
     int quantity;
     string shipmode;
@@ -196,8 +217,17 @@ int main(){
 
     double ans = 0;
     double acceptance = 0;
+
+    //one of the following fragments should be commented. First one is used for prob method and second one is for dist method.
+
+    //prob:
     double expected_price = (double)summations[l_price] / price_coefficient / lineitem_table_size;
     double expected_discount = (double)summations[l_discount] / discount_coefficient / lineitem_table_size;
+
+    //dist:
+//    double expected_price = params[l_price][0];
+//    double expected_discount = params[l_discount][0];
+
     for (int i = 0; i < num_of_conditions; ++i){
         acceptance += dist_table_probs[i] * (double)num_of_real_table_acceptances[i];
         ans += dist_table_probs[i] * (double)num_of_real_table_acceptances[i]
@@ -211,5 +241,4 @@ int main(){
     end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
-
 }
