@@ -21,6 +21,7 @@ const int tax_coefficient = 100;
 const int price_coefficient = 10;
 const int retailprice_coefficient = 100;
 
+
 enum table{
     l_orderkey = 0,
     l_quantity,
@@ -36,8 +37,8 @@ enum table{
     l_commitdate,
     l_receiptdate,
     l_shipinstruct,
-    l_shipmode,
-    p_partkey,
+    l_shipmode = 14,
+    p_partkey = 15,
     p_name,
     p_mfgr,
     p_brand,
@@ -45,12 +46,38 @@ enum table{
     p_size,
     p_container,
     p_retailprice,
-    p_comment,
+    p_comment = 23,
     ENUM_COUNT
 };
 
 const int num_of_attributes = ENUM_COUNT;
 
+
+const int month_days_acc[] = {31, 31+28, 31+28+31, 31+28+31+30, 31+28+31+30+31,
+                              31+28+31+30+31+30, 31+28+31+30+31+30+31, 31+28+31+30+31+30+31+31,
+                              31+28+31+30+31+30+31+31+30, 31+28+31+30+31+30+31+31+30+31,
+                              31+28+31+30+31+30+31+31+30+31+30, 31+28+31+30+31+30+31+31+30+31+30+31};
+
+
+string days_to_date(int days){
+    int year = (days / 365);
+    days -= year * 365;
+    int month = (lower_bound(month_days_acc,month_days_acc+12, days+1) - month_days_acc);
+//    cout << month << endl;
+    if ( month > 0 )
+        days -= month_days_acc[month-1];
+    return to_string(year + 1900) + "-" + to_string(month + 1) + "-" + to_string(days + 1);
+}
+int date_to_days(string date){
+    replace(date.begin(), date.end(), '-', ' ');
+    istringstream iss(date);
+    int year, month, day, days;
+    iss >> year >> month >> day;
+    days = (year-1900) * 365;
+    (month > 1)?days+=month_days_acc[month-2]:1+1;
+    days += day - 1;
+    return days;
+}
 
 void read_lineitem_from_file(string file_name, vector<int> table_ints[], vector<string> table_strings[], vector<int> int_attributes, vector<int> string_attributes){
     ifstream fin;

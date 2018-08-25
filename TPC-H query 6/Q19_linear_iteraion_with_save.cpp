@@ -8,6 +8,7 @@
 #include <math.h>
 #include "chrono"
 #include <vector>
+#include <unordered_map>
 
 int main(){
     auto start = chrono::system_clock::now();
@@ -38,7 +39,34 @@ int main(){
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
 
     start = chrono::system_clock::now();
+    cout<<"\nPreprocessing(Hashing part table)..."<<endl;
+
+    string container;
+
+    unordered_map <int, int> hash_table;
+    for (int i = 0; i < part_table_size; ++i) {
+        int partkey = part_table_ints[p_partkey][i];
+        if(part_table_ints[p_size][i]>15)
+            continue;
+        container = part_table_strings[p_container][i];
+        if(
+                (part_table_strings[p_brand][i] == "Brand#12" && 1 < part_table_ints[p_size][i] && part_table_ints[p_size][i] < 5
+                && (container == "SM_CASE" || container == "SM_BOX" || container == "SM_PACK" || container == "SM_PKG")) ||
+                (part_table_strings[p_brand][i] == "Brand#23" && 1 < part_table_ints[p_size][i] && part_table_ints[p_size][i] < 10
+                && (container == "MED_BAG" || container == "MED_BOX" || container == "MED_PACK" || container == "MED_PKG")) ||
+                (part_table_strings[p_brand][i] == "Brand#34" && 1 < part_table_ints[p_size][i] && part_table_ints[p_size][i] < 15
+                && (container == "LG_CASE" || container == "LG_BOX" || container == "LG_PACK" || container == "LG_PKG"))
+                )
+        hash_table[partkey] = i;
+    }
+
+    end = chrono::system_clock::now();
+    diff = end-start;
+    cout<<"Done! elapsed time: " << diff.count() <<"s\n\n";
+
+    start = chrono::system_clock::now();
     cout<<"\nChecking tuples..."<<endl;
+
 
     long ans = 0;
     int start_date = date_to_days("1994-01-01");
@@ -49,15 +77,16 @@ int main(){
     //    cout << lineitem_table_size << endl;
 
     string brand;
-    string container;
+//    string container;
     int quantity;
     int size;
     string shipmode;
     string shipinstruct;
     int price;
     int discount;
+
     for (int i = 0; i < lineitem_table_size; ++i) {
-        int p_index = lower_bound(part_table_ints[p_partkey].begin(), part_table_ints[p_partkey].end(), lineitem_table_ints[l_partkey][i]) - part_table_ints[p_partkey].begin();
+        int p_index = hash_table[lineitem_table_ints[l_partkey][i]];
         if (p_index != part_table_size){
             brand = part_table_strings[p_brand][p_index];
             container = part_table_strings[p_container][p_index];

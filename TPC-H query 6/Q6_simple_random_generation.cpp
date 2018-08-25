@@ -62,15 +62,17 @@ int main(){
     long ans = 0;
     int valid_num =0;
 
+    int temp[3] = {0,0,0};
+
     for (int i = 0; i < table_size; ++i){
-
         int tship_date = (rand()/(float)RAND_MAX) * range[l_shipdate] + min_value[l_shipdate];
-
-
+        temp[0]++;
         if ( start_date <= tship_date && tship_date < end_date) {
             int tquantity = (rand() / (float) RAND_MAX) * range[l_quantity] + min_value[l_quantity];
+            temp[1]++;
             if (tquantity < 24) {
                 int tdiscount = (rand()/(float)RAND_MAX) * range[l_discount] + min_value[l_discount];
+                temp[2]++;
                 if (5 < tdiscount && tdiscount < 7) {
                     int textended_price = (rand()/(float)RAND_MAX) * range[l_price] + min_value[l_price];
                     ans += textended_price * tdiscount;
@@ -79,9 +81,12 @@ int main(){
             }
         }
     }
+    for (int i = 0; i < 3; ++i) {
+        cout << temp[i] << " " ;
+    }cout << valid_num << endl;
 
-        cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
-        end = chrono::system_clock::now();
+    cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
+    end = chrono::system_clock::now();
     diff = end-start;
     cout<<"Done! elapsed time: " << diff.count() <<"s\n\nOriginal table size: " << table_size << endl;
 

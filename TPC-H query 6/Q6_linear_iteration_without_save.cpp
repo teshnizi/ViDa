@@ -31,20 +31,29 @@ int main(){
     int x;
     float y;
     char z;
+
+    int temp[3] = {0,0,0};
+
     while (getline(fin,line,'\n')) {
         table_size++;
         istringstream iss(line);
         iss >> orderkey >> x >> x >> x >> quantity >> float_tmp[0] >> float_tmp[1] >> y >> z >> z >> ship_date;
         extended_price = float_tmp[0] * 10;
         discount = float_tmp[1] * 100;
-        if ( start_date <= ship_date && ship_date < end_date)
-            if ( quantity < 24)
-                if (5 < discount && discount < 7)
-                {
-                    ans += extended_price * discount;
-                    valid_num++;
-                }
+        temp[0]++;
+        if ( start_date <= ship_date && ship_date < end_date) {
+            temp[1]++;
+            if (quantity < 24)
+                temp[2]++;
+            if (5 < discount && discount < 7) {
+                ans += extended_price * discount;
+                valid_num++;
+            }
+        }
     }
+    for (int i = 0; i < 3; ++i) {
+        cout << temp[i] << " " ;
+    }cout << valid_num << endl;
 
     cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << (float)valid_num/table_size * 100.0 <<endl;
     auto end = chrono::system_clock::now();
