@@ -2,7 +2,7 @@
 // Created by teshnizi on 24/08/18.
 //
 
-#include "operator.h"
+#include "data_operators.h"
 
 using namespace std;
 
@@ -11,6 +11,8 @@ vector<string> table_strings[ENUM_COUNT];
 
 vector<int> lineitem_ints;
 vector<int> lineitem_strings;
+
+Histogram hist_ints[ENUM_COUNT];
 
 int lineitem_table_size;
 
@@ -28,30 +30,60 @@ void preprocess(){
 
 int main(){
 
-    preprocess();
-    read_lineitem_from_file("edited_lineitem.tbl", table_ints, table_strings, lineitem_ints, lineitem_strings);
-    lineitem_table_size = table_ints[lineitem_ints[0]].size();
-
-    Node dummy = Node();
-
-    set<string> attributes;
+    try {
+        preprocess();
+        read_lineitem_from_file("edited_lineitem.tbl", table_ints, table_strings, lineitem_ints, lineitem_strings);
+        lineitem_table_size = table_ints[lineitem_ints[0]].size();
+        for (int i = 0; i < ENUM_COUNT; ++i) {
+            if (table_ints[i].size() > 0)
+                hist_ints[i] = Histogram(&table_ints[i], 40);
+        }
+        set<string> attributes;
 //    attributes.insert("quantity");
 //    attributes.insert("price");
 
-    vector<string> variables;
-    variables.push_back("shipdate");
-    variables.push_back("discount");
-    variables.push_back("quantity");
-    vector<pair<int,int>> range;
-    range.push_back(make_pair(date_to_days("1994-01-01"), date_to_days("1995-01-01")));
-    range.push_back(make_pair(5,7));
-    range.push_back(make_pair(0,24));
+        vector<string> variables;
+        variables.push_back("shipdate");
+        variables.push_back("discount");
+        variables.push_back("quantity");
+        vector<pair<int, int>> range;
+        range.push_back(make_pair(date_to_days("1994-01-01"), date_to_days("1995-01-01")));
+        range.push_back(make_pair(5, 7));
+        range.push_back(make_pair(0, 24));
 
-    DataMapNode dataMapNode = DataMapNode(&dummy, "(price * discount)", "revenue");
-    DataSelectNode dataSelectNode = DataSelectNode(&dataMapNode, variables, range);
-    DataScanNode dataScanNode = DataScanNode(&dataSelectNode, "lineitem", lineitem_table_size);
+        Node root = Node();
 
-    dataSelectNode.set_child(&dataScanNode);
-    dataMapNode.set_child(&dataSelectNode);
-    dataMapNode.produce(attributes);
+
+        //on real data:
+        cout<<"==============================================\n============ Code For Real Table ======"
+              "=======\n==============================================\n\n";
+        MapNode mapNode = MapNode(&root, "(price * discount)", "revenue");
+
+        DataSelectNode dataSelectNode = DataSelectNode(&mapNode, variables, range);
+        DataScanNode dataScanNode = DataScanNode(&dataSelectNode, "lineitem", lineitem_table_size);
+
+        dataSelectNode.set_child(&dataScanNode);
+        mapNode.set_child(&dataSelectNode);
+        root.set_child(&mapNode);
+
+        root.produce(attributes);
+
+
+        //on histograms:
+        cout<<"==============================================\n============ Code For Histograms ======="
+              "======\n==============================================\n\n";
+        HistSelectNode histSelectNode = HistSelectNode(&mapNode, variables, range);
+        HistScanNode histScanNode = HistScanNode(&histSelectNode);
+
+        histSelectNode.set_child(&histScanNode);
+        mapNode.set_child(&histSelectNode);
+        root.set_child(&mapNode);
+
+        root.produce(attributes);
+
+    }
+
+    catch (const char* massage){
+        cerr << massage << endl;
+    }
 }
