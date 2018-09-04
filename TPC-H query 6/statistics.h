@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 class Histogram{
 public:
     Histogram(){};
@@ -35,6 +34,11 @@ public:
         for (int i = 0; i < v->size(); ++i) {
             bar[((*v)[i]-minimum)/bucket_size]++;
         }
+    }
+    string create_histogram_code(string name){
+        string s = "int " + name + "[Bar_count];\n";
+        s += "int " + name + "_min =  1e9;\n";
+        s += "int " + name + "_max = -1e9;\n";
     }
     //removes out of limit data from histogram
     void limit(int l, int h){
@@ -96,6 +100,7 @@ vector <int>quantize(vector<int> data, int segment_count, int &block_size, int &
 }
 
 vector <string> string_generator(vector <string> table, vector <string> valid_strings){
+
     vector <int> upper_indices;
     vector <int> lower_indices;
     vector <int> ranges;
@@ -115,4 +120,3 @@ vector <string> string_generator(vector <string> table, vector <string> valid_st
     for (int i = 1; i < ranges.size(); ++i)
         ranges[i] = ranges[i-1] + ranges[i];
 }
-

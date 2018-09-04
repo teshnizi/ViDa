@@ -2,7 +2,7 @@
 // Created by teshnizi on 24/08/18.
 //
 
-#include "data_operators.h"
+#include "operators.h"
 
 using namespace std;
 
@@ -29,7 +29,6 @@ void preprocess(){
 }
 
 int main(){
-
     try {
         preprocess();
         read_lineitem_from_file("edited_lineitem.tbl", table_ints, table_strings, lineitem_ints, lineitem_strings);
@@ -38,9 +37,16 @@ int main(){
             if (table_ints[i].size() > 0)
                 hist_ints[i] = Histogram(&table_ints[i], 40);
         }
-        set<string> attributes;
+//        set<string> attributes;
 //    attributes.insert("quantity");
 //    attributes.insert("price");
+
+
+        set<Attribute> attributes;
+
+//        attributes.insert( attribute("lineitem", "discount"));
+        Attribute a = Attribute("lineitem", "l_discount");
+        attributes.insert(a);
 
         vector<string> variables;
         variables.push_back("shipdate");
@@ -51,36 +57,75 @@ int main(){
         range.push_back(make_pair(5, 7));
         range.push_back(make_pair(0, 24));
 
-        Node root = Node();
-
+        Node root = Node("Root");
 
         //on real data:
         cout<<"==============================================\n============ Code For Real Table ======"
               "=======\n==============================================\n\n";
-        MapNode mapNode = MapNode(&root, "(price * discount)", "revenue");
+//        MapNode mapNode = MapNode(&root, "(price * discount)", "revenue");
 
-        DataSelectNode dataSelectNode = DataSelectNode(&mapNode, variables, range);
-        DataScanNode dataScanNode = DataScanNode(&dataSelectNode, "lineitem", lineitem_table_size);
-
-        dataSelectNode.set_child(&dataScanNode);
-        mapNode.set_child(&dataSelectNode);
-        root.set_child(&mapNode);
-
-        root.produce(attributes);
-
+//        DataSelectNode dataSelectNode = DataSelectNode(&mapNode, variables, range);
+//        DataScanNode dataScanNode = DataScanNode(&dataSelectNode, "lineitem", lineitem_table_size);
+//
+//        dataSelectNode.set_child(&dataScanNode);
+//        mapNode.set_child(&dataSelectNode);
+//        root.set_child(&mapNode);
+//
+//        root.produce(&attributes);
 
         //on histograms:
         cout<<"==============================================\n============ Code For Histograms ======="
               "======\n==============================================\n\n";
-        HistSelectNode histSelectNode = HistSelectNode(&mapNode, variables, range);
-        HistScanNode histScanNode = HistScanNode(&histSelectNode);
+        cout<<"int default_bucket[max_table_num][max_attribute_num][max_bar_count];\n";
+        cout<<"int default_minimum[max_table_num][max_attribute_num];\n";
+        cout<<"int default_maximum[max_table_num][max_attribute_num];\n";
+        cout<<"int default_bucket_width[max_table_num][max_attribute_num];\n";
+        cout<<"int default_table_size[max_table_num];\n";
+        cout<<"int table_size[max_table_num];\n";
 
-        histSelectNode.set_child(&histScanNode);
-        mapNode.set_child(&histSelectNode);
-        root.set_child(&mapNode);
+        cout << "\ndouble limit(int bars[], int minimum, int maximum, int l, int h){\n"
+                "\tint bucket_size = ceil((float)(maximum + 1 - minimum)/(bucket_count));\n"
+                "\tint total = 0;\n"
+                "\tint left = 0;\n"
+                "\tfor (int i = 0; i < bucket_count; ++i) {\n"
+                "        int lo = minimum + bucket_size * i;\n"
+                "\t\tint hi = lo + bucket_size;\n"
+                "\t\ttotal += bar[i];\n"
+                "\t\tif (lo >= h || hi < l)\n"
+                "\t\t\tbar[i] = 0;\n"
+                "        else if ( l <= lo && hi < h)\n"
+                "            left += bar[i];\n"
+                "        else{\n"
+                "\t\t\tleft += bar[i];\n"
+                "            bar[i] = bar[i] * ((lo < l) * (hi - l) + (lo >= l) * (h - lo))/(hi - lo);\n"
+                "\t\t\tleft -= bar[i];\n"
+                "        }\n"
+                "\t}\n"
+                "\treturn (double)left/total;\n"
+                "}\n\n";
 
-        root.produce(attributes);
+        vector <Attribute> var[10];
+        vector <pair<int, int>> ranges[10];
 
+        var[0].push_back(Attribute("lineitem", "l_discount"));
+        ranges[0].push_back(make_pair(5,15));
+        var[1].push_back(Attribute("part", "p_shipdate"));
+        ranges[1].push_back(make_pair(date_to_days("1994-01-01"),date_to_days("1995-01-01")));
+
+        HistMapNode histMapNode = HistMapNode("Revenue", &root, map_sum, Attribute("lineitem", "l_price"), Attribute("lineitem", "l_discount"));
+        HistSelectNode histSelectNode = HistSelectNode("Select", &histMapNode, var, 2, ranges);
+        HistScanNode histScanNode = HistScanNode("Scan", &histSelectNode);
+
+        root.produce(&attributes);
+
+//        HistSelectNode histSelectNode = HistSelectNode(&mapNode, variables, range);
+//        HistScanNode histScanNode = HistScanNode(&histSelectNode);
+//
+//        histSelectNode.set_child(&histScanNode);
+//        mapNode.set_child(&histSelectNode);
+//        root.set_child(&mapNode);
+//
+//        root.produce(&attributes);
     }
 
     catch (const char* massage){
