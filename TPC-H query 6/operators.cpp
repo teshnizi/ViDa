@@ -46,11 +46,11 @@ int main(){
 
 //        attributes.insert( attribute("lineitem", "discount"));
 
-        attributes.insert(Attribute("lineitem", "l_discount"));
-        attributes.insert(Attribute("lineitem", "l_partkey"));
-        attributes.insert(Attribute("lineitem", "l_quantity"));
-        attributes.insert(Attribute("part", "p_partkey"));
-        attributes.insert(Attribute("part", "p_size"));
+        attributes.insert(Attribute("lineitem", "l_discount", att_int));
+        attributes.insert(Attribute("lineitem", "l_partkey", att_int));
+        attributes.insert(Attribute("lineitem", "l_quantity", att_int));
+        attributes.insert(Attribute("part", "p_partkey", att_int));
+        attributes.insert(Attribute("part", "p_size", att_int));
 
 //        vector<string> variables;
 //        variables.push_back("shipdate");
@@ -111,22 +111,22 @@ int main(){
         vector <Attribute> var[10];
         vector <pair<int, int>> ranges[10];
 
-        var[0].push_back(Attribute("lineitem", "l_discount"));
+        var[0].push_back(Attribute("lineitem", "l_discount", att_int));
         ranges[0].push_back(make_pair(5,15));
-        var[0].push_back(Attribute("lineitem", "l_quantity"));
+        var[0].push_back(Attribute("lineitem", "l_quantity", att_int));
         ranges[0].push_back(make_pair(0,12));
-        var[0].push_back(Attribute("part", "p_partkey"));
+        var[0].push_back(Attribute("part", "p_partkey", att_int));
         ranges[0].push_back(make_pair(100,200));
-        var[0].push_back(Attribute("part", "p_size"));
+        var[0].push_back(Attribute("part", "p_size", att_int));
         ranges[0].push_back(make_pair(1,5));
 
-        var[1].push_back(Attribute("lineitem", "l_quantity"));
+        var[1].push_back(Attribute("lineitem", "l_quantity", att_int));
         ranges[1].push_back(make_pair(9,21));
 
-        Attribute join_att1 = Attribute("lineitem", "l_partkey");
-        Attribute join_att2 = Attribute("part", "p_partkey");
+        Attribute join_att1 = Attribute("lineitem", "l_partkey", att_int);
+        Attribute join_att2 = Attribute("part", "p_partkey", att_int);
 
-        HistMapNode histMapNode = HistMapNode("Revenue", &root, map_sum, Attribute("lineitem", "l_price"), Attribute("lineitem", "l_discount"));
+        HistMapNode histMapNode = HistMapNode("Revenue", &root, map_sum, Attribute("lineitem", "l_price", att_int), Attribute("lineitem", "l_discount", att_int));
         HistHistJoinNode histHistJoinNode = HistHistJoinNode("Join", &histMapNode, join_att1, join_att2);
         HistSelectNode histSelectNode = HistSelectNode("Select", &histHistJoinNode, var, 2, ranges);
         HistScanNode histScanNode = HistScanNode("Scan", &histSelectNode);
