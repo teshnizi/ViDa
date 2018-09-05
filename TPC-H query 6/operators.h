@@ -103,72 +103,6 @@ public:
     string name;
 };
 
-//class DataScanNode : public Node{
-//public:
-//    DataScanNode(string name, Node* parent, int sz) : Node(name){
-//        this->sz = sz;
-//        this->parent = parent;
-//    }
-//    void produce(set<Attribute> *a) override ;
-//
-//private:
-//    int sz;
-//};
-
-//class DataSelectNode : public Node{
-//public:
-//    DataSelectNode(string name, Node* parent, vector<string> int_variables, vector<pair<int,int>> int_ranges):Node(name){
-//        this->int_variables = int_variables;
-//        this->int_ranges = int_ranges;
-//        this->parent = parent;
-//    }
-//    void produce(set<Attribute> *a) override;
-//
-//private:
-//    vector<string> int_variables;
-//    vector<pair<int, int>> int_ranges;
-//};
-//
-//class MapNode : public Node{
-//public:
-//    MapNode(Node* parent, string expression, string ans_name){
-//        if(expression.substr(0,3) == "sum"){
-//            agg_type = agg_sum;
-//            expression = expression.substr(3,expression.size());
-//        }
-//        else if(expression.substr(0,4) == "mean"){
-//            agg_type = agg_mean;
-//            expression = expression.substr(4,expression.size());
-//        } else {
-//            agg_type = nothing;
-//        }
-//
-//        this->expression = expression;
-//        this->parent = parent;
-//        this->ans_name = ans_name;
-//    }
-//    void produce(set<string> *a) override;
-//
-//private:
-//    string expression;
-//    string ans_name;
-//    bool agg_type;
-//};
-//
-//class DataAggregateNode : public Node{
-//public:
-//    DataAggregateNode(string name, vector<string>* aggregate_atts, Node* parent){
-//        this->parent = parent;
-//        this->name = name;
-//        this->aggregate_atts = aggregate_atts;
-//    }
-//    void produce(set<string> *a) override;
-//
-//private:
-//    string name;
-//    vector<string> *aggregate_atts;
-//};
-
 class ScanNode :public Node{
 public:
     ScanNode(string name, Node* parent) : Node(name){
@@ -247,51 +181,6 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//void DataSelectNode::produce(set<string> *a) {
-//    for (int i = 0; i < int_variables.size(); ++i) {
-//        a->insert(int_variables[i]);
-//    }
-//    this->child->produce(a);
-//    for (int i = 0; i < int_variables.size(); ++i) {
-//        cout << indent;
-//        printf("if(%i < %s && %s < %i)\n", int_ranges[i].first, int_variables[i].c_str(), int_variables[i].c_str(), int_ranges[i].second);
-//    }
-//    cout << indent <<"{\n";
-//    indent += "\t";
-//    brackets++;
-//}
-//
-//void DataScanNode::produce(set<string> *a) {
-//    cout << indent;
-//    printf("for (int %s_it = 0; %s_it < %d; %s_it++)\n", name.c_str(), name.c_str(), sz, name.c_str());
-//    cout << "{\n";
-//    indent += "\t";
-//    for (auto i = a->begin(); i != a->end(); ++i) {
-//        cout << indent;
-//        printf("%s = table[l_%s][%s_it];\n", (*i).c_str(), (*i).c_str(), (this->name).c_str());
-//    }cout << endl;
-//    brackets++;
-//}
-//
-//void MapNode::produce(set<string> *a) {
-//    vector<string> v = expression_parser(this->expression);
-//    for (int i = 0; i < v.size(); ++i) {
-//        a->insert(v[i]);
-//    }
-//    cout << indent;
-//    printf("int %s = 0;\n", this->ans_name.c_str());
-//    this->child->produce(a);
-//    char ch=' ';
-//    if ( this->agg_type != nothing)ch = '+';
-//    printf("%s%s %c= %s;\n", indent.c_str(), (this->ans_name).c_str(), ch, (this->expression).c_str());
-//    a->insert(this->ans_name);
-//}
-//
-//void DataAggregateNode::produce(set<string> *a) {
-//    cout<<indent << "materialize(" << name << ")\n";
-//}
-//
 
 void SelectNode::produce(set<Attribute> *a) {
     this->child->produce(a);
