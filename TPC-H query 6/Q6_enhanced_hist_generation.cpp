@@ -17,7 +17,7 @@ using namespace std;
 
 const int segment_count = 10;
 
-//ranges are defined as [a,b) :
+//int_ranges are defined as [a,b) :
 float query_lower_bounds[5] = {0, 0, 0, 6, date_to_days("1994-01-01")};
 float query_upper_bounds[5] = {0, 24, 1e9, 7, date_to_days("1995-01-01")};
 
