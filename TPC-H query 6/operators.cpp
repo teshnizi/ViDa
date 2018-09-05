@@ -45,17 +45,21 @@ int main(){
         set<Attribute> attributes;
 
 //        attributes.insert( attribute("lineitem", "discount"));
-        Attribute a = Attribute("lineitem", "l_discount");
-        attributes.insert(a);
 
-        vector<string> variables;
-        variables.push_back("shipdate");
-        variables.push_back("discount");
-        variables.push_back("quantity");
-        vector<pair<int, int>> range;
-        range.push_back(make_pair(date_to_days("1994-01-01"), date_to_days("1995-01-01")));
-        range.push_back(make_pair(5, 7));
-        range.push_back(make_pair(0, 24));
+        attributes.insert(Attribute("lineitem", "l_discount"));
+        attributes.insert(Attribute("lineitem", "l_partkey"));
+        attributes.insert(Attribute("lineitem", "l_quantity"));
+        attributes.insert(Attribute("part", "p_partkey"));
+        attributes.insert(Attribute("part", "p_size"));
+
+//        vector<string> variables;
+//        variables.push_back("shipdate");
+//        variables.push_back("discount");
+//        variables.push_back("quantity");
+//        vector<pair<int, int>> range;
+//        range.push_back(make_pair(date_to_days("1994-01-01"), date_to_days("1995-01-01")));
+//        range.push_back(make_pair(5, 7));
+//        range.push_back(make_pair(0, 24));
 
         Node root = Node("Root");
 
@@ -109,11 +113,22 @@ int main(){
 
         var[0].push_back(Attribute("lineitem", "l_discount"));
         ranges[0].push_back(make_pair(5,15));
-        var[1].push_back(Attribute("part", "p_shipdate"));
-        ranges[1].push_back(make_pair(date_to_days("1994-01-01"),date_to_days("1995-01-01")));
+        var[0].push_back(Attribute("lineitem", "l_quantity"));
+        ranges[0].push_back(make_pair(0,12));
+        var[0].push_back(Attribute("part", "p_partkey"));
+        ranges[0].push_back(make_pair(100,200));
+        var[0].push_back(Attribute("part", "p_size"));
+        ranges[0].push_back(make_pair(1,5));
+
+        var[1].push_back(Attribute("lineitem", "l_quantity"));
+        ranges[1].push_back(make_pair(9,21));
+
+        Attribute join_att1 = Attribute("lineitem", "l_partkey");
+        Attribute join_att2 = Attribute("part", "p_partkey");
 
         HistMapNode histMapNode = HistMapNode("Revenue", &root, map_sum, Attribute("lineitem", "l_price"), Attribute("lineitem", "l_discount"));
-        HistSelectNode histSelectNode = HistSelectNode("Select", &histMapNode, var, 2, ranges);
+        HistHistJoinNode histHistJoinNode = HistHistJoinNode("Join", &histMapNode, join_att1, join_att2);
+        HistSelectNode histSelectNode = HistSelectNode("Select", &histHistJoinNode, var, 2, ranges);
         HistScanNode histScanNode = HistScanNode("Scan", &histSelectNode);
 
         root.produce(&attributes);

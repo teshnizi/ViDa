@@ -18,15 +18,23 @@ enum map_type{
     map_mult
 };
 
+enum attribute_type{
+    att_int,
+    att_string
+};
+
 const int condition_max_subconditions = 30;
 
 struct Attribute{
-    Attribute(string table_name, string name){
+    Attribute(string table_name, string name, int type){
         this->name = name;
         this->table_name = table_name;
+        this->type = type;
     }
     string name;
     string table_name;
+    int type;
+
     bool operator<(const Attribute& a) const{
         if(this->table_name == a.table_name){
             return this->name < a.name;
@@ -61,6 +69,7 @@ class HistScanNode;
 class HistSelectNode;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
 class Node{
 public:
     Node(string name){
@@ -75,6 +84,9 @@ public:
         }
     };
 
+    virtual void consume(set<Attribute> *a){
+        return;
+    }
     void set_child(Node* child){
         this->child = child;
     }
@@ -158,6 +170,7 @@ public:
         parent->child = this;
     }
     void produce(set<Attribute> *a) override;
+    void consume(set<Attribute> *a) override;
 };
 
 class HistSelectNode : public Node{
@@ -173,6 +186,7 @@ public:
         this->parent->child = this;
     }
     void produce(set<Attribute> *a) override;
+    void consume(set<Attribute> *a) override;
 
 private:
     int sub_conditions_count;
@@ -190,28 +204,28 @@ public:
         this->op2 = op2;
     }
     void produce(set<Attribute> *a) override;
+    void consume(set<Attribute> *a) override;
 
 private:
     int type;
-    Attribute op1 = Attribute("NULL", "NULL");
-    Attribute op2 = Attribute("NULL", "NULL");
+    Attribute op1 = Attribute("NULL", "NULL", att_int);
+    Attribute op2 = Attribute("NULL", "NULL", att_int);
 };
 
 class HistHistJoinNode : public Node{
 public:
-    HistHistJoinNode(string name, Node* parent, Node* left, Node* right, Attribute att1, Attribute att2) : Node(name){
-        this->left = left;
-        this->right = right;
+    HistHistJoinNode(string name, Node* parent, Attribute att1, Attribute att2) : Node(name){
         this->att1 = att1;
         this->att2 = att2;
+        this->parent = parent;
+        this->parent->child = this;
     }
     void produce(set<Attribute> *a) override;
+    void consume(set<Attribute> *a) override;
 
 private:
-    Node* left;
-    Node* right;
-    Attribute att1 = Attribute("NULL", "NULL");
-    Attribute att2 = Attribute("NULL", "NULL");
+    Attribute att1 = Attribute("NULL", "NULL", att_int);
+    Attribute att2 = Attribute("NULL", "NULL", att_int);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -268,57 +282,100 @@ void HistSelectNode::produce(set<Attribute> *a) {
         }
     }
     this->child->produce(a);
-    printf("%svector<int> %s_att[%i];\n", indent.c_str(), this->name.c_str(), sub_conditions_count);
-    printf("%srange<pair<int,int>> %s_range[%i];\n", indent.c_str(), this->name.c_str(), sub_conditions_count);
-    for (int i = 0; i < sub_conditions_count; ++i) {
-        for (int j = 0; j < variables[i].size(); ++j) {
-            printf("%s%s_att[%i].push_back(%s);\n", indent.c_str(), this->name.c_str(), i, variables[i][j].name.c_str());
-            printf("%s%s_range[%i].push_back(make_pair(%i,%i));\n", indent.c_str(), this->name.c_str(), i, ranges[i][j].first, ranges[i][j].second);
+}
+
+void HistSelectNode::consume(set<Attribute> *a) {
+//    printf("%svector<int> %s_att[%i];\n", indent.c_str(), this->name.c_str(), sub_conditions_count);
+//    printf("%srange<pair<int,int>> %s_range[%i];\n", indent.c_str(), this->name.c_str(), sub_conditions_count);
+//    for (int i = 0; i < sub_conditions_count; ++i) {
+//        for (int j = 0; j < variables[i].size(); ++j) {
+//            printf("%s%s_att[%i].push_back(%s);\n", indent.c_str(), this->name.c_str(), i, variables[i][j].name.c_str());
+//            printf("%s%s_range[%i].push_back(make_pair(%i,%i));\n", indent.c_str(), this->name.c_str(), i, ranges[i][j].first, ranges[i][j].second);
+//        }
+//    }cout << endl;
+
+    cout << indent << "//APPLYING THE CONDITIONS OF EVERY SUBCONDITION INSIDE SELECT NODE\n\n";
+    for (int k = 0; k < sub_conditions_count; ++k) {
+        cout << indent << "{\n";
+        indent += "\t";
+        cout << indent << "//TAKING A COPY FROM EVERY ATTRIBUTE SO WE COULD RETRIEVE IT AFTER THIS SUBCONDITION EXECUTION\n\n";
+        for (auto i = a->begin(); i != a->end(); i++) {
+            string new_name = this->name + "_" + i->name;
+            printf("%sint %s_bucket[BUCKET_COUNT];\n", indent.c_str(), new_name.c_str());
+            printf("%sfor (int i = 0 ; i < BUCKET_COUNT; i++)\n", indent.c_str());
+            printf("%s    %s_bucket[i] = %s_bucket[i];\n", indent.c_str(), new_name.c_str(), i->name.c_str());
+            printf("%sint %s_min = %s_min;\n", indent.c_str(), new_name.c_str(), i->name.c_str());
+            printf("%sint %s_max = %s_max;\n", indent.c_str(), new_name.c_str(), i->name.c_str());
+            printf("%sint %s_table_size = table_size[%s];\n\n", indent.c_str(),
+                   (this->name + "_" + i->table_name).c_str(), i->table_name.c_str());
         }
-    }cout << endl;
-
-    //    printf("%sfor(int i = 0; i < %i; i++){\n\n", indent.c_str(), sub_conditions_count);
-
-    cout << indent << "{\n";
-    indent += "\t";
-    for (auto i = a->begin(); i != a->end(); i++){
-        string new_name = this->name + "_" + i->name;
-        printf("%sint %s_bucket[BUCKET_COUNT];\n", indent.c_str(), new_name.c_str());
-        printf("%sfor (int i = 0 ; i < 30; i++)\n", indent.c_str());
-        printf("%s    %s_bucket[i] = %s_bucket[i];\n", indent.c_str(), new_name.c_str(), i->name.c_str());
-        printf("%sint %s_min = %s_min;\n", indent.c_str(), new_name.c_str(), i->name.c_str());
-        printf("%sint %s_max = %s_max;\n", indent.c_str(), new_name.c_str(), i->name.c_str());
-        printf("%sint %s_table_size = table_size[%s];\n\n", indent.c_str(), (this->name + "_" + i->table_name).c_str(), i->table_name.c_str());
-    }cout << endl;
-
-    for (auto i = 0; i < variables->size(); ++i) {
-        printf("%stable_size[%s] *= limit(%s_bucket, %s_min, %s_max, %i, %i);\n",
-               indent.c_str(), variables[0][i].table_name.c_str(), variables[0][i].name.c_str(), variables[0][i].name.c_str(),
-               variables[0][i].name.c_str(), ranges[0][i].first, ranges[0][i].second);
+        cout << endl;
+        cout << indent << "//APPLYING SUBCONDITIONS\n\n";
+        for (int i = 0; i < variables[k].size(); ++i) {
+            printf("%sdouble %s_ratio = limit(%s_bucket, %s_min, %s_max, %i, %i);\n",
+                   indent.c_str(), variables[k][i].name.c_str(), variables[k][i].name.c_str(),
+                   variables[k][i].name.c_str(),
+                   variables[k][i].name.c_str(), ranges[k][i].first, ranges[k][i].second);
+            for (auto j = a->begin(); j != a->end(); ++j) {
+                if (variables[k][i].name != j->name && j->table_name == variables[k][i].table_name) {
+                    printf("%sfor (int i = 0; i < BUCKET_COUNT; i++)\n"
+                           "%s       %s_bucket[i] *= %s_ratio;\n",
+                           indent.c_str(),
+                           indent.c_str(), j->name.c_str(), variables[k][i].name.c_str());
+                }
+            }
+            cout << endl;
+        }
+        cout << endl << endl;
+        parent->consume(a);
+        cout << indent << "//RETRIEVING ATTRIBUTES\n\n";
+        for (auto i = a->begin(); i != a->end(); i++) {
+            string new_name = this->name + "_" + i->name;
+            printf("%sfor (int i = 0 ; i < BUCKET_COUNT; i++)\n", indent.c_str());
+            printf("%s    %s_bucket[i] = %s_bucket[i];\n", indent.c_str(), i->name.c_str(), new_name.c_str());
+            printf("%s%s_min = %s_min;\n", indent.c_str(), i->name.c_str(), new_name.c_str());
+            printf("%s%s_max = %s_max;\n\n", indent.c_str(), i->name.c_str(), new_name.c_str());
+//        printf("%s%s_table_size = table_size[%s];\n\n", indent.c_str(), (this->name + "_" + i->table_name).c_str(), i->table_name.c_str());
+        }
+        cout << endl;
+        indent = indent.substr(0, indent.size() - 1);
+        cout << indent << "}\n";
     }
 }
 
 void HistScanNode::produce(set<Attribute> *a) {
+    cout << indent << "//SCANNING ATTRIBUTES(TAKING A COPY FROM DEFAULTS)\n\n";
     cout << indent;
     cout << "{\n";
     indent += "\t";
     for (auto i = a->begin(); i != a->end(); i++){
         printf("%sint %s_bucket[BUCKET_COUNT];\n", indent.c_str(), i->name.c_str());
-        printf("%sfor (int i = 0 ; i < 30; i++)\n", indent.c_str());
+        printf("%sfor (int i = 0 ; i < BUCKET_COUNT; i++)\n", indent.c_str());
         printf("%s    %s_bucket[i] = default_buckets[%s][%s][i];\n", indent.c_str(), i->name.c_str(), i->table_name.c_str(), i->name.c_str());
         printf("%sint %s_min = default_minimum[%s][%s];\n", indent.c_str(), i->name.c_str(), i->table_name.c_str(), i->name.c_str());
         printf("%sint %s_max = default_maximum[%s][%s];\n", indent.c_str(), i->name.c_str(), i->table_name.c_str(), i->name.c_str());
-        printf("%stable_size[%s] = default_table_size[%s];\n", indent.c_str(), i->table_name.c_str(), i->table_name.c_str());
+//        printf("%stable_size[%s] = default_table_size[%s];\n", indent.c_str(), i->table_name.c_str(), i->table_name.c_str());
         cout << endl;
-//        printf("%sint %s[Max_bars] = Histogram(&table_ints[%s], 25);\n", indent.c_str(), i->c_str(), i->c_str());
+//        printf("%sint %s[Max_buckets] = Histogram(&table_ints[%s], 25);\n", indent.c_str(), i->c_str(), i->c_str());
     } cout << endl;
+    parent->consume(a);
 }
+void HistScanNode::consume(set<Attribute> *a) {}
 
 void HistMapNode::produce(set<Attribute> *a) {
     a->insert(op1);
     a->insert(op2);
+    auto in = indent.c_str();
+    auto nm = name.c_str();
+    printf("%sint %s_bucket[BUCKET_COUNT];\n"
+           "%sint %s_min;\n"
+           "%sint %s_max;\n",
+           in, nm,
+           in, nm,
+           in, nm);
     this->child->produce(a);
-    cout << indent;
+}
+void HistMapNode::consume(set<Attribute> *a) {
     string op1_name = op1.name;
     string op2_name = op2.name;
     auto in = indent.c_str();
@@ -327,40 +384,97 @@ void HistMapNode::produce(set<Attribute> *a) {
     auto o2 = op2_name.c_str();
 
     if (type == map_sum){
-        printf("%sint %s_bar[BUCKET_COUNT];\n"
-               "%sint %s_min;\n"
-               "%sint %s_max;\n"
+        printf("%s//CALCULATING MAP EXPRESSION\n\n"
                "%s%s_min = %s_min + %s_min;\n"
                "%s%s_max = %s_max + %s_max;\n"
                "%sint bs1 = (%s_max - %s_min)/BUCKET_COUNT;\n"
                "%sint bs2 = (%s_max - %s_min)/BUCKET_COUNT;\n"
                "%sint bs3 = (%s_max - %s_min)/BUCKET_COUNT;\n"
-               "%s      for (int i = 0; i < BUCKET_COUNT; ++i) {\n"
-               "%s          for (int j = 0; j < BUCKET_COUNT; ++j) {\n"
-               "%s              int val = (%s_min + i * bs1 + bs1/2) +\n"
-               "%s                          (%s_min + j * bs2 + bs2/2);\n"
-               "%s              %s_bar[(val - %s_min)/bs3] += %s_bar[i] + %s_bar[j];\n"
-               "%s          }\n"
-               "%s      }\n",
-        in, nm,
-        in, nm,
-        in, nm,
-        in, nm, o1, o2,
-        in, nm, o1, o2,
-        in, o1, o1,
-        in, o2, o2,
-        in, nm, nm,
-        in,
-        in,
-        in, o1,
-        in, o2,
-        in, nm, nm, o1, o2,
-        in,
-        in);
+               "%sfor (int i = 0; i < BUCKET_COUNT; ++i) {\n"
+               "%s     for (int j = 0; j < BUCKET_COUNT; ++j) {\n"
+               "%s          int val = (%s_min + i * bs1 + bs1/2) +\n"
+               "%s               (%s_min + j * bs2 + bs2/2);\n"
+               "%s          %s_bucket[(val - %s_min)/bs3] += %s_bucket[i] + %s_bucket[j];\n"
+               "%s     }\n"
+               "%s}\n\n",
+               in,
+               in, nm, o1, o2,
+               in, nm, o1, o2,
+               in, o1, o1,
+               in, o2, o2,
+               in, nm, nm,
+               in,
+               in,
+               in, o1,
+               in, o2,
+               in, nm, nm, o1, o2,
+               in,
+               in);
     }
+    parent->consume(a);
 }
 
 void HistHistJoinNode::produce(set<Attribute> *a){
-
+    a->insert(att1);
+    a->insert(att2);
+    this->child->produce(a);
 }
+
+void HistHistJoinNode::consume(set<Attribute> *a) {
+
+    cout << indent << "//HIST-HIST JOIN\n";
+    cout << indent << "{\n";
+
+    indent += "\t";
+    auto in = indent.c_str();
+    auto nm = name.c_str();
+    auto al = att1.name.c_str();
+    auto ar = att2.name.c_str();
+
+    printf("%sdouble expected_left_joins = 0;\n"
+           "%sdouble expected_right_joins = 0;\n"
+           "%sdouble bs = (%s_max - %s_min)/BUCKET_COUNT; //or (%s_max - %s_min)/BUCKET_SIZE\n "
+           "%sfor (int i = 0; i < BUCKET_COUNT; i++){\n"
+           "%s\tdouble bucket_left_joins = %s_bucket[i]/bs;\n"
+           "%s\tdouble bucket_right_joins = %s_bucket[i]/bs;\n"
+           "%s\texpected_left_joins += bucket_left_joins;\n"
+           "%s\texpected_right_joins += bucket_right_joins;\n"
+           "%s\t%s_bucket[i] *= bucket_left_joins;\n"
+           "%s\t%s_bucket[i] *= bucket_right_joins;\n"
+           "%s}\n"
+           "%sexpected_left_joins /= BUCKET_COUNT;\n"
+           "%sexpected_right_joins /= BUCKET_COUNT;\n\n",
+    in,
+    in,
+    in, al, al, ar, ar,
+    in,
+    in, ar,
+    in, al,
+    in,
+    in,
+    in, al,
+    in, ar,
+    in,
+    in,
+    in);
+    for (auto i = a->begin(); i != a->end() ; ++i) {
+        if (i->table_name == att1.table_name) {
+            printf("%sfor (int i = 0; i < BUCKET_COUNT; i++)\n"
+                   "%s\t%s_bucket[i] *= expected_left_joins;\n\n",
+                   in,
+                   in, i->name.c_str());
+        }
+        if (i->table_name == att2.table_name) {
+            printf("%sfor (int i = 0; i < BUCKET_COUNT; i++)\n"
+                   "%s\t%s_bucket[i] *= expected_right_joins;\n\n",
+                   in,
+                   in, i->name.c_str());
+        }
+    }
+    parent->consume(a);
+    cout << endl;
+    indent = indent.substr(0, indent.size() - 1);
+    cout << indent << "}\n";
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
