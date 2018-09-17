@@ -105,7 +105,7 @@ int main(){
                        "    p_comment_id,\n"
                        "};\n");
         fprintf(pfile,"\n\n"
-                      "void read_lineitems_from_file(vector<int> *table_ints, vector<string> *table_strings, string name,\n"
+                      "void read_lineitems_from_file(string name,\n"
                       "int *int_attributes, int num_of_int_attributes, int *string_attributes, int num_of_string_attributes){\n"
                       "    ifstream fin;\n"
                       "    fin.open(name);\n"
