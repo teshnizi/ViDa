@@ -461,7 +461,7 @@ void AggregateNode::produce(set<Attribute> *a) {
                in, nm);
     }
     if ( virtuality == data_att){
-        fprintf(pfile, "%sint %s = 0;\n", in, nm);
+        fprintf(pfile, "%slong %s = 0;\n", in, nm);
     }
     this->child->produce(a);
 }
@@ -610,6 +610,31 @@ void AggregateNode::consume(set<Attribute> *a, Node *source) {
                        "%s%s += %s + %s;\n",
                        in,
                        in, nm, o1, o2
+                );
+            }
+        }
+    } else if ( type == map_mult ){
+        if (virtuality == hist_att) {
+            if (op1.virtuality == hist_att && op2.virtuality == hist_att) {
+            }
+            if ((op1.virtuality == hist_att && op2.virtuality == data_att) ||
+                (op2.virtuality == hist_att && op1.virtuality == data_att)) {
+            }
+            if( op1.virtuality == data_att && op2.virtuality == data_att){
+                fprintf(pfile, "%sERROR CALCULATING MAP EXPRESSION. CAN NOT CALCULATE A HIST FROM 2 NUMBERS\n\n");
+            }
+        }
+        if (virtuality == data_att) {
+            if (op1.virtuality == hist_att && op2.virtuality == hist_att) {
+            }
+            if ((op1.virtuality == hist_att && op2.virtuality == data_att) ||
+                (op2.virtuality == hist_att && op1.virtuality == data_att)) {
+            }
+            if (op1.virtuality == data_att && op2.virtuality == data_att) {
+                fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
+                               "%s%s += %s * %s;\n",
+                        in,
+                        in, nm, o1, o2
                 );
             }
         }

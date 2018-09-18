@@ -49,11 +49,12 @@ int main(){
         fprintf(pfile,"#include <string>\n");
         fprintf(pfile,"#include <fstream>\n");
         fprintf(pfile,"#include <sstream>\n");
+        fprintf(pfile,"#include <iostream>\n");
         fprintf(pfile,"#include <vector>\n\n");
         fprintf(pfile,"using namespace std;\n\n");
-        fprintf(pfile,"const int max_table_num = 5;\n");
-        fprintf(pfile,"const int max_table_size = 100000;\n");
-        fprintf(pfile,"const int max_attribute_num = 20;\n");
+        fprintf(pfile,"const int max_table_num = 2;\n");
+        fprintf(pfile,"const int max_table_size = 1000000;\n");
+        fprintf(pfile,"const int max_attribute_num = 15;\n");
         fprintf(pfile,"const int max_bucket_count = 40;\n");
         fprintf(pfile,"const int BUCKET_COUNT = 40;\n");
         fprintf(pfile,"const int discount_coefficient = 100;\n"
@@ -135,7 +136,7 @@ int main(){
                       "            string_table[lineitem][string_attributes[i]][iterator] = string_tmp[string_attributes[i]];\n"
                       "            // table_strings[string_attributes[i]].push_back(string_tmp[string_attributes[i]]);\n"
                       "        iterator++;\n"
-                      "    }\n}\n\n\n");
+                      "    }\ntable_size[lineitem] = iterator;\n}\n\n\n");
 
         fprintf(pfile, "\ndouble limit(int bucket[], int minimum, int maximum, int l, int h){\n"
                 "\tint bucket_size = ceil((float)(maximum + 1 - minimum)/(BUCKET_COUNT));\n"
@@ -189,10 +190,10 @@ int main(){
 
         set<Attribute> attributes;
 
-        attributes.insert(p_container_att);
-        attributes.insert(p_brand_att);
-        attributes.insert(p_partkey_att);
-        attributes.insert(p_size_att);
+//        attributes.insert(p_container_att);
+//        attributes.insert(p_brand_att);
+//        attributes.insert(p_partkey_att);
+//        attributes.insert(p_size_att);
         attributes.insert(l_shipmode_att);
         attributes.insert(l_shipinstruct_att);
         attributes.insert(l_quantity_att);
@@ -280,16 +281,20 @@ int main(){
         Attribute join_att1 = l_partkey_att;
         Attribute join_att2 = p_partkey_att;
 
-//        AggregateNode histMapNode = AggregateNode("Revenue", &root, map_sum, data_att, l_price_att, l_discount_att);
+        AggregateNode histAggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
 //        SelectNode histSelectNode = SelectNode("Select", &histMapNode, var, 3, ranges, 3, strings, valid_strings);
 //        JoinNode histHistJoinNode = JoinNode("Join", &histSelectNode, join_att1, join_att2);
-        ScanNode scanNode = ScanNode("Scan", &root);
+        ScanNode scanNode = ScanNode("Scan", &histAggregateNode);
 //        HashScanNode hashScanNode = HashScanNode("HScan", &histHistJoinNode, &l_partkey_att, &p_partkey_att);
 
 //        histHistJoinNode.setLeftChild(&scanNode);
 //        histHistJoinNode.setRightChild(&hashScanNode);
 
-        fprintf(pfile, "int main(){\n");
+        fprintf(pfile, "int main(){\n"
+                       "\n"
+                       "    int lineitem_ia[] = {l_discount_id, l_partkey_id, l_price_id, l_quantity_id};\n"
+                       "    int lineitem_sa[] = {l_shipinstruct_id, l_shipmode_id};\n"
+                       "    read_lineitems_from_file(\"edited_lineitem.tbl\", lineitem_ia, 4, lineitem_sa, 2);\n");
         root.produce(&attributes);
 //        fprintf(pfile, "\n}\n");
     }

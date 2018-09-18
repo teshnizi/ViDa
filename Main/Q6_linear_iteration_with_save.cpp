@@ -51,12 +51,14 @@ int main(){
     int end_date = date_to_days("1995-01-01");
 
 
-    for (int i = 0; i < table_size; ++i) {
-        if ( start_date <= table[l_shipdate][i] && table[l_shipdate][i] < end_date)
-            if ( table[l_quantity][i] < 24)
-                if ( (5) < table[l_discount][i] && table[l_discount][i] < (7) )
+    for (int i = 0; i < 100; ++i) {
+//        if ( start_date <= table[l_shipdate][i] && table[l_shipdate][i] < end_date)
+//            if ( table[l_quantity][i] < 24)
+//                if ( (5) < table[l_discount][i] && table[l_discount][i] < (7) )
                 {
+                    cout << table[l_price][i] * table[l_discount][i] << endl;
                     ans += table[l_price][i] * table[l_discount][i];
+//                    cout << ans << endl;
                     valid_num++;
                 }
     }
