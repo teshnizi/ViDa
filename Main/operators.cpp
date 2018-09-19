@@ -340,7 +340,6 @@ int main(){
         strings[1].push_back(p_container_att);
         tmp[1][0].push_back("MED_BAG");
         tmp[1][0].push_back("MED_BOX");
-        tmp[1][0].push_back("MED_PACK");
         tmp[1][0].push_back("MED_PKG");
         valid_strings[1].push_back(tmp[1][0]);
 
@@ -398,6 +397,7 @@ int main(){
         HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
 
         joinNode.setLeftChild(&scanNode1);
+        tmp[1][0].push_back("MED_PACK");
         joinNode.setRightChild(&scanNode2);
 
         fprintf(pfile, "int main(){\n"

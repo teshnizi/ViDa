@@ -2,16 +2,17 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_dist_by_data" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_LIWS" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="tmp" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_sampling" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="operators" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="file_editor" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="string_gen" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_histogram" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_simple_random" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_LIWS" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_LIWOS" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="file_editor" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_dist_by_data" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_LIWS" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_LIWS" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="string_gen" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_simple_random" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_mixes" />
     </generated>
   </component>
@@ -23,10 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="277878c6-042e-4265-b27a-76c2908c086e" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file_editor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/file_editor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operators.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/operators.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operators.h" beforeDir="false" afterPath="$PROJECT_DIR$/operators.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,10 +41,15 @@
       <file leaf-file-name="operators.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/operators.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="387" column="44" selection-start-line="387" selection-start-column="44" selection-end-line="387" selection-end-column="44" />
+            <state relative-caret-position="198">
+              <caret line="255" column="18" selection-start-line="255" selection-start-column="18" selection-end-line="255" selection-end-column="18" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tmp.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tmp.cpp">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="Q6_linear_iteration_with_save.cpp" pinned="false" current-in-tab="false">
@@ -72,7 +76,7 @@
       <file leaf-file-name="operators.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/operators.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-523">
+            <state relative-caret-position="-750">
               <caret line="331" column="32" selection-start-line="331" selection-start-column="32" selection-end-line="331" selection-end-column="32" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -94,8 +98,8 @@
       <file leaf-file-name="Q19_linear_iteraion_with_save.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="854">
-              <caret line="124" column="37" selection-start-line="124" selection-start-column="37" selection-end-line="124" selection-end-column="37" />
+            <state relative-caret-position="2200">
+              <caret line="100" column="45" lean-forward="true" selection-start-line="100" selection-start-column="45" selection-end-line="100" selection-end-column="45" />
               <folding>
                 <element signature="e#43#62#0" expanded="true" />
               </folding>
@@ -127,8 +131,8 @@
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+            <state relative-caret-position="88">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
@@ -137,7 +141,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>insert</find>
       <find>join</find>
       <find>if(</find>
       <find>if</find>
@@ -165,8 +168,9 @@
       <find>hashSca</find>
       <find>hashe</find>
       <find>SIZE</find>
-      <find>hashed_keys</find>
       <find>AIR_REG</find>
+      <find>max_table_size</find>
+      <find>hashed_keys</find>
     </findStrings>
     <replaceStrings>
       <replace>double</replace>
@@ -199,19 +203,19 @@
         <option value="$PROJECT_DIR$/Q19_mixed.cpp" />
         <option value="$PROJECT_DIR$/Q6_simple_random_generation.cpp" />
         <option value="$PROJECT_DIR$/Q6_linear_iteration_without_save.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/operator.h" />
         <option value="$PROJECT_DIR$/dist_operators.h" />
         <option value="$PROJECT_DIR$/hist_operators.h" />
         <option value="$PROJECT_DIR$/data_operators.h" />
-        <option value="$PROJECT_DIR$/tmp.cpp" />
         <option value="$PROJECT_DIR$/statistics.h" />
         <option value="$PROJECT_DIR$/tuples2.h" />
         <option value="$PROJECT_DIR$/Q6_linear_iteration_with_save.cpp" />
         <option value="$PROJECT_DIR$/file_editor.cpp" />
         <option value="$PROJECT_DIR$/operators.h" />
-        <option value="$PROJECT_DIR$/operators.cpp" />
         <option value="$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp" />
+        <option value="$PROJECT_DIR$/operators.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/tmp.cpp" />
       </list>
     </option>
   </component>
@@ -281,15 +285,16 @@
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19_LIWS" EXPLICIT_BUILD_TARGET_NAME="all" />
     <configuration name="Q19_LIWS" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q19_LIWS" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19_LIWS" />
     <configuration name="Q19_dist_by_data" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q19_dist_by_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19_LIWS" />
-    <configuration name="Q19_mixes" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q19_mixes" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q6_LIWS" />
-    <configuration name="Q6_LIWOS" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_LIWOS" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q6_LIWS" />
-    <configuration name="Q6_LIWS" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_LIWS" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q6_LIWS" />
-    <configuration name="Q6_histogram" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_histogram" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q6_LIWS" />
-    <configuration name="Q6_sampling" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_sampling" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q6_simple_random" />
-    <configuration name="Q6_simple_random" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_simple_random" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q6_simple_random" />
+    <configuration name="Q19_mixes" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q19_mixes" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="Q6_LIWOS" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_LIWOS" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="Q6_LIWS" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_LIWS" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="Q6_histogram" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_histogram" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="Q6_sampling" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_sampling" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="Q6_simple_random" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6_simple_random" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
     <configuration name="file_editor" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="file_editor" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19_LIWS" />
     <configuration name="operators" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="operators" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19_LIWS" />
-    <configuration name="string_gen" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="string_gen" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="string_gen" />
+    <configuration name="string_gen" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="string_gen" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="tmp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="tmp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
     <list>
       <item itemvalue="Application.Build All" />
       <item itemvalue="Application.file_editor" />
@@ -303,6 +308,7 @@
       <item itemvalue="Application.Q6_sampling" />
       <item itemvalue="Application.Q6_simple_random" />
       <item itemvalue="Application.string_gen" />
+      <item itemvalue="Application.tmp" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -350,7 +356,7 @@
       <workItem from="1536986881024" duration="8475000" />
       <workItem from="1537172555727" duration="6208000" />
       <workItem from="1537286637896" duration="7078000" />
-      <workItem from="1537335555002" duration="8160000" />
+      <workItem from="1537335555002" duration="11251000" />
     </task>
     <task id="LOCAL-00001" summary="week 5 tasks.">
       <created>1534097850194</created>
@@ -436,11 +442,18 @@
       <option name="project" value="LOCAL" />
       <updated>1537293576333</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Q19 works for data attributes.">
+      <created>1537360457423</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1537360457425</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="343368000" />
+    <option name="totallyTimeSpent" value="346459000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -452,17 +465,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="27" width="1853" height="1053" extended-state="6" />
+    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.122404374" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11808118" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32922733" />
       <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.895082" weight="0.25419933" />
       <window_info anchor="bottom" id="CMake" order="11" sideWeight="0.49945354" weight="0.33034715" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5038251" side_tool="true" weight="0.27099663" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49836066" weight="0.32922733" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.20380738" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.8497268" visible="true" weight="0.19148937" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8497268" weight="0.0" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32922733" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -494,7 +507,8 @@
     <MESSAGE value="previous code removed :)" />
     <MESSAGE value="joins implemented(last week actually :) ), some configuration codes fitted into generated code." />
     <MESSAGE value="lineitem table scanning." />
-    <option name="LAST_COMMIT_MESSAGE" value="lineitem table scanning." />
+    <MESSAGE value="Q19 works for data attributes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Q19 works for data attributes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -737,9 +751,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tmp.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file:///usr/include/c++/7/bits/stl_function.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
@@ -761,13 +772,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
           <caret line="122" column="16" selection-start-line="122" selection-start-column="16" selection-end-line="122" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
         </state>
       </provider>
     </entry>
@@ -812,9 +816,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/operators.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-523">
+        <state relative-caret-position="-750">
           <caret line="331" column="32" selection-start-line="331" selection-start-column="32" selection-end-line="331" selection-end-column="32" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -834,18 +845,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="854">
-          <caret line="124" column="37" selection-start-line="124" selection-start-column="37" selection-end-line="124" selection-end-column="37" />
+        <state relative-caret-position="2200">
+          <caret line="100" column="45" lean-forward="true" selection-start-line="100" selection-start-column="45" selection-end-line="100" selection-end-column="45" />
           <folding>
             <element signature="e#43#62#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tmp.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/operators.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="387" column="44" selection-start-line="387" selection-start-column="44" selection-end-line="387" selection-end-column="44" />
+        <state relative-caret-position="198">
+          <caret line="255" column="18" selection-start-line="255" selection-start-column="18" selection-end-line="255" selection-end-column="18" />
         </state>
       </provider>
     </entry>
