@@ -28,6 +28,7 @@ void preprocess(){
     lineitem_strings.push_back     (l_shipinstruct);
 }
 
+
 int main(){
     try {
         preprocess();
@@ -54,6 +55,8 @@ int main(){
         fprintf(pfile,"using namespace std;\n\n");
         fprintf(pfile,"const int max_table_num = 2;\n");
         fprintf(pfile,"const int max_table_size = 1000000;\n");
+        fprintf(pfile,"const int hash_table_size = 1000000;\n");
+        fprintf(pfile,"const int max_hashed_attributes = 3;\n");
         fprintf(pfile,"const int max_attribute_num = 15;\n");
         fprintf(pfile,"const int max_bucket_count = 40;\n");
         fprintf(pfile,"const int BUCKET_COUNT = 40;\n");
@@ -137,6 +140,33 @@ int main(){
                       "            // table_strings[string_attributes[i]].push_back(string_tmp[string_attributes[i]]);\n"
                       "        iterator++;\n"
                       "    }\ntable_size[lineitem] = iterator;\n}\n\n\n");
+        fprintf(pfile,"\nvoid read_part_from_file(string name,\n"
+                      "                         int *int_attributes, int num_of_int_attributes, int *string_attributes, int num_of_string_attributes){\n"
+                      "    ifstream fin;\n"
+                      "    fin.open(name);\n"
+                      "    string line;\n"
+                      "    int int_tmp[20];\n"
+                      "    float float_tmp[20];\n"
+                      "    char char_tmp[20];\n"
+                      "    string string_tmp[20];\n"
+                      "    int iterator = 0;\n"
+                      "    while (getline(fin,line,'\\n')) {\n"
+                      "        istringstream iss(line);\n"
+                      "        iss >> int_tmp[p_partkey_id] >> string_tmp[p_name_id] >> string_tmp[p_mfgr_id] >> string_tmp[p_brand_id] >> string_tmp[p_type_id] >> int_tmp[p_size_id] >>\n"
+                      "            string_tmp[p_container_id] >> float_tmp[p_retailprice_id] >> string_tmp[p_comment_id];\n"
+                      "        int_tmp[p_retailprice_id] = retailprice_coefficient * float_tmp[p_retailprice_id];\n"
+                      "\n"
+                      "        for (int i = 0; i < num_of_int_attributes; ++i) {\n"
+                      "            int_table[part][int_attributes[i]][iterator] = int_tmp[int_attributes[i]];\n"
+                      "        }\n"
+                      "\n"
+                      "        for (int i = 0; i < num_of_string_attributes; ++i) {\n"
+                      "            string_table[part][string_attributes[i]][iterator] = string_tmp[string_attributes[i]];\n"
+                      "        }\n"
+                      "        iterator++;\n"
+                      "    }\n"
+                      "    table_size[part] = iterator;\n"
+                      "}\n\n\n");
 
         fprintf(pfile, "\ndouble limit(int bucket[], int minimum, int maximum, int l, int h){\n"
                 "\tint bucket_size = ceil((float)(maximum + 1 - minimum)/(BUCKET_COUNT));\n"
@@ -170,6 +200,86 @@ int main(){
                 "\treturn (double)left/total;\n"
                 "}\n\n");
 
+        fprintf(pfile, "\n"
+                       "struct DataItem{\n"
+                       "    int data;\n"
+                       "    int key;\n"
+                       "};\n"
+                       "\n"
+                       "typedef struct DataItem DataItem;\n"
+                       "\n"
+                       "DataItem* hashArray[max_hashed_attributes][hash_table_size * 2];\n"
+                       "struct DataItem* dummyItem;\n"
+                       "\n"
+                       "int hashCode(int key) {\n"
+                       "    return key %% hash_table_size;\n"
+                       "}\n"
+                       "\n"
+                       "struct DataItem *search(int id, int key) {\n"
+                       "    //get the hash\n"
+                       "    int hashIndex = hashCode(key);\n"
+                       "\n"
+                       "    //move in array until an empty\n"
+                       "    while(hashArray[id][hashIndex] != NULL) {\n"
+                       "\n"
+                       "        if(hashArray[id][hashIndex]->key == key)\n"
+                       "            return hashArray[id][hashIndex];\n"
+                       "\n"
+                       "        //go to next cell\n"
+                       "        ++hashIndex;\n"
+                       "\n"
+                       "        //wrap around the table\n"
+                       "        hashIndex %%= hash_table_size;\n"
+                       "    }\n"
+                       "    return NULL;\n"
+                       "}\n"
+                       "\n"
+                       "void insert(int id, int key,int data) {\n"
+                       "    struct DataItem *item = (struct DataItem*) malloc(sizeof(struct DataItem));\n"
+                       "    item->data = data;\n"
+                       "    item->key = key;\n"
+                       "\n"
+                       "    //get the hash\n"
+                       "    int hashIndex = hashCode(key);\n"
+                       "\n"
+                       "    //move in array until an empty or deleted cell\n"
+                       "    while(hashArray[id][hashIndex] != NULL && hashArray[id][hashIndex]->key != -1) {\n"
+                       "        //go to next cell\n"
+                       "        ++hashIndex;\n"
+                       "\n"
+                       "        //wrap around the table\n"
+                       "        hashIndex %%= hash_table_size;\n"
+                       "    }\n"
+                       "    hashArray[id][hashIndex] = item;\n"
+                       "}\n"
+                       "\n"
+                       "struct DataItem* remove(int id, struct DataItem* item) {\n"
+                       "    int key = item->key;\n"
+                       "\n"
+                       "    //get the hash\n"
+                       "    int hashIndex = hashCode(key);\n"
+                       "\n"
+                       "    //move in array until an empty\n"
+                       "    while (hashArray[hashIndex] != NULL) {\n"
+                       "\n"
+                       "        if (hashArray[id][hashIndex]->key == key) {\n"
+                       "            struct DataItem *temp = hashArray[id][hashIndex];\n"
+                       "\n"
+                       "            //assign a dummy item at deleted position\n"
+                       "            hashArray[id][hashIndex] = dummyItem;\n"
+                       "            return temp;\n"
+                       "        }\n"
+                       "\n"
+                       "        //go to next cell\n"
+                       "        ++hashIndex;\n"
+                       "\n"
+                       "        //wrap around the table\n"
+                       "        hashIndex %%= hash_table_size;\n"
+                       "    }\n"
+                       "\n"
+                       "    return NULL;\n"
+                       "}\n");
+
         vector <Attribute> var[10];
         vector <pair<int, int>> ranges[10];
         vector <Attribute> strings[10];
@@ -190,10 +300,10 @@ int main(){
 
         set<Attribute> attributes;
 
-//        attributes.insert(p_container_att);
-//        attributes.insert(p_brand_att);
-//        attributes.insert(p_partkey_att);
-//        attributes.insert(p_size_att);
+        attributes.insert(p_container_att);
+        attributes.insert(p_brand_att);
+        attributes.insert(p_partkey_att);
+        attributes.insert(p_size_att);
         attributes.insert(l_shipmode_att);
         attributes.insert(l_shipinstruct_att);
         attributes.insert(l_quantity_att);
@@ -215,7 +325,7 @@ int main(){
 
         strings[0].push_back(l_shipmode_att);
         tmp[0][2].push_back("AIR");
-        tmp[0][2].push_back("AIR_REG");
+        tmp[0][2].push_back("REG_AIR");
         valid_strings[0].push_back(tmp[0][2]);
 
         strings[0].push_back(l_shipinstruct_att);
@@ -240,7 +350,7 @@ int main(){
 
         strings[1].push_back(l_shipmode_att);
         tmp[1][2].push_back("AIR");
-        tmp[1][2].push_back("AIR_REG");
+        tmp[1][2].push_back("REG_AIR");
         valid_strings[1].push_back(tmp[1][2]);
 
         strings[1].push_back(l_shipinstruct_att);
@@ -265,7 +375,7 @@ int main(){
 
         strings[2].push_back(l_shipmode_att);
         tmp[2][2].push_back("AIR");
-        tmp[2][2].push_back("AIR_REG");
+        tmp[2][2].push_back("REG_AIR");
         valid_strings[2].push_back(tmp[2][2]);
 
         strings[2].push_back(l_shipinstruct_att);
@@ -281,20 +391,27 @@ int main(){
         Attribute join_att1 = l_partkey_att;
         Attribute join_att2 = p_partkey_att;
 
-        AggregateNode histAggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
-//        SelectNode histSelectNode = SelectNode("Select", &histMapNode, var, 3, ranges, 3, strings, valid_strings);
-//        JoinNode histHistJoinNode = JoinNode("Join", &histSelectNode, join_att1, join_att2);
-        ScanNode scanNode = ScanNode("Scan", &histAggregateNode);
-//        HashScanNode hashScanNode = HashScanNode("HScan", &histHistJoinNode, &l_partkey_att, &p_partkey_att);
+        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
+        SelectNode selectNode = SelectNode("Select", &aggregateNode, var, 3, ranges, 3, strings, valid_strings);
+        JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
+        ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
+        HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
 
-//        histHistJoinNode.setLeftChild(&scanNode);
-//        histHistJoinNode.setRightChild(&hashScanNode);
+        joinNode.setLeftChild(&scanNode1);
+        joinNode.setRightChild(&scanNode2);
 
         fprintf(pfile, "int main(){\n"
                        "\n"
                        "    int lineitem_ia[] = {l_discount_id, l_partkey_id, l_price_id, l_quantity_id};\n"
                        "    int lineitem_sa[] = {l_shipinstruct_id, l_shipmode_id};\n"
-                       "    read_lineitems_from_file(\"edited_lineitem.tbl\", lineitem_ia, 4, lineitem_sa, 2);\n");
+                       "    read_lineitems_from_file(\"edited_lineitem.tbl\", lineitem_ia, 4, lineitem_sa, 2);\n"
+                       "\n"
+                       "    int part_ia[] = {p_partkey_id, p_size_id};\n"
+                       "    int part_sa[] = {p_container_id, p_brand_id};\n"
+                       "    read_part_from_file(\"edited_part.tbl\", part_ia, 2, part_sa, 2);\n"
+                       "    for (int i = 0; i < table_size[part]; ++i) {\n"
+                       "        insert(p_partkey_id, int_table[part][p_partkey_id][i], i);\n"
+                       "    }\n");
         root.produce(&attributes);
 //        fprintf(pfile, "\n}\n");
     }

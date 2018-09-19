@@ -319,7 +319,7 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
                 fprintf(pfile,"%sif(\n",indent.c_str());
 //                cout << indent << "if(\n";
                 for (int l = 0; l < valid_strings[k][i].size(); ++l) {
-                    fprintf(pfile, "%s   (%s == %s)" , indent.c_str(), string_variables[k][i].name.c_str(), valid_strings[k][i][l].c_str());
+                    fprintf(pfile, "%s   (%s == \"%s\")" , indent.c_str(), string_variables[k][i].name.c_str(), valid_strings[k][i][l].c_str());
                     if ( l != valid_strings[k][i].size() - 1)fprintf(pfile,"||");
                     fprintf(pfile,"\n");
                 }
@@ -429,8 +429,8 @@ void HashScanNode::produce(set<Attribute> *a) {
             if(tables.find(i->table_name) == tables.end()) {
                 tables.insert(i->table_name);
                 fprintf(pfile,"%s", indent.c_str());
-                fprintf(pfile, "int %s_it = lower_bound(hashed_keys[%s].begin(), hashed_keys[%s].end(), %s)\n", i->table_name.c_str(),
-                        hashedAtt->name.c_str(), hashedAtt->name.c_str(), sourceAtt->name.c_str());
+                fprintf(pfile, "int %s_it = search(%s_id, %s)->data;\n", i->table_name.c_str(),
+                        hashedAtt->name.c_str(), sourceAtt->name.c_str());
                 fprintf(pfile,"%s{\n", indent.c_str());
                 indent += "\t";
             }

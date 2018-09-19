@@ -11,6 +11,7 @@
 #include <sstream>
 #include <utility>
 #include "tuples.h"
+#include "tuples2.h"
 #include <vector>
 
 
@@ -64,8 +65,8 @@ void edit_part_table(string name){
     fin.close();
     fout.close();
     cout << "original TPC-H table " + name + " was edited and saved as edited_" + name << endl;
-
 }
+
 //Generic type could also be used for index readers, by the way due to limited number of types used in code,
 // I preferred separate functions.
 
@@ -73,3 +74,5 @@ int main(){
     edit_lineitem_table("lineitem.tbl");
     edit_part_table("part.tbl");
 }
+
+

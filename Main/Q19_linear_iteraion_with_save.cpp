@@ -118,9 +118,11 @@ int main(){
                  (1 < size && size < 15 ) &&
                  (shipmode == "AIR" || shipmode == "REG_AIR") &&
                  (shipinstruct == "DELIVER_IN_PERSON"))
-                    ){
-//                cout << price << " " << discount << endl;
-                 ans += (price * (100 - discount));
+                    )
+            {
+//                 cout << price << " " << discount << endl;
+//                 cout << brand << " " << quantity << " " << size << " " << container << " " << shipmode << " " << shipinstruct << endl;
+                 ans += (price * (discount));
                  valid_num++;
             }
         }
