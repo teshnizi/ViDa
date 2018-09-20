@@ -49,8 +49,8 @@ enum Table{
     ENUM_COUNT
 };
 
-const int num_of_attributes = ENUM_COUNT;
-
+const int max_table_num = 2;
+const int max_attribute_num = 15; // max number of attributes per table
 
 const int month_days_acc[] = {31, 31+28, 31+28+31, 31+28+31+30, 31+28+31+30+31,
                               31+28+31+30+31+30, 31+28+31+30+31+30+31, 31+28+31+30+31+30+31+31,
