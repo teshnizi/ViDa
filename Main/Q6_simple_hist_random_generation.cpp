@@ -89,22 +89,22 @@ int main(){
         hist_sizes[m] = hist[m][hist[m].size() - 1];
     }
     for (int i = 0; i < table_size; ++i){
-        k = rand() % hist_sizes[l_shipdate];
-        k = lower_bound(hist[l_shipdate].begin(), hist[l_shipdate].end(), k) - hist[l_shipdate].begin();
-        tmp[l_shipdate] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_shipdate] + lower_bounds[l_shipdate]);
-        if ( start_date <= tmp[l_shipdate] && tmp[l_shipdate] < end_date) {
-            k = rand() % hist_sizes[l_quantity];
-            k = lower_bound(hist[l_quantity].begin(), hist[l_quantity].end(), k) - hist[l_quantity].begin();
-            tmp[l_quantity] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_quantity] + lower_bounds[l_quantity]);
-            if (tmp[l_quantity] < 24) {
-                k = rand() % hist_sizes[l_discount];
-                k = lower_bound(hist[l_discount].begin(), hist[l_discount].end(), k) - hist[l_discount].begin();
-                tmp[l_discount] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_discount] + lower_bounds[l_discount]);
-                if (5 < tmp[l_discount] && tmp[l_discount] < 7) {
-                    k = rand() % hist_sizes[l_price];
-                    k = lower_bound(hist[l_price].begin(), hist[l_price].end(), k) - hist[l_price].begin();
-                    tmp[l_price] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_price] + lower_bounds[l_price]);
-                    ans += tmp[l_price] * tmp[l_discount];
+        k = rand() % hist_sizes[l_shipdate_id];
+        k = lower_bound(hist[l_shipdate_id].begin(), hist[l_shipdate_id].end(), k) - hist[l_shipdate_id].begin();
+        tmp[l_shipdate_id] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_shipdate_id] + lower_bounds[l_shipdate_id]);
+        if ( start_date <= tmp[l_shipdate_id] && tmp[l_shipdate_id] < end_date) {
+            k = rand() % hist_sizes[l_quantity_id];
+            k = lower_bound(hist[l_quantity_id].begin(), hist[l_quantity_id].end(), k) - hist[l_quantity_id].begin();
+            tmp[l_quantity_id] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_quantity_id] + lower_bounds[l_quantity_id]);
+            if (tmp[l_quantity_id] < 24) {
+                k = rand() % hist_sizes[l_discount_id];
+                k = lower_bound(hist[l_discount_id].begin(), hist[l_discount_id].end(), k) - hist[l_discount_id].begin();
+                tmp[l_discount_id] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_discount_id] + lower_bounds[l_discount_id]);
+                if (5 < tmp[l_discount_id] && tmp[l_discount_id] < 7) {
+                    k = rand() % hist_sizes[l_price_id];
+                    k = lower_bound(hist[l_price_id].begin(), hist[l_price_id].end(), k) - hist[l_price_id].begin();
+                    tmp[l_price_id] = ((((float)rand() / RAND_MAX) + k ) * block_size[l_price_id] + lower_bounds[l_price_id]);
+                    ans += tmp[l_price_id] * tmp[l_discount_id];
                     valid_num++;
                 }
             }

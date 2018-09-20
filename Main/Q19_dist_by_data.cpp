@@ -25,52 +25,52 @@ pair<int,int> part_valid_int_ranges[10][3];
 
 int main(int argc, char** argv) {
 
-    parts_valid_strings[p_container][0].push_back("SM_CASE");
-    parts_valid_strings[p_container][0].push_back("SM_BOX");
-    parts_valid_strings[p_container][0].push_back("SM_PACK");
-    parts_valid_strings[p_container][0].push_back("SM_PKG");
+    parts_valid_strings[p_container_id][0].push_back("SM_CASE");
+    parts_valid_strings[p_container_id][0].push_back("SM_BOX");
+    parts_valid_strings[p_container_id][0].push_back("SM_PACK");
+    parts_valid_strings[p_container_id][0].push_back("SM_PKG");
 
-    parts_valid_strings[p_container][1].push_back("MED_BAG");
-    parts_valid_strings[p_container][1].push_back("MED_BOX");
-    parts_valid_strings[p_container][1].push_back("MED_PKG");
-    parts_valid_strings[p_container][1].push_back("MED_PACK");
+    parts_valid_strings[p_container_id][1].push_back("MED_BAG");
+    parts_valid_strings[p_container_id][1].push_back("MED_BOX");
+    parts_valid_strings[p_container_id][1].push_back("MED_PKG");
+    parts_valid_strings[p_container_id][1].push_back("MED_PACK");
 
-    parts_valid_strings[p_container][2].push_back("LG_CASE");
-    parts_valid_strings[p_container][2].push_back("LG_BOX");
-    parts_valid_strings[p_container][2].push_back("LG_PACK");
-    parts_valid_strings[p_container][2].push_back("LG_PKG");
+    parts_valid_strings[p_container_id][2].push_back("LG_CASE");
+    parts_valid_strings[p_container_id][2].push_back("LG_BOX");
+    parts_valid_strings[p_container_id][2].push_back("LG_PACK");
+    parts_valid_strings[p_container_id][2].push_back("LG_PKG");
 
-    parts_valid_strings[p_brand][0].push_back("Brand#12");
-    parts_valid_strings[p_brand][1].push_back("Brand#23");
-    parts_valid_strings[p_brand][2].push_back("Brand#34");
+    parts_valid_strings[p_brand_id][0].push_back("Brand#12");
+    parts_valid_strings[p_brand_id][1].push_back("Brand#23");
+    parts_valid_strings[p_brand_id][2].push_back("Brand#34");
 
-    lineitem_valid_strings[l_shipmode][0].push_back("AIR");
-    lineitem_valid_strings[l_shipmode][0].push_back("REG_AIR");
+    lineitem_valid_strings[l_shipmode_id][0].push_back("AIR");
+    lineitem_valid_strings[l_shipmode_id][0].push_back("REG_AIR");
 
-    lineitem_valid_strings[l_shipmode][1].push_back("AIR");
-    lineitem_valid_strings[l_shipmode][1].push_back("REG_AIR");
+    lineitem_valid_strings[l_shipmode_id][1].push_back("AIR");
+    lineitem_valid_strings[l_shipmode_id][1].push_back("REG_AIR");
 
-    lineitem_valid_strings[l_shipmode][2].push_back("AIR");
-    lineitem_valid_strings[l_shipmode][2].push_back("REG_AIR");
+    lineitem_valid_strings[l_shipmode_id][2].push_back("AIR");
+    lineitem_valid_strings[l_shipmode_id][2].push_back("REG_AIR");
 
-    lineitem_valid_strings[l_shipinstruct][0].push_back("DELIVER_IN_PERSON");
-    lineitem_valid_strings[l_shipinstruct][1].push_back("DELIVER_IN_PERSON");
-    lineitem_valid_strings[l_shipinstruct][2].push_back("DELIVER_IN_PERSON");
+    lineitem_valid_strings[l_shipinstruct_id][0].push_back("DELIVER_IN_PERSON");
+    lineitem_valid_strings[l_shipinstruct_id][1].push_back("DELIVER_IN_PERSON");
+    lineitem_valid_strings[l_shipinstruct_id][2].push_back("DELIVER_IN_PERSON");
     
     
-    lineitem_valid_int_ranges[l_quantity][0].first = 0;
-    lineitem_valid_int_ranges[l_quantity][0].second = 11;
-    lineitem_valid_int_ranges[l_quantity][1].first = 9;
-    lineitem_valid_int_ranges[l_quantity][1].second = 21;
-    lineitem_valid_int_ranges[l_quantity][2].first = 19;
-    lineitem_valid_int_ranges[l_quantity][2].second = 31;
+    lineitem_valid_int_ranges[l_quantity_id][0].first = 0;
+    lineitem_valid_int_ranges[l_quantity_id][0].second = 11;
+    lineitem_valid_int_ranges[l_quantity_id][1].first = 9;
+    lineitem_valid_int_ranges[l_quantity_id][1].second = 21;
+    lineitem_valid_int_ranges[l_quantity_id][2].first = 19;
+    lineitem_valid_int_ranges[l_quantity_id][2].second = 31;
 
-    part_valid_int_ranges[p_size][0].first = 1;
-    part_valid_int_ranges[p_size][0].second = 5;
-    part_valid_int_ranges[p_size][1].first = 1;
-    part_valid_int_ranges[p_size][1].second = 10;
-    part_valid_int_ranges[p_size][2].first = 1;
-    part_valid_int_ranges[p_size][2].second = 15;
+    part_valid_int_ranges[p_size_id][0].first = 1;
+    part_valid_int_ranges[p_size_id][0].second = 5;
+    part_valid_int_ranges[p_size_id][1].first = 1;
+    part_valid_int_ranges[p_size_id][1].second = 10;
+    part_valid_int_ranges[p_size_id][2].first = 1;
+    part_valid_int_ranges[p_size_id][2].second = 15;
 
     auto start = chrono::system_clock::now();
     auto end = chrono::system_clock::now();
@@ -78,10 +78,10 @@ int main(int argc, char** argv) {
 
     cout << "\nreading tables from file...\n";
 
-    int lineitem_int_attributes[] = {l_partkey, l_quantity, l_price, l_discount, l_tax};
-    int lineitem_string_attributes[] = {l_shipmode, l_shipinstruct};
-    int parts_int_attributes[] = {p_partkey, p_size};
-    int parts_string_attributes[] = {p_brand, p_container};
+    int lineitem_int_attributes[] = {l_partkey_id, l_quantity_id, l_price_id, l_discount_id, l_tax_id};
+    int lineitem_string_attributes[] = {l_shipmode_id, l_shipinstruct_id};
+    int parts_int_attributes[] = {p_partkey_id, p_size_id};
+    int parts_string_attributes[] = {p_brand_id, p_container_id};
     vector <int> lineitem_table_ints[20];
     vector <int> part_table_ints[10];
     vector <string> part_table_strings[10];
@@ -114,8 +114,8 @@ int main(int argc, char** argv) {
     long price_sum = 0;
     long discount_sum = 0;
     for (int i = 0; i < lineitem_table_size; ++i) {
-        price_sum += lineitem_table_ints[l_price][i];
-        discount_sum += lineitem_table_ints[l_discount][i];
+        price_sum += lineitem_table_ints[l_price_id][i];
+        discount_sum += lineitem_table_ints[l_discount_id][i];
     }
     float expected_price = price_sum / (float)lineitem_table_size;
     float expected_discount = discount_sum / (float)lineitem_table_size;

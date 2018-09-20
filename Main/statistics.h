@@ -85,15 +85,17 @@ private:
 };
 
 //gets a sorted vector data and returns an approximate distribution function, as a histogram with "segment_count" segments:
-vector <int>quantize(vector<int> data, int segment_count, int &block_size, int &lower_bound){
+vector <int>quantize(vector<int> data, int bucket_count, float &block_size, float &lower_bound){
     lower_bound = data[0];
-    int upper_bound = data[data.size()-1];
-    if(upper_bound - lower_bound <= (segment_count))
-        upper_bound = lower_bound + segment_count;
-    block_size = (upper_bound - lower_bound) / (segment_count);
-    vector <int> hist(segment_count);
+    float upper_bound = data[data.size()-1];
+//    if(upper_bound - lower_bound <= (bucket_count))
+//        upper_bound = lower_bound + bucket_count;
+    block_size = (upper_bound - lower_bound) / (bucket_count);
+    vector <int> hist(bucket_count);
     for (int i = 0; i < data.size(); ++i) {
-        hist[(data[i]-lower_bound)/block_size] += 1;
+        int id = (int)(data[i]-lower_bound)/block_size;
+        if ( id == bucket_count) id--;
+        hist[id] += 1;
     }
     cout << lower_bound << " " << upper_bound << endl;
     return hist;

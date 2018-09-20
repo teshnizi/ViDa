@@ -65,16 +65,16 @@ int main(){
     int temp[3] = {0,0,0};
 
     for (int i = 0; i < table_size; ++i){
-        int tship_date = (rand()/(float)RAND_MAX) * range[l_shipdate] + min_value[l_shipdate];
+        int tship_date = (rand()/(float)RAND_MAX) * range[l_shipdate_id] + min_value[l_shipdate_id];
         temp[0]++;
         if ( start_date <= tship_date && tship_date < end_date) {
-            int tquantity = (rand() / (float) RAND_MAX) * range[l_quantity] + min_value[l_quantity];
+            int tquantity = (rand() / (float) RAND_MAX) * range[l_quantity_id] + min_value[l_quantity_id];
             temp[1]++;
             if (tquantity < 24) {
-                int tdiscount = (rand()/(float)RAND_MAX) * range[l_discount] + min_value[l_discount];
+                int tdiscount = (rand()/(float)RAND_MAX) * range[l_discount_id] + min_value[l_discount_id];
                 temp[2]++;
                 if (5 < tdiscount && tdiscount < 7) {
-                    int textended_price = (rand()/(float)RAND_MAX) * range[l_price] + min_value[l_price];
+                    int textended_price = (rand()/(float)RAND_MAX) * range[l_price_id] + min_value[l_price_id];
                     ans += textended_price * tdiscount;
                     valid_num++;
                 }

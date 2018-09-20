@@ -19,13 +19,13 @@ int lineitem_table_size;
 pair<int, int> condition_ranges[ENUM_COUNT];
 
 void preprocess(){
-    lineitem_ints.push_back        (l_partkey);
-    lineitem_ints.push_back        (l_quantity);
-    lineitem_ints.push_back        (l_price);
-    lineitem_ints.push_back        (l_discount);
-    lineitem_ints.push_back        (l_tax);
-    lineitem_strings.push_back     (l_shipmode);
-    lineitem_strings.push_back     (l_shipinstruct);
+    lineitem_ints.push_back        (l_partkey_id);
+    lineitem_ints.push_back        (l_quantity_id);
+    lineitem_ints.push_back        (l_price_id);
+    lineitem_ints.push_back        (l_discount_id);
+    lineitem_ints.push_back        (l_tax_id);
+    lineitem_strings.push_back     (l_shipmode_id);
+    lineitem_strings.push_back     (l_shipinstruct_id);
 }
 
 
@@ -53,42 +53,96 @@ int main(){
 
         vector<string> tmp[3][4];
 
-        Attribute p_container_att = Attribute("part", "p_container", data_att, att_string, p_container);
-        Attribute p_brand_att = Attribute("part", "p_brand", data_att, att_string, p_brand);
-        Attribute p_partkey_att = Attribute("part", "p_partkey", data_att, att_int, p_partkey);
-        Attribute p_size_att = Attribute("part", "p_size", data_att, att_int, p_size);
-        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", hist_att, att_string, l_shipmode);
-        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", data_att, att_string, l_shipinstruct);
-        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity);
-        Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount);
-        Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price);
-        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey);
+        Attribute p_container_att = Attribute("part", "p_container", hist_att, att_string, p_container_id);
+        Attribute p_brand_att = Attribute("part", "p_brand", hist_att, att_string, p_brand_id);
+        Attribute p_partkey_att = Attribute("part", "p_partkey", hist_att, att_int, p_partkey_id);
+        Attribute p_size_att = Attribute("part", "p_size", hist_att, att_int, p_size_id);
+        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", data_att, att_string, l_shipmode_id);
+        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", data_att, att_string, l_shipinstruct_id);
+        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
+        Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
+        Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
+        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", hist_att, att_int, l_partkey_id);
 
-        string_id[l_shipmode]["AIR"] = 1;
-        string_id[l_shipmode]["FOB"] = 2;
-        string_id[l_shipmode]["MAIL"] = 3;
-        string_id[l_shipmode]["RAIL"] = 4;
-        string_id[l_shipmode]["REG_AIR"] = 5;
-        string_id[l_shipmode]["SHIP"] = 6;
-        string_id[l_shipmode]["TRUCK"] = 7;
+        string_id[l_shipmode_id]["AIR"] = 1;
+        string_id[l_shipmode_id]["FOB"] = 2;
+        string_id[l_shipmode_id]["MAIL"] = 3;
+        string_id[l_shipmode_id]["RAIL"] = 4;
+        string_id[l_shipmode_id]["REG_AIR"] = 5;
+        string_id[l_shipmode_id]["SHIP"] = 6;
+        string_id[l_shipmode_id]["TRUCK"] = 7;
 
-        string_id[l_shipinstruct]["DELIVER_IN_PERSON"] = 1;
+        string_id[l_shipinstruct_id]["COLLECT_COD"] = 1;
+        string_id[l_shipinstruct_id]["DELIVER_IN_PERSON"] = 2;
+        string_id[l_shipinstruct_id]["NONE"] = 3;
+        string_id[l_shipinstruct_id]["TAKE_BACK_RETURN"] = 4;
 
-        string_id[p_container]["SM_CASE"] = 1;
-        string_id[p_container]["SM_BOX"] = 2;
-        string_id[p_container]["SM_PACK"] = 3;
-        string_id[p_container]["SM_PKG"] = 4;
-        string_id[p_container]["MED_BAG"] = 5;
-        string_id[p_container]["MED_BOX"] = 6;
-        string_id[p_container]["MED_PKG"] = 7;
-        string_id[p_container]["LG_CASE"] = 8;
-        string_id[p_container]["LG_BOX"] = 9;
-        string_id[p_container]["LG_PACK"] = 10;
-        string_id[p_container]["LG_PKG"] = 11;
+        string_id[p_container_id]["JUMBO_BAG"] = 1;
+        string_id[p_container_id]["JUMBO_BOX"] = 2;
+        string_id[p_container_id]["JUMBO_CAN"] = 3;
+        string_id[p_container_id]["JUMBO_CASE"] = 4;
+        string_id[p_container_id]["JUMBO_DRUM"] = 5;
+        string_id[p_container_id]["JUMBO_JAR"] = 6;
+        string_id[p_container_id]["JUMBO_PACK"] = 7;
+        string_id[p_container_id]["JUMBO_PKG"] = 8;
+        string_id[p_container_id]["LG_BAG"] = 9;
+        string_id[p_container_id]["LG_BOX"] = 10;
+        string_id[p_container_id]["LG_CAN"] = 11;
+        string_id[p_container_id]["LG_CASE"] = 12;
+        string_id[p_container_id]["LG_DRUM"] = 13;
+        string_id[p_container_id]["LG_JAR"] = 14;
+        string_id[p_container_id]["LG_PACK"] = 15;
+        string_id[p_container_id]["LG_PKG"] = 16;
+        string_id[p_container_id]["MED_BAG"] = 17;
+        string_id[p_container_id]["MED_BOX"] = 18;
+        string_id[p_container_id]["MED_CAN"] = 19;
+        string_id[p_container_id]["MED_CASE"] = 20;
+        string_id[p_container_id]["MED_DRUM"] = 21;
+        string_id[p_container_id]["MED_JAR"] = 22;
+        string_id[p_container_id]["MED_PACK"] = 23;
+        string_id[p_container_id]["MED_PKG"] = 24;
+        string_id[p_container_id]["SM_BAG"] = 25;
+        string_id[p_container_id]["SM_BOX"] = 26;
+        string_id[p_container_id]["SM_CAN"] = 27;
+        string_id[p_container_id]["SM_CASE"] = 28;
+        string_id[p_container_id]["SM_DRUM"] = 29;
+        string_id[p_container_id]["SM_JAR"] = 30;
+        string_id[p_container_id]["SM_PACK"] = 31;
+        string_id[p_container_id]["SM_PKG"] = 32;
+        string_id[p_container_id]["WRAP_BAG"] = 33;
+        string_id[p_container_id]["WRAP_BOX"] = 34;
+        string_id[p_container_id]["WRAP_CAN"] = 35;
+        string_id[p_container_id]["WRAP_CASE"] = 36;
+        string_id[p_container_id]["WRAP_DRUM"] = 37;
+        string_id[p_container_id]["WRAP_JAR"] = 38;
+        string_id[p_container_id]["WRAP_PACK"] = 39;
+        string_id[p_container_id]["WRAP_PKG"] = 40;
 
-        string_id[p_brand]["Brand#12"] = 1;
-        string_id[p_brand]["Brand#23"] = 2;
-        string_id[p_brand]["Brand#34"] = 3;
+        string_id[p_brand_id]["Brand#11"] = 1;
+        string_id[p_brand_id]["Brand#12"] = 2;
+        string_id[p_brand_id]["Brand#13"] = 3;
+        string_id[p_brand_id]["Brand#14"] = 4;
+        string_id[p_brand_id]["Brand#15"] = 5;
+        string_id[p_brand_id]["Brand#21"] = 6;
+        string_id[p_brand_id]["Brand#22"] = 7;
+        string_id[p_brand_id]["Brand#23"] = 8;
+        string_id[p_brand_id]["Brand#24"] = 9;
+        string_id[p_brand_id]["Brand#25"] = 10;
+        string_id[p_brand_id]["Brand#31"] = 11;
+        string_id[p_brand_id]["Brand#32"] = 12;
+        string_id[p_brand_id]["Brand#33"] = 13;
+        string_id[p_brand_id]["Brand#34"] = 14;
+        string_id[p_brand_id]["Brand#35"] = 15;
+        string_id[p_brand_id]["Brand#41"] = 16;
+        string_id[p_brand_id]["Brand#42"] = 17;
+        string_id[p_brand_id]["Brand#43"] = 18;
+        string_id[p_brand_id]["Brand#44"] = 19;
+        string_id[p_brand_id]["Brand#45"] = 20;
+        string_id[p_brand_id]["Brand#51"] = 21;
+        string_id[p_brand_id]["Brand#52"] = 22;
+        string_id[p_brand_id]["Brand#53"] = 23;
+        string_id[p_brand_id]["Brand#54"] = 24;
+        string_id[p_brand_id]["Brand#55"] = 25;
 
         set<Attribute> attributes;
 
@@ -190,7 +244,6 @@ int main(){
         HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
 
         joinNode.setLeftChild(&scanNode1);
-        tmp[1][0].push_back("MED_PACK");
         joinNode.setRightChild(&scanNode2);
 
         fprintf(pfile, "\n#include \"database_preparation.h\"\n"

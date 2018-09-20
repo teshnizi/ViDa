@@ -261,8 +261,10 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
                 auto ind = indent.c_str();
                 auto tablename = i->table_name.c_str();
                 fprintf(pfile, "%sHistogram %s_hist;\n"
-                               "%scopy_hist(&%s_hist, &%s_hist);\n",
+                               "%scopy_hist(&%s_hist, &%s_hist);\n"
+                               "%sdouble %s_ratio = %s_ratio;\n\n",
                         ind, new_name.c_str(),
+                        ind, new_name.c_str(), varname,
                         ind, new_name.c_str(), varname);
 
 //                fprintf(pfile, "%sint %s_bucket[BUCKET_COUNT];\n", indent.c_str(), new_name.c_str());
@@ -287,7 +289,7 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
 
         for (int i = 0; i < int_variables[k].size(); ++i) {
             if( int_variables[k][i].virtuality == hist_att) {
-                fprintf(pfile, "%sdouble %s_ratio = limit(%s_hist, %i, %i);\n",
+                fprintf(pfile, "%s%s_ratio *= limit(%s_hist, %i, %i);\n",
                        indent.c_str(), int_variables[k][i].name.c_str(), int_variables[k][i].name.c_str(),
                        int_ranges[k][i].first, int_ranges[k][i].second);
                 for (auto j = a->begin(); j != a->end(); ++j) {
@@ -365,7 +367,9 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
             if(i->virtuality == hist_att) {
                 auto varname = i->name.c_str();
                 auto ind = indent.c_str();
-                fprintf(pfile, "%scopy_hist(&%s_hist, &%s_hist);\n",
+                fprintf(pfile, "%scopy_hist(&%s_hist, &%s_hist);\n"
+                               "%s%s_ratio = %s_ratio;\n\n",
+                        ind, varname, new_name.c_str(),
                         ind, varname, new_name.c_str());
 
 //                fprintf(pfile, "%sfor (int i = 0 ; i < BUCKET_COUNT; i++)\n", indent.c_str());
@@ -398,23 +402,25 @@ void ScanNode::produce(set<Attribute> *a) {
             auto ind = indent.c_str();
             auto tablename = i->table_name.c_str();
             fprintf(pfile, "%sHistogram %s_hist;\n"
-                           "%s           %s_hist.minimum = default_histogram[%s][%s_id].minimum;\n"
-                           "%s           %s_hist.maximum = default_histogram[%s][%s_id].maximum;\n"
-                           "%s           %s_hist.bucket_count = default_histogram[%s][%s_id].bucket_count;\n"
-                           "%s           %s_hist.bucket_size = default_histogram[%s][%s_id].bucket_size;\n"
-                           "%s           %s_hist.bucket = (float*)malloc(%s_hist.bucket_count * sizeof(int));\n"
-                           "%s           for (int i = 0; i < %s_hist.bucket_count; ++i){\n"
-                           "%s               %s_hist.bucket[i] = default_histogram[%s][%s_id].bucket[i];\n"
-                           "%s           }\n\n",
+                           "%s%s_hist.minimum = default_histogram[%s][%s_id].minimum;\n"
+                           "%s%s_hist.maximum = default_histogram[%s][%s_id].maximum;\n"
+                           "%s%s_hist.bucket_count = default_histogram[%s][%s_id].bucket_count;\n"
+                           "%s%s_hist.bucket_size = default_histogram[%s][%s_id].bucket_size;\n"
+//                           "%s%s_hist.bucket = (float*)malloc(%s_hist.bucket_count * sizeof(int));\n"
+                           "%sfor (int i = 0; i < %s_hist.bucket_count; ++i){\n"
+                           "%s    %s_hist.bucket[i] = default_histogram[%s][%s_id].bucket[i];\n"
+                           "%s}\n"
+                           "%sfloat %s_ratio = 1.0;\n",
                     ind, varname,
                     ind, varname, tablename, varname,
                     ind, varname, tablename, varname,
                     ind, varname, tablename, varname,
                     ind, varname, tablename, varname,
-                    ind, varname, varname,
+//                    ind, varname, varname,
                     ind, varname,
                     ind, varname, tablename, varname,
-                    ind);
+                    ind,
+                    ind, varname);
 //            fprintf(pfile, "%sint %s_bucket[BUCKET_COUNT];\n", indent.c_str(), i->name.c_str());
 //            fprintf(pfile, "%sfor (int i = 0 ; i < BUCKET_COUNT; i++)\n", indent.c_str());
 //            fprintf(pfile, "%s    %s_bucket[i] = default_histogram[%s][%s_id].bucket[i];\n", indent.c_str(), i->name.c_str(),
@@ -441,7 +447,9 @@ void ScanNode::produce(set<Attribute> *a) {
 
         }
     } fprintf(pfile,"\n");
+
     parent->consume(a, this);
+
 }
 
 void ScanNode::consume(set<Attribute> *a, Node *source) {}
@@ -459,23 +467,25 @@ void HashScanNode::produce(set<Attribute> *a) {
             auto ind = indent.c_str();
             auto tablename = i->table_name.c_str();
             fprintf(pfile, "%sHistogram %s_hist;\n"
-                           "%s           %s_hist.minimum = default_histogram[%s][%s_id].minimum;\n"
-                           "%s           %s_hist.maximum = default_histogram[%s][%s_id].maximum;\n"
-                           "%s           %s_hist.bucket_count = default_histogram[%s][%s_id].bucket_count;\n"
-                           "%s           %s_hist.bucket_size = default_histogram[%s][%s_id].bucket_size;\n"
-                           "%s           %s_hist.bucket = (float*)malloc(%s_hist.bucket_count * sizeof(int));\n"
-                           "%s           for (int i = 0; i < %s_hist.bucket_count; ++i){\n"
-                           "%s               %s_hist.bucket[i] = default_histogram[%s][%s_id].bucket[i];\n"
-                           "%s           }\n\n",
+                           "%s%s_hist.minimum = default_histogram[%s][%s_id].minimum;\n"
+                           "%s%s_hist.maximum = default_histogram[%s][%s_id].maximum;\n"
+                           "%s%s_hist.bucket_count = default_histogram[%s][%s_id].bucket_count;\n"
+                           "%s%s_hist.bucket_size = default_histogram[%s][%s_id].bucket_size;\n"
+//                           "%s%s_hist.bucket = (float*)malloc(%s_hist.bucket_count * sizeof(int));\n"
+                           "%sfor (int i = 0; i < %s_hist.bucket_count; ++i){\n"
+                           "%s    %s_hist.bucket[i] = default_histogram[%s][%s_id].bucket[i];\n"
+                           "%s}\n"
+                           "%sfloat %s_ratio = 1.0;\n",
                     ind, varname,
                     ind, varname, tablename, varname,
                     ind, varname, tablename, varname,
                     ind, varname, tablename, varname,
                     ind, varname, tablename, varname,
-                    ind, varname, varname,
+//                    ind, varname, varname,
                     ind, varname,
                     ind, varname, tablename, varname,
-                    ind);
+                    ind,
+                    ind, varname);
 
 //            fprintf(pfile, "%sint %s_bucket[BUCKET_COUNT];\n", indent.c_str(), i->name.c_str());
 //            fprintf(pfile, "%sfor (int i = 0 ; i < default_buckets; i++)\n", indent.c_str());
@@ -502,6 +512,7 @@ void HashScanNode::produce(set<Attribute> *a) {
                 fprintf(pfile, "%sstring %s = string_table[%s][%s_id][%s_it];\n\n",indent.c_str(), i->name.c_str(), i->table_name.c_str(), i->name.c_str(), (i->table_name.c_str()));
         }
     } fprintf(pfile,"\n");
+
     parent->consume(a, this);
 }
 
@@ -536,6 +547,7 @@ void AggregateNode::consume(set<Attribute> *a, Node *source) {
     auto o1 = op1_name.c_str();
     auto o2 = op2_name.c_str();
 
+    cout << a->size() << endl;
     if (type == map_sum) {
         if (virtuality == hist_att) {
             if (op1.virtuality == hist_att && op2.virtuality == hist_att) {
@@ -694,10 +706,15 @@ void AggregateNode::consume(set<Attribute> *a, Node *source) {
             }
             if (op1.virtuality == data_att && op2.virtuality == data_att) {
                 fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
-                               "%s%s += %s * %s;\n",
+                               "%s%s += %s * %s",
                         in,
                         in, nm, o1, o2
                 );
+                for (auto at = a->begin(); at != a->end(); at++) {
+                    if (at->virtuality == hist_att){
+                        fprintf(pfile, " * %s_ratio", at->name.c_str());
+                    }
+                }fprintf(pfile, ";\n");
             }
         }
     }
@@ -720,6 +737,7 @@ void JoinNode::produce(set<Attribute> *a){
     this->leftChild->produce(&la);
 }
 
+
 void JoinNode::consume(set<Attribute> *a, Node *source) {
 
 //    cout << indent << "//JOIN\n";
@@ -730,6 +748,14 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
         this->rightChild->produce(&ra);
     }
 
+//    for (auto j = la.begin(); j != la.end() ; ++j) {
+//        a->insert(*j);
+//    }
+    for (auto j = ra.begin(); j != ra.end() ; ++j) {
+        a->insert(*j);
+    }
+
+    cout << a->size() << endl;
     fprintf(pfile,"%s//JOIN\n%s{\n", indent.c_str(), indent.c_str());
 
     indent += "\t";
@@ -740,45 +766,53 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
 
     if ( att1.virtuality == hist_att && att2.virtuality == hist_att) {
         fprintf(pfile, "%sdouble expected_left_joins = 0;\n"
-               "%sdouble expected_right_joins = 0;\n"
-               "%sdouble bs = (%s_hist.max - %s_hist.min)/%s_hist.bucket_count; //or (%s_hist.max - %s_hist.min)/BUCKET_SIZE\n "
-               "%sfor (int i = 0; i < %s_hist.bucket_count; i++){\n"
-               "%s\tdouble bucket_left_joins = %s_hist.bucket[i]/bs;\n"
-               "%s\tdouble bucket_right_joins = %s_hist.bucket[i]/bs;\n"
-               "%s\texpected_left_joins += bucket_left_joins;\n"
-               "%s\texpected_right_joins += bucket_right_joins;\n"
-               "%s\t%s_hist.bucket[i] *= bucket_left_joins;\n"
-               "%s\t%s_hist.bucket[i] *= bucket_right_joins;\n"
-               "%s}\n"
-               "%sexpected_left_joins /= %s_hist.bucket_count;\n"
-               "%sexpected_right_joins /= %s_hist.bucket_count;\n\n",
-               in,
-               in,
-               in, al, al, al, ar, ar,
-               in, al,
-               in, ar,
-               in, al,
-               in,
-               in,
-               in, al,
-               in, ar,
-               in,
-               in, al,
-               in, ar);
-        for (auto i = a->begin(); i != a->end(); ++i) {
-            if (i->table_name == att1.table_name) {
-                fprintf(pfile, "%sfor (int i = 0; i < BUCKET_COUNT; i++)\n"
-                       "%s\t%s_bucket[i] *= expected_left_joins;\n\n",
-                       in,
-                       in, i->name.c_str());
-            }
-            if (i->table_name == att2.table_name) {
-                fprintf(pfile, "%sfor (int i = 0; i < BUCKET_COUNT; i++)\n"
-                       "%s\t%s_bucket[i] *= expected_right_joins;\n\n",
-                       in,
-                       in, i->name.c_str());
-            }
-        }
+                       "%sdouble expected_right_joins = 0;\n"
+                       "%sdouble bs = %s_hist.bucket_count;\n "
+                       "%sfor (int i = 0; i < %s_hist.bucket_count; i++){\n"
+                       "%s\tdouble bucket_left_joins = %s_hist.bucket[i]/bs;\n"
+                       "%s\tdouble bucket_right_joins = %s_hist.bucket[i]/bs;\n"
+                       "%s\texpected_left_joins += bucket_left_joins;\n"
+                       "%s\texpected_right_joins += bucket_right_joins;\n"
+                       "%s\t%s_hist.bucket[i] *= bucket_left_joins;\n"
+                       "%s\t%s_hist.bucket[i] *= bucket_right_joins;\n"
+                       "%s}\n"
+                       "%sexpected_left_joins /= %s_hist.bucket_count;\n"
+                       "%sexpected_right_joins /= %s_hist.bucket_count;\n\n"
+                       "%s%s_ratio *= expected_left_joins;\n"
+                       "%s%s_ratio *= expected_right_joins;\n\n",
+//                       "%s%s_ratio *= expected_left_joins;\n"
+//                       "%s%s_ratio *= expected_right_joins;\n‌",
+                in,
+                in,
+                in, al,
+                in, al,
+                in, ar,
+                in, al,
+                in,
+                in,
+                in, al,
+                in, ar,
+                in,
+                in, al,
+                in, ar,
+                in, al,
+                in, ar);
+//                in, al,
+//                in, ar);
+//        for (auto i = a->begin(); i != a->end(); ++i) {
+//            if (i->table_name == att1.table_name) {
+//                fprintf(pfile, "%sfor (int i = 0; i < BUCKET_COUNT; i++)\n"
+//                       "%s\t%s_bucket[i] *= expected_left_joins;\n\n",
+//                       in,
+//                       in, i->name.c_str());
+//            }
+//            if (i->table_name == att2.table_name) {
+//                fprintf(pfile, "%sfor (int i = 0; i < BUCKET_COUNT; i++)\n"
+//                       "%s\t%s_bucket[i] *= expected_right_joins;\n\n",
+//                       in,
+//                       in, i->name.c_str());
+//            }
+//        }
     }
 
     if ((att1.virtuality == hist_att && att2.virtuality == data_att) ||
@@ -842,6 +876,8 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
     //this one is for join itself:
     indent = indent.substr(0, indent.size() - 1);
 //    cout << indent << "}\n";
+    parent->consume(a, this);
+
     fprintf(pfile,"%s}\n", indent.c_str());
 }
 

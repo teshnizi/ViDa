@@ -16,33 +16,33 @@ const int price_coefficient = 10;
 const int retailprice_coefficient = 100;
 
 enum lineitem{
-    l_orderkey = 0,
-    l_quantity,
-    l_price,
-    l_discount,
-    l_shipdate,
-    l_partkey,
-    l_suppkey,
-    l_linenumber,
-    l_tax,
-    l_returnflag,
-    l_linestatus,
-    l_commitdate,
-    l_receiptdate,
-    l_shipinstruct,
-    l_shipmode,
+    l_orderkey_id = 0,
+    l_quantity_id,
+    l_price_id,
+    l_discount_id,
+    l_shipdate_id,
+    l_partkey_id,
+    l_suppkey_id,
+    l_linenumber_id,
+    l_tax_id,
+    l_returnflag_id,
+    l_linestatus_id,
+    l_commitdate_id,
+    l_receiptdate_id,
+    l_shipinstruct_id,
+    l_shipmode_id,
 };
 
 enum part{
-    p_partkey= 0,
-    p_name,
-    p_mfgr,
-    p_brand,
-    p_type,
-    p_size,
-    p_container,
-    p_retailprice,
-    p_comment
+    p_partkey_id= 0,
+    p_name_id,
+    p_mfgr_id,
+    p_brand_id,
+    p_type_id,
+    p_size_id,
+    p_container_id,
+    p_retailprice_id,
+    p_comment_id
 };
 
 
@@ -84,15 +84,15 @@ int *int_attributes, int num_of_int_attributes, int *string_attributes, int num_
 
     while (getline(fin,line,'\n')) {
         istringstream iss(line);
-        iss >> int_tmp[l_orderkey] >> int_tmp[l_partkey] >> int_tmp[l_suppkey] >> int_tmp[l_linenumber] >> int_tmp[l_quantity] >> float_tmp[l_price] >>
-            float_tmp[l_discount] >> float_tmp[l_tax] >> char_tmp[l_returnflag] >> char_tmp[l_linestatus] >> int_tmp[l_shipdate] >>
-            int_tmp[l_commitdate] >> int_tmp[l_receiptdate] >> string_tmp[l_shipinstruct] >> string_tmp[l_shipmode];
+        iss >> int_tmp[l_orderkey_id] >> int_tmp[l_partkey_id] >> int_tmp[l_suppkey_id] >> int_tmp[l_linenumber_id] >> int_tmp[l_quantity_id] >> float_tmp[l_price_id] >>
+            float_tmp[l_discount_id] >> float_tmp[l_tax_id] >> char_tmp[l_returnflag_id] >> char_tmp[l_linestatus_id] >> int_tmp[l_shipdate_id] >>
+            int_tmp[l_commitdate_id] >> int_tmp[l_receiptdate_id] >> string_tmp[l_shipinstruct_id] >> string_tmp[l_shipmode_id];
 
-        int_tmp[l_discount] = discount_coefficient * float_tmp[l_discount];
-        int_tmp[l_tax] = tax_coefficient * float_tmp[l_tax];
-        int_tmp[l_price] = price_coefficient * float_tmp[l_price];
-        int_tmp[l_returnflag] = char_tmp[l_returnflag];
-        int_tmp[l_linestatus] = char_tmp[l_linestatus];
+        int_tmp[l_discount_id] = discount_coefficient * float_tmp[l_discount_id];
+        int_tmp[l_tax_id] = tax_coefficient * float_tmp[l_tax_id];
+        int_tmp[l_price_id] = price_coefficient * float_tmp[l_price_id];
+        int_tmp[l_returnflag_id] = char_tmp[l_returnflag_id];
+        int_tmp[l_linestatus_id] = char_tmp[l_linestatus_id];
 
         for (int i = 0; i < num_of_int_attributes; ++i)
             table_ints[int_attributes[i]].push_back(int_tmp[int_attributes[i]]);
@@ -112,9 +112,9 @@ void read_parts_from_file(vector<int> *table_ints, vector<string> *table_strings
 
     while (getline(fin,line,'\n')) {
         istringstream iss(line);
-        iss >> int_tmp[p_partkey] >> string_tmp[p_name] >> string_tmp[p_mfgr] >> string_tmp[p_brand] >> string_tmp[p_type] >> int_tmp[p_size] >>
-            string_tmp[p_container] >> float_tmp[p_retailprice] >> string_tmp[p_comment];
-        int_tmp[p_retailprice] = retailprice_coefficient * float_tmp[p_retailprice];
+        iss >> int_tmp[p_partkey_id] >> string_tmp[p_name_id] >> string_tmp[p_mfgr_id] >> string_tmp[p_brand_id] >> string_tmp[p_type_id] >> int_tmp[p_size_id] >>
+            string_tmp[p_container_id] >> float_tmp[p_retailprice_id] >> string_tmp[p_comment_id];
+        int_tmp[p_retailprice_id] = retailprice_coefficient * float_tmp[p_retailprice_id];
 
         for (int i = 0; i < num_of_int_attributes; ++i) {
             table_ints[int_attributes[i]].push_back(int_tmp[int_attributes[i]]);

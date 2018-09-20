@@ -56,8 +56,8 @@ int main(){
 //            if ( table[l_quantity][i] < 24)
 //                if ( (5) < table[l_discount][i] && table[l_discount][i] < (7) )
                 {
-                    cout << table[l_price][i] * table[l_discount][i] << endl;
-                    ans += table[l_price][i] * table[l_discount][i];
+                    cout << table[l_price_id][i] * table[l_discount_id][i] << endl;
+                    ans += table[l_price_id][i] * table[l_discount_id][i];
 //                    cout << ans << endl;
                     valid_num++;
                 }

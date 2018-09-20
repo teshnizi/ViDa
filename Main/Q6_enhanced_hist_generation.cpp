@@ -89,7 +89,7 @@ int main(int argc, char** argv)
             int x = (rand() % ranges[j]) + lower_indices[j];
             tmp[j] = table[j][x];
         }
-        ans += tmp[l_price] * tmp[l_discount];
+        ans += tmp[l_price_id] * tmp[l_discount_id];
     }
 
     cout<<"Total revenue: " << ans / 1000.0<<endl << "Accepted rows percentage: " << output_size/table_size * 100 <<endl;

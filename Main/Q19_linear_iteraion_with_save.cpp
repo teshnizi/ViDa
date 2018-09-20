@@ -17,10 +17,10 @@ int main(){
 
     cout<<"\nReading tables from file...\n";
 
-    int lineitem_int_attributes[] = {l_partkey, l_quantity, l_price, l_discount, l_tax};
-    int lineitem_string_attributes[] = {l_shipmode, l_shipinstruct};
-    int parts_int_attributes[] = {p_partkey, p_size};
-    int parts_string_attributes[] = {p_brand, p_container};
+    int lineitem_int_attributes[] = {l_partkey_id, l_quantity_id, l_price_id, l_discount_id, l_tax_id};
+    int lineitem_string_attributes[] = {l_shipmode_id, l_shipinstruct_id};
+    int parts_int_attributes[] = {p_partkey_id, p_size_id};
+    int parts_string_attributes[] = {p_brand_id, p_container_id};
     vector <int> lineitem_table_ints[20];
     vector <int> part_table_ints[10];
     vector <string> part_table_strings[10];
@@ -45,16 +45,16 @@ int main(){
 
     unordered_map <int, int> hash_table;
     for (int i = 0; i < part_table_size; ++i) {
-        int partkey = part_table_ints[p_partkey][i];
-        if(part_table_ints[p_size][i]>15)
+        int partkey = part_table_ints[p_partkey_id][i];
+        if(part_table_ints[p_size_id][i]>15)
             continue;
-        container = part_table_strings[p_container][i];
+        container = part_table_strings[p_container_id][i];
         if(
-                (part_table_strings[p_brand][i] == "Brand#12" && 1 < part_table_ints[p_size][i] && part_table_ints[p_size][i] < 5
+                (part_table_strings[p_brand_id][i] == "Brand#12" && 1 < part_table_ints[p_size_id][i] && part_table_ints[p_size_id][i] < 5
                 && (container == "SM_CASE" || container == "SM_BOX" || container == "SM_PACK" || container == "SM_PKG")) ||
-                (part_table_strings[p_brand][i] == "Brand#23" && 1 < part_table_ints[p_size][i] && part_table_ints[p_size][i] < 10
+                (part_table_strings[p_brand_id][i] == "Brand#23" && 1 < part_table_ints[p_size_id][i] && part_table_ints[p_size_id][i] < 10
                 && (container == "MED_BAG" || container == "MED_BOX" || container == "MED_PACK" || container == "MED_PKG")) ||
-                (part_table_strings[p_brand][i] == "Brand#34" && 1 < part_table_ints[p_size][i] && part_table_ints[p_size][i] < 15
+                (part_table_strings[p_brand_id][i] == "Brand#34" && 1 < part_table_ints[p_size_id][i] && part_table_ints[p_size_id][i] < 15
                 && (container == "LG_CASE" || container == "LG_BOX" || container == "LG_PACK" || container == "LG_PKG"))
                 )
         hash_table[partkey] = i;
@@ -86,16 +86,16 @@ int main(){
     int discount;
 
     for (int i = 0; i < lineitem_table_size; ++i) {
-        int p_index = hash_table[lineitem_table_ints[l_partkey][i]];
+        int p_index = hash_table[lineitem_table_ints[l_partkey_id][i]];
         if (p_index != part_table_size){
-            brand = part_table_strings[p_brand][p_index];
-            container = part_table_strings[p_container][p_index];
-            quantity = lineitem_table_ints[l_quantity][i];
-            size = part_table_ints[p_size][p_index];
-            shipmode = lineitem_table_strings[l_shipmode][i];
-            shipinstruct = lineitem_table_strings[l_shipinstruct][i];
-            price = lineitem_table_ints[l_price][i];
-            discount = lineitem_table_ints[l_discount][i];
+            brand = part_table_strings[p_brand_id][p_index];
+            container = part_table_strings[p_container_id][p_index];
+            quantity = lineitem_table_ints[l_quantity_id][i];
+            size = part_table_ints[p_size_id][p_index];
+            shipmode = lineitem_table_strings[l_shipmode_id][i];
+            shipinstruct = lineitem_table_strings[l_shipinstruct_id][i];
+            price = lineitem_table_ints[l_price_id][i];
+            discount = lineitem_table_ints[l_discount_id][i];
 
             if (
                     ((brand == "Brand#12") &&
