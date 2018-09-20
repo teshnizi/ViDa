@@ -243,6 +243,7 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
 //    }cout << endl;
 
 //    cout << indent << "//APPLYING THE CONDITIONS OF EVERY SUBCONDITION INSIDE SELECT NODE\n\n";
+//    cout << source->name << endl;
     fprintf(pfile,"%s//APPLYING THE CONDITIONS OF EVERY SUBCONDITION INSIDE SELECT NODE\n\n", indent.c_str());
     for (int k = 0; k < int_sub_conditions; ++k) {
 //        cout << indent << "{\n";
@@ -737,7 +738,6 @@ void JoinNode::produce(set<Attribute> *a){
     this->leftChild->produce(&la);
 }
 
-
 void JoinNode::consume(set<Attribute> *a, Node *source) {
 
 //    cout << indent << "//JOIN\n";
@@ -876,7 +876,7 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
     //this one is for join itself:
     indent = indent.substr(0, indent.size() - 1);
 //    cout << indent << "}\n";
-    parent->consume(a, this);
+//    parent->consume(a, this);
 
     fprintf(pfile,"%s}\n", indent.c_str());
 }
