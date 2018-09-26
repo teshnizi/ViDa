@@ -62,7 +62,7 @@ int main(){
         Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
         Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
         Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", hist_att, att_int, l_partkey_id);
+        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -262,8 +262,9 @@ int main(){
                        "        insert(p_partkey_id, int_table[part][p_partkey_id][i], i);\n"
                        "    }\n"
                        "\n"
-                       "    read_histogram_defaults_from_file(\"histograms.txt\");\n\n");
-        root.produce(&attributes);
+                       "    read_histogram_defaults_from_file(\"histograms.txt\");\n");
+        set<string> x;
+        root.produce(&attributes, &x);
 //        fprintf(pfile, "\n}\n");
     }
 

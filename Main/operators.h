@@ -100,8 +100,8 @@ public:
         this->name = name;
     }
 
-    virtual void produce(set<Attribute> *a){
-        this->child->produce(a);
+    virtual void produce(set<Attribute> *a, set<string> *fixed_tables) {
+        this->child->produce(a, fixed_tables);
         while(!indent.empty()) {
             indent = indent.substr(0, indent.size()-1);
 //            cout << indent << "}\n";
@@ -109,7 +109,7 @@ public:
         }
     };
 
-    virtual void consume(set<Attribute> *a, Node *source) {
+    virtual void consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) {
         return;
     }
     void set_child(Node* child){
@@ -126,8 +126,8 @@ public:
         this->parent = parent;
         parent->child = this;
     }
-    void produce(set<Attribute> *a) override;
-    void consume(set<Attribute> *a, Node *source) override;
+    void produce(set<Attribute> *a, set<string> *fixed_tables) override;
+    void consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) override;
 };
 
 class HashScanNode : public Node{
@@ -138,8 +138,8 @@ public:
         this->sourceAtt = sourceAtt;
         this->hashedAtt = hashedAtt;
     }
-    void produce(set<Attribute> *a) override;
-    void consume(set<Attribute> *a, Node *source) override;
+    void produce(set<Attribute> *a, set<string> *fixed_tables) override;
+    void consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) override;
 
 private:
     Attribute* sourceAtt;
@@ -164,8 +164,8 @@ public:
         this->parent = parent;
         this->parent->child = this;
     }
-    void produce(set<Attribute> *a) override;
-    void consume(set<Attribute> *a, Node *source) override;
+    void produce(set<Attribute> *a, set<string> *fixed_tables) override;
+    void consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) override;
 
 private:
     int int_sub_conditions;
@@ -187,8 +187,8 @@ public:
         this->op1 = op1;
         this->op2 = op2;
     }
-    void produce(set<Attribute> *a) override;
-    void consume(set<Attribute> *a, Node *source) override;
+    void produce(set<Attribute> *a, set<string> *fixed_tables) override;
+    void consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) override;
 
 private:
     int type = map_sum;
@@ -214,8 +214,8 @@ public:
         this->rightChild = node;
         this->rightChild->parent = this;
     }
-    void produce(set<Attribute> *a) override;
-    void consume(set<Attribute> *a, Node *source) override;
+    void produce(set<Attribute> *a, set<string> *fixed_tables) override;
+    void consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) override;
 
 private:
     Attribute att1 = Attribute("NULL", "NULL", att_int, data_att, 0);
@@ -228,30 +228,19 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void SelectNode::produce(set<Attribute> *a) {
-    this->child->produce(a);
+void SelectNode::produce(set<Attribute> *a, set<string> *fixed_tables) {
+    this->child->produce(a, fixed_tables);
 }
 
-void SelectNode::consume(set<Attribute> *a, Node *source) {
-//    fprintf(pfile, "%svector<int> %s_att[%i];\n", indent.c_str(), this->name.c_str(), int_sub_conditions);
-//    fprintf(pfile, "%srange<pair<int,int>> %s_range[%i];\n", indent.c_str(), this->name.c_str(), int_sub_conditions);
-//    for (int i = 0; i < int_sub_conditions; ++i) {
-//        for (int j = 0; j < int_variables[i].size(); ++j) {
-//            fprintf(pfile, "%s%s_att[%i].push_back(%s);\n", indent.c_str(), this->name.c_str(), i, int_variables[i][j].name.c_str());
-//            fprintf(pfile, "%s%s_range[%i].push_back(make_pair(%i,%i));\n", indent.c_str(), this->name.c_str(), i, int_ranges[i][j].first, int_ranges[i][j].second);
-//        }
-//    }cout << endl;
+void SelectNode::consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) {
 
-//    cout << indent << "//APPLYING THE CONDITIONS OF EVERY SUBCONDITION INSIDE SELECT NODE\n\n";
-//    cout << source->name << endl;
     fprintf(pfile,"%s//APPLYING THE CONDITIONS OF EVERY SUBCONDITION INSIDE SELECT NODE\n\n", indent.c_str());
     for (int k = 0; k < int_sub_conditions; ++k) {
-//        cout << indent << "{\n";
+
         fprintf(pfile,"%s{\n", indent.c_str());
         indent += "\t";
         brackets++;
 
-//        cout << indent << "//TAKING A COPY FROM EVERY ATTRIBUTE SO WE COULD RETRIEVE IT AFTER THIS SUBCONDITION EXECUTION\n\n";
         fprintf(pfile,"%s//TAKING A COPY FROM EVERY ATTRIBUTE SO WE COULD RETRIEVE IT AFTER THIS SUBCONDITION EXECUTION\n\n", indent.c_str());
         for (auto i = a->begin(); i != a->end(); i++) {
             string new_name = this->name + "_" + i->name;
@@ -265,17 +254,7 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
                                "%scopy_hist(&%s_hist, &%s_hist);\n"
                                "%sdouble %s_ratio = %s_ratio;\n\n",
                         ind, new_name.c_str(),
-                        ind, new_name.c_str(), varname,
                         ind, new_name.c_str(), varname);
-
-//                fprintf(pfile, "%sint %s_bucket[BUCKET_COUNT];\n", indent.c_str(), new_name.c_str());
-//                fprintf(pfile, "%sfor (int i = 0 ; i < BUCKET_COUNT; i++)\n", indent.c_str());
-//                fprintf(pfile, "%s    %s_bucket[i] = %s_bucket[i];\n", indent.c_str(), new_name.c_str(), i->name.c_str());
-//                fprintf(pfile, "%sint %s_min = %s_min;\n", indent.c_str(), new_name.c_str(), i->name.c_str());
-//                fprintf(pfile, "%sint %s_max = %s_max;\n", indent.c_str(), new_name.c_str(), i->name.c_str());
-//                fprintf(pfile, "%sint %s_table_size = table_size[%s];\n\n", indent.c_str(),
-//                       (this->name + "_" + i->table_name).c_str(), i->table_name.c_str());
-
             }
             if ( i->virtuality == data_att){
                 string tp = "int";
@@ -350,7 +329,7 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
         }
 //        cout << endl << endl;
         fprintf(pfile,"\n\n");
-        parent->consume(a, this);
+        parent->consume(a, this, fixed_tables);
 
         //one remaining bracket is for condition itself
         while (brackets > 1) {
@@ -391,7 +370,7 @@ void SelectNode::consume(set<Attribute> *a, Node *source) {
     }
 }
 
-void ScanNode::produce(set<Attribute> *a) {
+void ScanNode::produce(set<Attribute> *a, set<string> *fixed_tables) {
     fprintf(pfile,"%s//SCANNING ATTRIBUTES(TAKING A COPY FROM DEFAULTS)\n\n", indent.c_str());
     fprintf(pfile,"%s{\n", indent.c_str());
 
@@ -435,6 +414,7 @@ void ScanNode::produce(set<Attribute> *a) {
         if ( i->virtuality == data_att){
             if(tables.find(i->table_name) == tables.end()) {
                 tables.insert(i->table_name);
+                fixed_tables->insert(i->table_name);
                 fprintf(pfile,"%s", indent.c_str());
                 fprintf(pfile, "for (int %s_it = 0; %s_it < table_size[%s]; %s_it++)\n", i->table_name.c_str(),
                        i->table_name.c_str(), i->table_name.c_str(), i->table_name.c_str());
@@ -447,15 +427,17 @@ void ScanNode::produce(set<Attribute> *a) {
                 fprintf(pfile, "%sstring %s = string_table[%s][%s_id][%s_it];\n\n",indent.c_str(), i->name.c_str(), i->table_name.c_str(), i->name.c_str(), (i->table_name.c_str()));
 
         }
-    } fprintf(pfile,"\n");
+    }
+    fprintf(pfile,"%sdouble lineitem_table_size = table_size[lineitem], part_table_size = table_size[part];\n\n", indent.c_str());
 
-    parent->consume(a, this);
+    parent->consume(a, this, fixed_tables);
 
 }
 
-void ScanNode::consume(set<Attribute> *a, Node *source) {}
 
-void HashScanNode::produce(set<Attribute> *a) {
+void ScanNode::consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) {}
+
+void HashScanNode::produce(set<Attribute> *a, set<string> *fixed_tables) {
 
     fprintf(pfile,"%s//UNHASHING KEY ATTRIBUTE AND FINDING OTHER ATTRIBUTES IN THAT TABLE(TAKING A COPY FROM DEFAULTS)\n\n", indent.c_str());
     fprintf(pfile,"%s{\n", indent.c_str());
@@ -504,6 +486,7 @@ void HashScanNode::produce(set<Attribute> *a) {
                 fprintf(pfile,"%s", indent.c_str());
                 fprintf(pfile, "int %s_it = search(%s_id, %s)->data;\n", i->table_name.c_str(),
                         hashedAtt->name.c_str(), sourceAtt->name.c_str());
+                fixed_tables->insert(hashedAtt->table_name);
                 fprintf(pfile,"%s{\n", indent.c_str());
                 indent += "\t";
             }
@@ -514,14 +497,15 @@ void HashScanNode::produce(set<Attribute> *a) {
         }
     } fprintf(pfile,"\n");
 
-    parent->consume(a, this);
+    parent->consume(a, this, fixed_tables);
 }
 
-void HashScanNode::consume(set<Attribute> *a, Node *source){
+
+void HashScanNode::consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) {
 
 }
 
-void AggregateNode::produce(set<Attribute> *a) {
+void AggregateNode::produce(set<Attribute> *a, set<string> *fixed_tables) {
     a->insert(op1);
     a->insert(op2);
     auto in = indent.c_str();
@@ -535,12 +519,12 @@ void AggregateNode::produce(set<Attribute> *a) {
                in, nm);
     }
     if ( virtuality == data_att){
-        fprintf(pfile, "%slong %s = 0;\n", in, nm);
+        fprintf(pfile, "%sdouble %s = 0;\n", in, nm);
     }
-    this->child->produce(a);
+    this->child->produce(a, fixed_tables);
 }
 
-void AggregateNode::consume(set<Attribute> *a, Node *source) {
+void AggregateNode::consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) {
     string op1_name = op1.name;
     string op2_name = op2.name;
     auto in = indent.c_str();
@@ -711,18 +695,24 @@ void AggregateNode::consume(set<Attribute> *a, Node *source) {
                         in,
                         in, nm, o1, o2
                 );
+                set<string> printed_table_ratios;
                 for (auto at = a->begin(); at != a->end(); at++) {
                     if (at->virtuality == hist_att){
                         fprintf(pfile, " * %s_ratio", at->name.c_str());
+                    }
+                    string tn = at->table_name;
+                    if (fixed_tables->find(tn) == fixed_tables->end() && printed_table_ratios.find(tn) == printed_table_ratios.end()){
+                        printed_table_ratios.insert(tn);
+                        fprintf(pfile, " * %s_table_size", tn.c_str());
                     }
                 }fprintf(pfile, ";\n");
             }
         }
     }
-    parent->consume(a, this);
+    parent->consume(a, this, fixed_tables);
 }
 
-void JoinNode::produce(set<Attribute> *a){
+void JoinNode::produce(set<Attribute> *a, set<string> *fixed_tables) {
     a->insert(att1);
     a->insert(att2);
     la.clear();
@@ -735,17 +725,17 @@ void JoinNode::produce(set<Attribute> *a){
         else
             ra.insert(*i);
     }
-    this->leftChild->produce(&la);
+    this->leftChild->produce(&la, fixed_tables);
 }
 
-void JoinNode::consume(set<Attribute> *a, Node *source) {
+void JoinNode::consume(set<Attribute> *a, Node *source, set<string> *fixed_tables) {
 
 //    cout << indent << "//JOIN\n";
 //    cout << indent << "{\n";
     if (source == this->rightChild)
         return;
     if ( source == this->leftChild ){
-        this->rightChild->produce(&ra);
+        this->rightChild->produce(&ra, fixed_tables);
     }
 
 //    for (auto j = la.begin(); j != la.end() ; ++j) {
@@ -763,11 +753,13 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
     auto nm = name.c_str();
     auto al = att1.name.c_str();
     auto ar = att2.name.c_str();
+    auto altn = att1.table_name.c_str();
+    auto artn = att2.table_name.c_str();
 
     if ( att1.virtuality == hist_att && att2.virtuality == hist_att) {
         fprintf(pfile, "%sdouble expected_left_joins = 0;\n"
                        "%sdouble expected_right_joins = 0;\n"
-                       "%sdouble bs = %s_hist.bucket_count;\n "
+                       "%sdouble bs = %s_hist.bucket_size;\n "
                        "%sfor (int i = 0; i < %s_hist.bucket_count; i++){\n"
                        "%s\tdouble bucket_left_joins = %s_hist.bucket[i]/bs;\n"
                        "%s\tdouble bucket_right_joins = %s_hist.bucket[i]/bs;\n"
@@ -778,8 +770,8 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
                        "%s}\n"
                        "%sexpected_left_joins /= %s_hist.bucket_count;\n"
                        "%sexpected_right_joins /= %s_hist.bucket_count;\n\n"
-                       "%s%s_ratio *= expected_left_joins;\n"
-                       "%s%s_ratio *= expected_right_joins;\n\n",
+                       "%s%s_table_size *= expected_left_joins / left_total;\n"
+                       "%s%s_table_size *= expected_right_joins / right_total;\n\n",
 //                       "%s%s_ratio *= expected_left_joins;\n"
 //                       "%s%s_ratio *= expected_right_joins;\n‌",
                 in,
@@ -821,28 +813,28 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
             string tt = al;
             al = ar;
             ar = tt.c_str();
+            string gg = altn;
+            altn = artn;
+            artn = gg.c_str();
         }
+
         fprintf(pfile, "%sdouble ratio = 1;\n"
-               "%sif(%s < %s_min || %s_max < %s)ratio = 0;\n"
+               "%sif(%s < %s_hist.minimum || %s_hist.maximum < %s)ratio = 0;\n"
                "%selse{\n"
-               "%s\tint count = 0;\n"
-               "%s\tint bs = (%s_max - %s_min)/BUCKET_COUNT;\n"
-               "%s\tfor (int i = 0; i < BUCKET_COUNT; ++i) {\n"
-               "%s\t\tcount += %s_bucket[i];\n"
-               "%s\t}\n"
-               "%s\tdouble buck = (double)(%s - %s_min)/bs;\n"
-               "%s\tratio = (double)%s_bucket[buck] / (double)count;\n\n"
+               "%s\tint bs = %s_hist.bucket_size, total = 0;\n"
+               "%s\tfor ( int i = 0 ; i < %s_hist.bucket_count; i++)\n"
+               "%s\t    total += %s_hist.bucket[i];\n"
+               "%s\tint buck = (double)(%s - %s_hist.minimum)/bs;\n"
+               "%s\t%s_table_size *= (double)%s_hist.bucket[buck]/bs/total;\n\n"
                "%s}\n",
                in,
                in, ar, al, al, ar,
                in,
-               in,
-               in, al, al,
-               in,
                in, al,
-               in,
+               in, al,
+               in, al,
                in, ar, al,
-               in, al,
+               in, altn, al,
                in
         );
         for (auto i = a->begin(); i != a->end(); ++i) {
@@ -866,7 +858,7 @@ void JoinNode::consume(set<Attribute> *a, Node *source) {
         fprintf(pfile, "%sif (%s == %s){\n\n", in, al, ar);
         indent += "\t";
     }
-    parent->consume(a, this);
+    parent->consume(a, this, fixed_tables);
 //    cout << endl;
     fprintf(pfile,"\n");
     if (bracket) {
