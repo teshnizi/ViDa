@@ -12,7 +12,7 @@
 using namespace std;
 
 
-enum Table{
+enum attribute_ids{
     l_orderkey = 0,
     l_quantity,
     l_price,

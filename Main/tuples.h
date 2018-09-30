@@ -29,8 +29,8 @@ enum lineitem{
     l_linestatus_id,
     l_commitdate_id,
     l_receiptdate_id,
-    l_shipinstruct_id,
     l_shipmode_id,
+    l_shipinstruct_id,
 };
 
 enum part{
@@ -61,6 +61,7 @@ string days_to_date(int days){
         days -= month_days_acc[month-1];
     return to_string(year + 1900) + "-" + to_string(month + 1) + "-" + to_string(days + 1);
 }
+
 int date_to_days(string date){
     replace(date.begin(), date.end(), '-', ' ');
     istringstream iss(date);

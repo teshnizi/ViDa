@@ -62,7 +62,7 @@ int main(){
         Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
         Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
         Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
+        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", hist_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -157,6 +157,10 @@ int main(){
         attributes.insert(l_price_att);
         attributes.insert(l_partkey_att);
 
+        set<Table> tables;
+        tables.insert(Table("lineitem"));
+        tables.insert(Table("part"));
+
         //////////////////////////////////////////////////////////////////////////////
         strings[0].push_back(p_container_att);
         tmp[0][0].push_back("SM_CASE");
@@ -237,8 +241,8 @@ int main(){
         Attribute join_att1 = l_partkey_att;
         Attribute join_att2 = p_partkey_att;
 
-        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
-        SelectNode selectNode = SelectNode("Select", &aggregateNode, var, 3, ranges, 3, strings, valid_strings);
+//        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
+        SelectNode selectNode = SelectNode("Select", &root, var, 3, ranges, 3, strings, valid_strings);
         JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
         ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
         HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
@@ -264,8 +268,8 @@ int main(){
                        "\n"
                        "    read_histogram_defaults_from_file(\"histograms.txt\");\n");
         set<string> x;
-        root.produce(&attributes, &x);
-//        fprintf(pfile, "\n}\n");
+        root.produce(&attributes, tables, &x);
+        fprintf(pfile, "\n}\n");
     }
 
     catch (const char* massage){

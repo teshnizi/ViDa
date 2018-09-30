@@ -21,7 +21,7 @@ const int tax_coefficient = 100;
 const int price_coefficient = 10;
 const int retailprice_coefficient = 100;
 
-enum Table{
+enum attribute_ids{
     l_orderkey_id = 0,
     l_quantity_id,
     l_price_id,
