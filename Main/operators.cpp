@@ -55,14 +55,14 @@ int main(){
 
         Attribute p_container_att = Attribute("part", "p_container", hist_att, att_string, p_container_id);
         Attribute p_brand_att = Attribute("part", "p_brand", hist_att, att_string, p_brand_id);
-        Attribute p_partkey_att = Attribute("part", "p_partkey", hist_att, att_int, p_partkey_id);
+        Attribute p_partkey_att = Attribute("part", "p_partkey", data_att, att_int, p_partkey_id);
         Attribute p_size_att = Attribute("part", "p_size", hist_att, att_int, p_size_id);
-        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", data_att, att_string, l_shipmode_id);
-        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", data_att, att_string, l_shipinstruct_id);
-        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
+        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", hist_att, att_string, l_shipmode_id);
+        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", hist_att, att_string, l_shipinstruct_id);
+        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", hist_att, att_int, l_quantity_id);
         Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
         Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", hist_att, att_int, l_partkey_id);
+        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -183,9 +183,9 @@ int main(){
         valid_strings[0].push_back(tmp[0][3]);
 
         var[0].push_back(l_quantity_att);
-        ranges[0].push_back(make_pair(0,12));
+        ranges[0].push_back(make_pair(1,12));
         var[0].push_back(p_size_att);
-        ranges[0].push_back(make_pair(1,5));
+        ranges[0].push_back(make_pair(2,5));
         //////////////////////////////////////////////////////////////////////////////
 
         strings[1].push_back(p_container_att);
@@ -208,9 +208,9 @@ int main(){
         valid_strings[1].push_back(tmp[1][3]);
 
         var[1].push_back(l_quantity_att);
-        ranges[1].push_back(make_pair(9,21));
+        ranges[1].push_back(make_pair(10,21));
         var[1].push_back(p_size_att);
-        ranges[1].push_back(make_pair(1,10));
+        ranges[1].push_back(make_pair(2,10));
         //////////////////////////////////////////////////////////////////////////////
         strings[2].push_back(p_container_att);
         tmp[2][0].push_back("LG_CASE");
@@ -233,16 +233,16 @@ int main(){
         valid_strings[2].push_back(tmp[2][3]);
 
         var[2].push_back(l_quantity_att);
-        ranges[2].push_back(make_pair(19,31));
+        ranges[2].push_back(make_pair(20,31));
         var[2].push_back(p_size_att);
-        ranges[2].push_back(make_pair(1,15));
+        ranges[2].push_back(make_pair(2,15));
         //////////////////////////////////////////////////////////////////////////////
 
         Attribute join_att1 = l_partkey_att;
         Attribute join_att2 = p_partkey_att;
 
-//        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
-        SelectNode selectNode = SelectNode("Select", &root, var, 3, ranges, 3, strings, valid_strings);
+        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
+        SelectNode selectNode = SelectNode("Select", &aggregateNode, var, 3, ranges, 3, strings, valid_strings);
         JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
         ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
         HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);

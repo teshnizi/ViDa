@@ -29,8 +29,8 @@ enum lineitem{
     l_linestatus_id,
     l_commitdate_id,
     l_receiptdate_id,
-    l_shipmode_id,
     l_shipinstruct_id,
+    l_shipmode_id
 };
 
 enum part{

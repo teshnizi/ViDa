@@ -60,7 +60,6 @@ struct Attribute{
     }
 };
 
-
 struct Table{
     Table(string name){
         this->name = name;
@@ -73,7 +72,6 @@ struct Table{
         return (this->name == a.name);
     }
 };
-
 
 vector<string> expression_parser(string expression){
     replace(expression.begin(), expression.end(),'*', ' ');
@@ -300,7 +298,7 @@ void SelectNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set
                        int_ranges[k][i].first, int_ranges[k][i].second);
             }
             if ( int_variables[k][i].virtuality == data_att) {
-                fprintf(pfile, "%sif(%i < %s && %s < %i)\n%s{\n",indent.c_str(), int_ranges[k][i].first, int_variables[k][i].name.c_str(), int_variables[k][i].name.c_str(), int_ranges[k][i].second, indent.c_str());
+                fprintf(pfile, "%sif(%i <= %s && %s < %i)\n%s{\n",indent.c_str(), int_ranges[k][i].first, int_variables[k][i].name.c_str(), int_variables[k][i].name.c_str(), int_ranges[k][i].second, indent.c_str());
                 indent += "\t";
                 brackets++;
             }
@@ -428,7 +426,18 @@ void ScanNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_
 
         }
     }
-    fprintf(pfile,"%sdouble lineitem_table_size = table_size[lineitem], part_table_size = table_size[part];\n\n", indent.c_str());
+
+    for ( auto i = tables.begin(); i != tables.end(); i++){
+        if ( fixed_tables->find(i->name) == fixed_tables->end() ){
+//            cout << i->name << endl;
+            fprintf(pfile,"%sdouble %s_table_size = table_size[%s];\n", indent.c_str(), i->name.c_str(), i->name.c_str());
+        } else {
+            fprintf(pfile,"%sdouble %s_table_size = 1;\n", indent.c_str(), i->name.c_str());
+        }
+    }
+//    fprintf(pfile,"%sdouble %s_table_size = table_size[lineitem], part_table_size = table_size[part];\n\n", indent.c_str());
+
+
 
     parent->consume(a, tables, this, fixed_tables);
 //    fprintf(pfile, " asdf\n");
@@ -489,6 +498,14 @@ void HashScanNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fi
         }
     } fprintf(pfile,"\n");
 
+    for ( auto i = tables.begin(); i != tables.end(); i++){
+        if ( fixed_tables->find(i->name) == fixed_tables->end() ){
+            fprintf(pfile,"%sdouble %s_table_size = table_size[%s];\n", indent.c_str(), i->name.c_str(), i->name.c_str());
+        } else {
+            fprintf(pfile,"%sdouble %s_table_size = 1;\n", indent.c_str(), i->name.c_str());
+        }
+    }
+
     parent->consume(a, tables, this, fixed_tables);
 
     while (brackets-- > 0){
@@ -530,19 +547,21 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
         if (virtuality == hist_att) {
             if (op1.virtuality == hist_att && op2.virtuality == hist_att) {
                 fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
-                       "%s%s_min = %s_min + %s_min;\n"
-                       "%s%s_max = %s_max + %s_max;\n"
-                       "%sint bs1 = (%s_max - %s_min)/BUCKET_COUNT;\n"
-                       "%sint bs2 = (%s_max - %s_min)/BUCKET_COUNT;\n"
-                       "%sint bs3 = (%s_max - %s_min)/BUCKET_COUNT;\n"
+                       "%s%s_hist.minimum = %s_hist.minimum + %s_hist.minimum;\n"
+                       "%s%s_hist.minimum = %s_hist.minimum + %s_hist.minimum;\n"
+                       "%s%s_hist.maximum = %s_hist.maximum + %s_hist.maximum;\n"
+                       "%sint bs1 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
+                       "%sint bs2 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
+                       "%sint bs3 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
                        "%sfor (int i = 0; i < BUCKET_COUNT; ++i) {\n"
                        "%s     for (int j = 0; j < BUCKET_COUNT; ++j) {\n"
-                       "%s          int val = (%s_min + i * bs1 + bs1/2) +\n"
-                       "%s               (%s_min + j * bs2 + bs2/2);\n"
-                       "%s          %s_hist.bucket[(val - %s_min)/bs3] += %s_hist.bucket[i] + %s_hist.bucket[j];\n"
+                       "%s          int val = (%s_hist.minimum + i * bs1 + bs1/2) +\n"
+                       "%s               (%s_hist.minimum + j * bs2 + bs2/2);\n"
+                       "%s          %s_hist.bucket[(val - %s_hist.minimum)/bs3] += %s_hist.bucket[i] + %s_hist.bucket[j];\n"
                        "%s     }\n"
                        "%s}\n\n",
                        in,
+                       in, nm, o1, o2,
                        in, nm, o1, o2,
                        in, nm, o1, o2,
                        in, o1, o1,
@@ -565,10 +584,10 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                     o2 = tt.c_str();
                 }
                 fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
-                       "%s%s_min = %s_min + %s;\n"
-                       "%s%s_max = %s_max + %s;\n"
+                       "%s%s_hist.minimum = %s_hist.minimum + %s;\n"
+                       "%s%s_hist.maximum = %s_hist.maximum + %s;\n"
                        "%sfor (int i = 0; i < BUCKET_COUNT; ++i)\n"
-                       "%s\t%s_bucket[i] = %s_bucket[i];\n",
+                       "%s\t%s_hist.bucket[i] = %s_hist.bucket[i];\n",
                        in,
                        in, nm, o1, o2,
                        in, nm, o1, o2,
@@ -592,17 +611,17 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                        "%sint mean2 = 0;\n"
                        "%sint count1 = 0;\n"
                        "%sint count2 = 0;\n"
-                       "%sint bs1 = (%s_max - %s_min)/BUCKET_COUNT;\n"
-                       "%sint bs2 = (%s_max - %s_min)/BUCKET_COUNT;\n"
+                       "%sint bs1 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
+                       "%sint bs2 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
                        "%sfor (int i = 0; i < BUCKET_COUNT; ++i) {\n"
-                       "%s\tcount1 += %s_bucket[i];\n"
-                       "%s\tcount2 += %s_bucket[i];\n"
-                       "%s\tmean1 += %s_bucket[i] * (%s_min + bs1 * i + bs1/2);\n"
-                       "%s\tmean2 += %s_bucket[i] * (%s_min + bs2 * i + bs2/2);\n"
+                       "%s\tcount1 += %s_hist.bucket[i];\n"
+                       "%s\tcount2 += %s_hist.bucket[i];\n"
+                       "%s\tmean1 += %s_hist.bucket[i] * (%s_hist.minimum + bs1 * i + bs1/2);\n"
+                       "%s\tmean2 += %s_hist.bucket[i] * (%s_hist.minimum + bs2 * i + bs2/2);\n"
                        "%s\t}\n"
                        "%smean1 /= count1;\n"
                        "%smean2 /= count2;\n"
-                       "%s%s = mean1 + mean2;\n"
+                       "%s%s += mean1 + mean2;\n"
                        "%s}\n\n",
                        in,
                        in,
@@ -633,10 +652,10 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                 fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
                        "%sint mean = 0;\n"
                        "%sint count = 0;\n"
-                       "%sint bs = (%s_max - %s_min)/BUCKET_COUNT;\n"
+                       "%sint bs = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
                        "%sfor (int i = 0; i < BUCKET_COUNT; ++i) {\n"
-                       "%s\tcount += %s_bucket[i];\n"
-                       "%s\tmean += %s_bucket[i] * (%s_min + bs * i + bs/2);\n"
+                       "%s\tcount += %s_hist.bucket[i];\n"
+                       "%s\tmean += %s_hist.bucket[i] * (%s_hist.minimum + bs * i + bs/2);\n"
                        "%s\t}\n"
                        "%smean /= count;\n"
                        "%s%s += mean + %s;\n",
@@ -677,6 +696,7 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
             }
         }
         if (virtuality == data_att) {
+            cout << op1.virtuality << " " << op2.virtuality << endl;
             if (op1.virtuality == hist_att && op2.virtuality == hist_att) {
             }
             if ((op1.virtuality == hist_att && op2.virtuality == data_att) ||
@@ -688,16 +708,12 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                         in,
                         in, nm, o1, o2
                 );
-                set<string> printed_table_ratios;
-                for (auto at = a->begin(); at != a->end(); at++) {
-                    if (at->virtuality == hist_att){
-                        fprintf(pfile, " * %s_ratio", at->name.c_str());
+
+                for (auto at = tables.begin(); at != tables.end(); at++) {
+                    if (fixed_tables->find(at->name) == fixed_tables->end()){
+                        fprintf(pfile,"%sdouble lineitem_table_size = table_size[lineitem], part_table_size = table_size[part];\n\n", indent.c_str());
                     }
-                    string tn = at->table_name;
-                    if (fixed_tables->find(tn) == fixed_tables->end() && printed_table_ratios.find(tn) == printed_table_ratios.end()){
-                        printed_table_ratios.insert(tn);
-                        fprintf(pfile, " * %s_table_size", tn.c_str());
-                    }
+                    fprintf(pfile, " * %s_table_size", at->name.c_str());
                 }fprintf(pfile, ";\n");
             }
         }
@@ -750,7 +766,41 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
     auto altn = att1.table_name.c_str();
     auto artn = att2.table_name.c_str();
 
+    for (auto i = tables.begin(); i != tables.end(); ++i) {
+        string new_name = this->name + "_" + i->name;
+        fprintf(pfile, "%sint %s_table_size = %s_table_size;\n",
+                indent.c_str(), new_name.c_str(), i->name.c_str());
+    }
+
+    fprintf(pfile,"\n");
+
+    {
+        auto i = &att1;
+        string new_name = this->name + "_" + i->name;
+        if (i->virtuality == hist_att) {
+            auto varname = i->name.c_str();
+            auto ind = indent.c_str();
+            auto tablename = i->table_name.c_str();
+            fprintf(pfile, "%sHistogram %s_hist;\n"
+                           "%scopy_hist(&%s_hist, &%s_hist);\n\n",
+                    ind, new_name.c_str(),
+                    ind, new_name.c_str(), varname);
+        }
+        i = &att2;
+        new_name = this->name + "_" + i->name;
+        if (i->virtuality == hist_att) {
+            auto varname = i->name.c_str();
+            auto ind = indent.c_str();
+            auto tablename = i->table_name.c_str();
+            fprintf(pfile, "%sHistogram %s_hist;\n"
+                           "%scopy_hist(&%s_hist, &%s_hist);\n\n",
+                    ind, new_name.c_str(),
+                    ind, new_name.c_str(), varname);
+        }
+    }
+
     if ( att1.virtuality == hist_att && att2.virtuality == hist_att) {
+
         fprintf(pfile, "%sdouble expected_left_joins = 0;\n"
                        "%sdouble expected_right_joins = 0;\n"
                        "%sdouble bs = %s_hist.bucket_size;\n "
@@ -835,6 +885,39 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
     }
     //this one is for join itself:
     indent = indent.substr(0, indent.size() - 1);
+    for (auto i = tables.begin(); i != tables.end(); ++i) {
+        string new_name = this->name + "_" + i->name;
+        fprintf(pfile, "%s%s_table_size= %s_table_size;\n",
+                indent.c_str(), i->name.c_str(), new_name.c_str());
+    }
+
+    fprintf(pfile,"\n");
+
+
+    {
+        auto i = &att1;
+        string new_name = this->name + "_" + i->name;
+        if(i->virtuality == hist_att) {
+            auto varname = i->name.c_str();
+            auto ind = indent.c_str();
+            fprintf(pfile, "%scopy_hist(&%s_hist, &%s_hist);\n",
+//                               "%s%s_ratio = %s_ratio;\n\n",
+                    ind, varname, new_name.c_str()
+//                        ind, varname, new_name.c_str()
+            );
+        }
+        i = &att2;
+        new_name = this->name + "_" + i->name;
+        if(i->virtuality == hist_att) {
+            auto varname = i->name.c_str();
+            auto ind = indent.c_str();
+            fprintf(pfile, "%scopy_hist(&%s_hist, &%s_hist);\n",
+//                               "%s%s_ratio = %s_ratio;\n\n",
+                    ind, varname, new_name.c_str()
+//                        ind, varname, new_name.c_str()
+            );
+        }
+    }
     fprintf(pfile,"%s}\n", indent.c_str());
 }
 
