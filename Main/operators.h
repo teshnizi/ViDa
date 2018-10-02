@@ -35,6 +35,8 @@ const int condition_max_subconditions = 30;
 
 map <string, int> string_id[ENUM_COUNT];
 
+vector <string> extra_ratios;
+
 struct Attribute{
     Attribute(string table_name, string name, int virtuality, int type, int id){
         this->name = name;
@@ -550,11 +552,11 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                        "%s%s_hist.minimum = %s_hist.minimum + %s_hist.minimum;\n"
                        "%s%s_hist.minimum = %s_hist.minimum + %s_hist.minimum;\n"
                        "%s%s_hist.maximum = %s_hist.maximum + %s_hist.maximum;\n"
-                       "%sint bs1 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
-                       "%sint bs2 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
-                       "%sint bs3 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
-                       "%sfor (int i = 0; i < BUCKET_COUNT; ++i) {\n"
-                       "%s     for (int j = 0; j < BUCKET_COUNT; ++j) {\n"
+                       "%sint bs1 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                       "%sint bs2 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                       "%sint bs3 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                       "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
+                       "%s     for (int j = 0; j < %s_hist.bucket_count; ++j) {\n"
                        "%s          int val = (%s_hist.minimum + i * bs1 + bs1/2) +\n"
                        "%s               (%s_hist.minimum + j * bs2 + bs2/2);\n"
                        "%s          %s_hist.bucket[(val - %s_hist.minimum)/bs3] += %s_hist.bucket[i] + %s_hist.bucket[j];\n"
@@ -564,11 +566,11 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                        in, nm, o1, o2,
                        in, nm, o1, o2,
                        in, nm, o1, o2,
-                       in, o1, o1,
-                       in, o2, o2,
-                       in, nm, nm,
-                       in,
-                       in,
+                       in, o1, o1, o1,
+                       in, o2, o2, o2,
+                       in, nm, nm, nm,
+                       in, o1,
+                       in, o2,
                        in, o1,
                        in, o2,
                        in, nm, nm, o1, o2,
@@ -611,9 +613,9 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                        "%sint mean2 = 0;\n"
                        "%sint count1 = 0;\n"
                        "%sint count2 = 0;\n"
-                       "%sint bs1 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
-                       "%sint bs2 = (%s_hist.maximum - %s_hist.minimum)/BUCKET_COUNT;\n"
-                       "%sfor (int i = 0; i < BUCKET_COUNT; ++i) {\n"
+                       "%sint bs1 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                       "%sint bs2 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                       "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
                        "%s\tcount1 += %s_hist.bucket[i];\n"
                        "%s\tcount2 += %s_hist.bucket[i];\n"
                        "%s\tmean1 += %s_hist.bucket[i] * (%s_hist.minimum + bs1 * i + bs1/2);\n"
@@ -628,9 +630,9 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                        in,
                        in,
                        in,
-                       in, o1, o1,
-                       in, o2, o2,
-                       in,
+                       in, o1, o1, o1,
+                       in, o2, o2, o2,
+                       in, o1,
                        in, o1,
                        in, o2,
                        in, o1, o1,
@@ -692,15 +694,146 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                 (op2.virtuality == hist_att && op1.virtuality == data_att)) {
             }
             if( op1.virtuality == data_att && op2.virtuality == data_att){
-                fprintf(pfile, "%sERROR CALCULATING MAP EXPRESSION. CAN NOT CALCULATE A HIST FROM 2 NUMBERS\n\n");
+                fprintf(pfile, "%sERROR CALCULATING MAP EXPRESSION. CAN NOT CALCULATE A HISTOGRAM FROM 2 NUMBERS\n\n");
             }
         }
         if (virtuality == data_att) {
-            cout << op1.virtuality << " " << op2.virtuality << endl;
+//            cout << op1.virtuality << " " << op2.virtuality << endl;
             if (op1.virtuality == hist_att && op2.virtuality == hist_att) {
+//                fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
+//                               "%sdouble mean1 = 0;\n"
+//                               "%sdouble mean2 = 0;\n"
+//                               "%sdouble count1 = 0;\n"
+//                               "%sdouble count2 = 0;\n"
+//                               "%sdouble bs1 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+//                               "%sdouble bs2 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+//                               "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
+//                               "%s\tcount1 += %s_hist.bucket[i];\n"
+//                               "%s\tmean1 += %s_hist.bucket[i] * (%s_hist.minimum + bs1 * i + bs1/2);\n"
+//                               "%s\t}\n"
+//                               "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
+//                               "%s\tcount2 += %s_hist.bucket[i];\n"
+//                               "%s\tmean2 += %s_hist.bucket[i] * (%s_hist.minimum + bs2 * i + bs2/2);\n"
+//                               "%s\t}\n"
+//                               "%smean1 /= count1;\n"
+//                               "%smean2 /= count2;\n"
+//                               "%s%s += mean1 * mean2;\n\n",
+//                        in,
+//                        in,
+//                        in,
+//                        in,
+//                        in,
+//                        in, o1, o1, o1,
+//                        in, o2, o2, o2,
+//                        in, o1,
+//                        in, o1,
+//                        in, o1, o1,
+//                        in,
+//                        in, o2,
+//                        in, o2,
+//                        in, o2, o2,
+//                        in,
+//                        in,
+//                        in,
+//                        in, nm
+//                );
+
+                fprintf(pfile,
+                "%sdouble val1 = 0;\n"
+                "%sdouble val2 = 0;\n"
+                "%sdouble count1 = 0;\n"
+                "%sdouble count2 = 0;\n"
+                "%sdouble summation = 0;\n"
+                "%sdouble bs1 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                "%sdouble bs2 = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
+                "%s    count1 += %s_hist.bucket[i];\n"
+                "%s}\n"
+                "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
+                "%s    count2 += %s_hist.bucket[i];\n"
+                "%s}\n"
+                "%sdouble mlt = count1 * count2;\n"
+
+                "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
+                "%s\t\tfor (int j = 0; j < %s_hist.bucket_count; ++j) {\n"
+                "    %s\t\tval1 = %s_hist.bucket[i] * (%s_hist.minimum + bs1 * i + bs1/2);\n"
+                "    %s\t\tval2 = %s_hist.bucket[j] * (%s_hist.minimum + bs2 * j + bs2/2);\n"
+                "    %s\t\tsummation += (val1 * val2) / mlt;\n"
+                "%s\t}\n"
+                "%s}\n"
+                "%s%s += summation",
+                    in,
+                    in,
+                    in,
+                    in,
+                    in,
+                    in, o1, o1, o1,
+                    in, o2, o2, o2,
+                    in, o1,
+                    in, o1,
+                    in,
+                    in, o2,
+                    in, o2,
+                    in,
+                    in,
+
+                    in, o1,
+                    in, o2,
+
+                    in, o1, o1,
+                    in, o2, o2,
+                    in,
+                    in,
+                    in,
+                    in, nm);
+                for (auto at = tables.begin(); at != tables.end(); at++) {
+                    fprintf(pfile, " * %s_table_size", at->name.c_str());
+                }
+                for (int i = 0; i < extra_ratios.size(); ++i) {
+                    fprintf(pfile, " * %s_ratio", extra_ratios[i].c_str());
+                }
+                fprintf(pfile, ";\n");
             }
             if ((op1.virtuality == hist_att && op2.virtuality == data_att) ||
                 (op2.virtuality == hist_att && op1.virtuality == data_att)) {
+                if ( op1.virtuality == data_att){
+                    string tt = o1;
+                    o1 = o2;
+                    o2 = tt.c_str();
+                }
+                fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
+                               "%sdouble mean = 0;\n"
+                               "%sdouble count = 0;\n"
+                               "%sdouble bs = (%s_hist.maximum - %s_hist.minimum)/%s_hist.bucket_count;\n"
+                               "%sfor (int i = 0; i < %s_hist.bucket_count; ++i) {\n"
+                               "%s\tcount += %s_hist.bucket[i];\n"
+                               "%s\tmean += %s_hist.bucket[i] * (%s_hist.minimum + bs * i + bs/2);\n"
+                               "%s\t}\n"
+                               "%smean /= count;\n"
+                               "%s%s += mean * %s",
+                        in,
+                        in,
+                        in,
+                        in, o1, o1, o1,
+                        in, o1,
+                        in, o1,
+                        in, o1, o1,
+                        in,
+                        in,
+                        in, nm, o2
+                );
+                for (auto at = tables.begin(); at != tables.end(); at++) {
+                    fprintf(pfile, " * %s_table_size", at->name.c_str());
+                }
+                for (int i = 0; i < extra_ratios.size(); ++i) {
+                    fprintf(pfile, " * %s_ratio", extra_ratios[i].c_str());
+                }
+                fprintf(pfile, ";\n");
+                if ( op1.virtuality == data_att){
+                    string tt = o1;
+                    o1 = o2;
+                    o2 = tt.c_str();
+                }
             }
             if (op1.virtuality == data_att && op2.virtuality == data_att) {
                 fprintf(pfile, "%s//CALCULATING MAP EXPRESSION\n\n"
@@ -710,11 +843,18 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
                 );
 
                 for (auto at = tables.begin(); at != tables.end(); at++) {
-                    if (fixed_tables->find(at->name) == fixed_tables->end()){
-                        fprintf(pfile,"%sdouble lineitem_table_size = table_size[lineitem], part_table_size = table_size[part];\n\n", indent.c_str());
-                    }
                     fprintf(pfile, " * %s_table_size", at->name.c_str());
-                }fprintf(pfile, ";\n");
+                }
+                for (int i = 0; i < extra_ratios.size(); ++i) {
+                    fprintf(pfile, " * %s_ratio", extra_ratios[i].c_str());
+                }
+
+//                for (auto at = tables.begin(); at != tables.end(); at++) {
+//                    if(fixed_tables->find(at->name) == fixed_tables->end())
+//                        fprintf(pfile, " * table_size[%s]", at->name.c_str());
+//                }
+
+                fprintf(pfile, ";\n");
             }
         }
     }
@@ -755,6 +895,8 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
     for (auto j = left_tables.begin(); j != left_tables.end(); j++){
         tables.insert(*j);
     }
+
+    int er_size = extra_ratios.size();
 
     fprintf(pfile,"%s//JOIN\n%s{\n", indent.c_str(), indent.c_str());
 
@@ -814,8 +956,8 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
                        "%s}\n"
                        "%sexpected_left_joins /= %s_hist.bucket_count;\n"
                        "%sexpected_right_joins /= %s_hist.bucket_count;\n\n"
-                       "%s%s_table_size *= expected_left_joins;\n"
-                       "%s%s_table_size *= expected_right_joins;\n\n",
+                       "%sdouble %s_ratio = expected_left_joins / %s_table_size ;\n\n",
+//                       "%s%s_table_size *= expected_right_joins;\n\n",
                 in,
                 in,
                 in, al,
@@ -829,8 +971,8 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
                 in,
                 in, al,
                 in, ar,
-                in, altn,
-                in, artn);
+                in, this->name.c_str(), artn);
+        extra_ratios.push_back(this->name);
     }
 
     if ((att1.virtuality == hist_att && att2.virtuality == data_att) ||
@@ -844,25 +986,25 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
             artn = gg.c_str();
         }
 
-        fprintf(pfile, "%sdouble ratio = 1;\n"
-               "%sif(%s < %s_hist.minimum || %s_hist.maximum < %s)\t%s_table_size = 0;\n"
-               "%selse{\n"
+        fprintf(pfile,
+               "%sdouble %s_ratio = 0;\n"
+               "%sif(%s_hist.minimum <= %s && %s <= %s_hist.maximum){\n"
                "%s\tint bs = %s_hist.bucket_size, total = 0;\n"
                "%s\tfor ( int i = 0 ; i < %s_hist.bucket_count; i++)\n"
                "%s\t    total += %s_hist.bucket[i];\n"
                "%s\tint buck = (double)(%s - %s_hist.minimum)/bs;\n"
-               "%s\t%s_table_size *= (double)%s_hist.bucket[buck]/bs/total;\n\n"
-               "%s}\n",
-               in,
-               in, ar, al, al, ar, altn,
-               in,
+               "%s\t%s_ratio = (double)%s_hist.bucket[buck]/bs/total;\n"
+               "%s}\n\n",
+               in, this->name.c_str(),
+               in, al, ar, ar, al,
                in, al,
                in, al,
                in, al,
                in, ar, al,
-               in, altn, al,
+               in, this->name.c_str(), al,
                in
         );
+        extra_ratios.push_back(this->name);
         if (att1.virtuality == data_att) {
             string tt = al;
             al = ar;
@@ -876,7 +1018,10 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
         fprintf(pfile, "%sif (%s == %s){\n\n", in, al, ar);
         indent += "\t";
     }
+
     parent->consume(a, tables, this, fixed_tables);
+
+    while (extra_ratios.size() > er_size) extra_ratios.pop_back();
 
     fprintf(pfile,"\n");
     if (bracket) {

@@ -53,16 +53,16 @@ int main(){
 
         vector<string> tmp[3][4];
 
-        Attribute p_container_att = Attribute("part", "p_container", hist_att, att_string, p_container_id);
-        Attribute p_brand_att = Attribute("part", "p_brand", hist_att, att_string, p_brand_id);
+        Attribute p_container_att = Attribute("part", "p_container", data_att, att_string, p_container_id);
+        Attribute p_brand_att = Attribute("part", "p_brand", data_att, att_string, p_brand_id);
         Attribute p_partkey_att = Attribute("part", "p_partkey", data_att, att_int, p_partkey_id);
-        Attribute p_size_att = Attribute("part", "p_size", hist_att, att_int, p_size_id);
+        Attribute p_size_att = Attribute("part", "p_size", data_att, att_int, p_size_id);
         Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", hist_att, att_string, l_shipmode_id);
         Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", hist_att, att_string, l_shipinstruct_id);
         Attribute l_quantity_att = Attribute("lineitem", "l_quantity", hist_att, att_int, l_quantity_id);
-        Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
-        Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
+        Attribute l_discount_att = Attribute("lineitem", "l_discount", hist_att, att_int, l_discount_id);
+        Attribute l_price_att = Attribute("lineitem", "l_price", hist_att, att_int, l_price_id);
+        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", hist_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -241,11 +241,14 @@ int main(){
         Attribute join_att1 = l_partkey_att;
         Attribute join_att2 = p_partkey_att;
 
-        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_price_att, l_discount_att);
+        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_discount_att, l_price_att);
         SelectNode selectNode = SelectNode("Select", &aggregateNode, var, 3, ranges, 3, strings, valid_strings);
         JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
+
         ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
-        HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
+
+        ScanNode scanNode2 = ScanNode("ScanP", &joinNode);
+//        HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
 
         joinNode.setLeftChild(&scanNode1);
         joinNode.setRightChild(&scanNode2);
@@ -269,10 +272,11 @@ int main(){
                        "    read_histogram_defaults_from_file(\"histograms.txt\");\n");
         set<string> x;
         root.produce(&attributes, tables, &x);
-        fprintf(pfile, "\n}\n");
+        fprintf(pfile, "\ncout << Revenue << endl;\n}\n");
     }
 
     catch (const char* massage){
         cerr << massage << endl;
     }
 }
+

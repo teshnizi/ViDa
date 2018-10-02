@@ -85,6 +85,7 @@ int main(){
         table[l_price].push_back(int_tmp[l_price]);
         table[l_partkey].push_back(int_tmp[l_partkey]);
         table[l_quantity].push_back(int_tmp[l_quantity]);
+
     }
     fin.close();
     fin.open("edited_part.tbl");

@@ -7,14 +7,14 @@
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_simple_random" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_sampling" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="file_editor" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_mixes" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="string_gen" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_histogram" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="find_hists" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="operators" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="tmp" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_LIWS" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_LIWOS" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_histogram" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_mixes" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -23,12 +23,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="277878c6-042e-4265-b27a-76c2908c086e" name="Default" comment="">
+    <list default="true" id="277878c6-042e-4265-b27a-76c2908c086e" name="Default" comment="Lots of minor bugs - are hopefully! - fixed. Seems to be working for all of conditions now.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/find_histograms.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/find_histograms.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operators.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/operators.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operators.h" beforeDir="false" afterPath="$PROJECT_DIR$/operators.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tuples.h" beforeDir="false" afterPath="$PROJECT_DIR$/tuples.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -47,8 +46,8 @@
       <file leaf-file-name="operators.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/operators.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="57" column="73" selection-start-line="57" selection-start-column="73" selection-end-line="57" selection-end-column="73" />
+            <state relative-caret-position="335">
+              <caret line="265" column="67" selection-start-line="265" selection-start-column="67" selection-end-line="265" selection-end-column="67" />
             </state>
           </provider>
         </entry>
@@ -56,8 +55,8 @@
       <file leaf-file-name="find_histograms.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/find_histograms.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1113">
-              <caret line="186" column="45" selection-start-line="186" selection-start-column="45" selection-end-line="186" selection-end-column="45" />
+            <state relative-caret-position="22">
+              <caret line="86" column="8" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="8" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -68,7 +67,7 @@
       <file leaf-file-name="Q19_linear_iteraion_with_save.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1795">
+            <state relative-caret-position="2596">
               <caret line="118" column="19" selection-start-line="118" selection-start-column="19" selection-end-line="118" selection-end-column="19" />
               <folding>
                 <element signature="e#43#62#0" expanded="true" />
@@ -100,8 +99,8 @@
       <file leaf-file-name="operators.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/operators.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="300" column="53" selection-start-line="300" selection-start-column="53" selection-end-line="300" selection-end-column="53" />
+            <state relative-caret-position="299">
+              <caret line="996" column="22" selection-start-line="996" selection-start-column="22" selection-end-line="996" selection-end-column="22" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#173#239#1" />
@@ -109,12 +108,6 @@
                 <element signature="e#288#338#1" />
                 <element signature="e#486#1172#1" />
                 <element signature="e#7092#7236#0" />
-                <element signature="e#12929#16113#0" />
-                <element signature="e#15958#18875#0" />
-                <element signature="e#18987#19561#0" />
-                <element signature="e#19563#27791#0" />
-                <element signature="e#27820#28394#0" />
-                <element signature="e#28396#34819#0" />
               </folding>
             </state>
           </provider>
@@ -132,7 +125,7 @@
       <file leaf-file-name="tuples.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tuples.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
+            <state relative-caret-position="682">
               <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
               <folding>
                 <element signature="e#43#61#0" expanded="true" />
@@ -163,13 +156,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>scanned_tab</find>
-      <find>expect</find>
-      <find>expe</find>
-      <find>count +=</find>
-      <find>consume</find>
-      <find>set&lt;string&gt;</find>
-      <find>fixed_tabels</find>
       <find>fixed_tables</find>
       <find>set&lt;string&gt;()</find>
       <find>consume(a,</find>
@@ -193,6 +179,13 @@
       <find>printed_ta</find>
       <find>aggrega</find>
       <find>fixed_tables-&gt;find(</find>
+      <find>lineitem_tab</find>
+      <find>+=</find>
+      <find>bucket_count</find>
+      <find>BUCKET_COUNT</find>
+      <find>%s_table_size</find>
+      <find>* %s_table_</find>
+      <find>extra</find>
     </findStrings>
     <replaceStrings>
       <replace>double</replace>
@@ -402,7 +395,8 @@
       <workItem from="1538246521846" duration="6913000" />
       <workItem from="1538280115800" duration="98000" />
       <workItem from="1538326050470" duration="11357000" />
-      <workItem from="1538370016475" duration="9656000" />
+      <workItem from="1538370016475" duration="11534000" />
+      <workItem from="1538413533941" duration="13002000" />
     </task>
     <task id="LOCAL-00001" summary="week 5 tasks.">
       <created>1534097850194</created>
@@ -537,11 +531,18 @@
       <option name="project" value="LOCAL" />
       <updated>1538280190868</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="elaborated and checked histogram limitation borders.">
+      <created>1538394193280</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1538394193280</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="438885000" />
+    <option name="totallyTimeSpent" value="453765000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -556,16 +557,16 @@
     <frame x="67" y="27" width="1853" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6786207" visible="true" weight="0.12513661" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6786787" visible="true" weight="0.12513661" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32922733" />
-      <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.895082" weight="0.25419933" />
+      <window_info active="true" anchor="bottom" id="Messages" order="7" sideWeight="0.895082" visible="true" weight="0.25419933" />
       <window_info anchor="bottom" id="CMake" order="11" sideWeight="0.49945354" weight="0.33034715" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5038251" side_tool="true" weight="0.27099663" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.20380738" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.8497268" visible="true" weight="0.1881299" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8497268" weight="0.1881299" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32922733" />
-      <window_info id="Favorites" order="2" sideWeight="0.3213793" side_tool="true" visible="true" weight="0.12513661" />
+      <window_info id="Favorites" order="2" sideWeight="0.3213213" side_tool="true" visible="true" weight="0.12513661" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49617487" weight="0.2900336" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -603,7 +604,9 @@
     <MESSAGE value="hist joins tested." />
     <MESSAGE value="before removing attribute_ratios" />
     <MESSAGE value="ratios unified in Join, Scan and Select Nodes." />
-    <option name="LAST_COMMIT_MESSAGE" value="ratios unified in Join, Scan and Select Nodes." />
+    <MESSAGE value="elaborated and checked histogram limitation borders." />
+    <MESSAGE value="Lots of minor bugs - are hopefully! - fixed. Seems to be working for all of conditions now." />
+    <option name="LAST_COMMIT_MESSAGE" value="Lots of minor bugs - are hopefully! - fixed. Seems to be working for all of conditions now." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -909,16 +912,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/string_generator.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tuples.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
+        <state relative-caret-position="682">
           <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
           <folding>
             <element signature="e#43#61#0" expanded="true" />
@@ -928,7 +924,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1795">
+        <state relative-caret-position="2596">
           <caret line="118" column="19" selection-start-line="118" selection-start-column="19" selection-end-line="118" selection-end-column="19" />
           <folding>
             <element signature="e#43#62#0" expanded="true" />
@@ -936,10 +932,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/string_generator.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/find_histograms.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="86" column="8" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/operators.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="300" column="53" selection-start-line="300" selection-start-column="53" selection-end-line="300" selection-end-column="53" />
+        <state relative-caret-position="299">
+          <caret line="996" column="22" selection-start-line="996" selection-start-column="22" selection-end-line="996" selection-end-column="22" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#173#239#1" />
@@ -947,30 +960,14 @@
             <element signature="e#288#338#1" />
             <element signature="e#486#1172#1" />
             <element signature="e#7092#7236#0" />
-            <element signature="e#12929#16113#0" />
-            <element signature="e#15958#18875#0" />
-            <element signature="e#18987#19561#0" />
-            <element signature="e#19563#27791#0" />
-            <element signature="e#27820#28394#0" />
-            <element signature="e#28396#34819#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/find_histograms.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1113">
-          <caret line="186" column="45" selection-start-line="186" selection-start-column="45" selection-end-line="186" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/operators.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="57" column="73" selection-start-line="57" selection-start-column="73" selection-end-line="57" selection-end-column="73" />
+        <state relative-caret-position="335">
+          <caret line="265" column="67" selection-start-line="265" selection-start-column="67" selection-end-line="265" selection-end-column="67" />
         </state>
       </provider>
     </entry>
