@@ -114,7 +114,7 @@ public:
     }
     virtual string get_type(){};
     virtual string run(){};
-
+    virtual set<Attribute>* scan_atts(){};
 protected:
     ExpressionNode* left;
     ExpressionNode* right;
@@ -142,6 +142,20 @@ public:
         }
         return left->get_type() + "_" + right->get_type() + "_" + func_name + "_" + this->get_type()
                + "(" + left->run() + ", " + right->run() + ")";
+    }
+
+    set<Attribute>* scan_atts(){
+        cout << "AA";
+        set<Attribute>* s1 = left->scan_atts();
+        set<Attribute>* s2 = right->scan_atts();
+        set<Attribute>* ret;
+        for (auto i = s1->begin(); i != s1->end() ; ++i) {
+            ret->insert(*i);
+        }
+        for (auto i = s2->begin(); i != s2->end() ; ++i) {
+            ret->insert(*i);
+        }
+        return ret;
     }
 private:
     bool is_unary;
@@ -172,6 +186,13 @@ public:
             return att->name;
         else
             return numeric;
+    }
+
+    set<Attribute>* scan_atts(){
+        set<Attribute>* s;
+        if(!has_att)
+            s->insert(*att);
+        return s;
     }
 private:
     bool has_att = false;

@@ -30,6 +30,7 @@ void preprocess(){
 
 
 int main(){
+    cout << " ASDFFDFGGWE";
     try {
         preprocess();
         prep("HELLO.cpp");
@@ -241,7 +242,14 @@ int main(){
         Attribute join_att1 = l_partkey_att;
         Attribute join_att2 = p_partkey_att;
 
-        AggregateNode aggregateNode = AggregateNode("Revenue", &root, map_mult, data_att, l_discount_att, l_price_att);
+
+        OperandNode opd1("1");
+        OperandNode opd2(&l_discount_att);
+        OperatorNode opr1(&opd1, &opd2, false, "sub", false);
+        OperandNode opd3(&l_price_att);
+        OperatorNode opr2(&opd3, &opr1, false, "mult", false);
+
+        AggregateNode aggregateNode = AggregateNode("Revenue", &root, agg_sum, data_att, &opr2);
         SelectNode selectNode = SelectNode("Select", &aggregateNode, var, 3, ranges, 3, strings, valid_strings);
         JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
 
@@ -274,11 +282,7 @@ int main(){
         root.produce(&attributes, tables, &x);
         fprintf(pfile, "\ncout << Revenue << endl;\n}\n");
 
-        OperandNode opd1("1");
-        OperandNode opd2(&l_discount_att);
-        OperatorNode opr1(&opd1, &opd2, false, "sub", false);
-        OperandNode opd3(&l_price_att);
-        OperatorNode opr2(&opd3, &opr1, false, "mult", false);
+
 
         cout << opr2.run();
     }
