@@ -6,6 +6,7 @@
 #include <set>
 #include "statistics.h"
 #include <map>
+#include "expressions.h"
 
 using namespace std;
 
@@ -15,20 +16,9 @@ enum aggregation_type{
     agg_mean
 };
 
-
 enum map_type{
     map_sum,
     map_mult
-};
-
-enum attribute_type{
-    att_int,
-    att_string
-};
-
-enum attribute_virtuality{
-    data_att,
-    hist_att
 };
 
 const int condition_max_subconditions = 30;
@@ -36,31 +26,6 @@ const int condition_max_subconditions = 30;
 map <string, int> string_id[ENUM_COUNT];
 
 vector <string> extra_ratios;
-
-struct Attribute{
-    Attribute(string table_name, string name, int virtuality, int type, int id){
-        this->name = name;
-        this->table_name = table_name;
-        this->type = type;
-        this->virtuality = virtuality;
-        this->id = id;
-    }
-    string name;
-    string table_name;
-    int type;
-    int virtuality;
-    int id;
-
-    bool operator<(const Attribute& a) const{
-        if(this->table_name == a.table_name){
-            return this->name < a.name;
-        }
-        return this->table_name < a.table_name;
-    }
-    bool operator==(const Attribute& a) const{
-        return (this->table_name == a.table_name) && (this->table_name == a.table_name);
-    }
-};
 
 struct Table{
     Table(string name){
@@ -295,7 +260,7 @@ void SelectNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set
 
         for (int i = 0; i < int_variables[k].size(); ++i) {
             if( int_variables[k][i].virtuality == hist_att) {
-                fprintf(pfile, "%s%s_table_size *= limit(%s_hist, %i, %i);\n",
+                fprintf(pfile, "%s%s_table_size *= limit(&%s_hist, %i, %i);\n",
                        indent.c_str(), int_variables[k][i].table_name.c_str(), int_variables[k][i].name.c_str(),
                        int_ranges[k][i].first, int_ranges[k][i].second);
             }
@@ -313,15 +278,16 @@ void SelectNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set
 
         for (int i = 0; i < string_variables[k].size(); ++i) {
             if (string_variables[k][i].virtuality == hist_att) {
-                fprintf(pfile, "%sbool %s_valids[BUCKET_COUNT] = {0};\n", indent.c_str(),
-                       string_variables[k][i].name.c_str());
+//                fprintf(pfile, "%sbool %s_valids[BUCKET_COUNT] = {0};\n", indent.c_str(),
+//                       string_variables[k][i].name.c_str());
                 for (int l = 0; l < valid_strings[k][i].size(); ++l) {
-                    fprintf(pfile, "%s%s_valids[%i] = 1;\n", indent.c_str(), string_variables[k][i].name.c_str(),
-                           string_id[string_variables[k][i].id][valid_strings[k][i][l].c_str()]);
+//                    fprintf(pfile, "%s%s_valids[%i] = 1;\n", indent.c_str(), string_variables[k][i].name.c_str(),
+//                           string_id[string_variables[k][i].id][valid_strings[k][i][l].c_str()]);
+                    fprintf(pfile, "%s%s_table_size *= string_limit(&%s_hist, %i);\n",
+                            indent.c_str(), string_variables[k][i].table_name.c_str(),
+                            string_variables[k][i].name.c_str(),
+                            string_id[string_variables[k][i].id][valid_strings[k][i][l].c_str()]);
                 }
-                fprintf(pfile, "%s%s_table_size *= string_limit(%s_hist, %s_valids);\n",
-                       indent.c_str(), string_variables[k][i].table_name.c_str(), string_variables[k][i].name.c_str(),
-                       string_variables[k][i].name.c_str());
             }
             if ( string_variables[k][i].virtuality == data_att) {
                 fprintf(pfile,"%sif(\n",indent.c_str());

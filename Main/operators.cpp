@@ -35,10 +35,10 @@ int main(){
         prep("HELLO.cpp");
         read_lineitem_from_file("edited_lineitem.tbl", table_ints, table_strings, lineitem_ints, lineitem_strings);
         lineitem_table_size = table_ints[lineitem_ints[0]].size();
-        for (int i = 0; i < ENUM_COUNT; ++i) {
-            if (table_ints[i].size() > 0)
-                hist_ints[i] = Histogram(&table_ints[i], 40);
-        }
+//        for (int i = 0; i < ENUM_COUNT; ++i) {
+//            if (table_ints[i].size() > 0)
+//                hist_ints[i] = Histogram(&table_ints[i], 40);
+//        }
 
         Node root = Node("Root");
         indent = "\t";
@@ -60,7 +60,7 @@ int main(){
         Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", hist_att, att_string, l_shipmode_id);
         Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", hist_att, att_string, l_shipinstruct_id);
         Attribute l_quantity_att = Attribute("lineitem", "l_quantity", hist_att, att_int, l_quantity_id);
-        Attribute l_discount_att = Attribute("lineitem", "l_discount", hist_att, att_int, l_discount_id);
+        Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
         Attribute l_price_att = Attribute("lineitem", "l_price", hist_att, att_int, l_price_id);
         Attribute l_partkey_att = Attribute("lineitem", "l_partkey", hist_att, att_int, l_partkey_id);
 
@@ -273,6 +273,14 @@ int main(){
         set<string> x;
         root.produce(&attributes, tables, &x);
         fprintf(pfile, "\ncout << Revenue << endl;\n}\n");
+
+        OperandNode opd1("1");
+        OperandNode opd2(&l_discount_att);
+        OperatorNode opr1(&opd1, &opd2, false, "sub", false);
+        OperandNode opd3(&l_price_att);
+        OperatorNode opr2(&opd3, &opr1, false, "mult", false);
+
+        cout << opr2.run();
     }
 
     catch (const char* massage){
