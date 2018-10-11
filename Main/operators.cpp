@@ -62,7 +62,7 @@ int main(){
         Attribute l_quantity_att = Attribute("lineitem", "l_quantity", hist_att, att_int, l_quantity_id);
         Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
         Attribute l_price_att = Attribute("lineitem", "l_price", hist_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", hist_att, att_int, l_partkey_id);
+        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -247,8 +247,8 @@ int main(){
 
         ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
 
-        ScanNode scanNode2 = ScanNode("ScanP", &joinNode);
-//        HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
+//        ScanNode scanNode2 = ScanNode("ScanP", &joinNode);
+        HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
 
         joinNode.setLeftChild(&scanNode1);
         joinNode.setRightChild(&scanNode2);
@@ -266,7 +266,7 @@ int main(){
                        "    int part_sa[] = {p_container_id, p_brand_id};\n"
                        "    read_part_from_file(\"edited_part.tbl\", part_ia, 2, part_sa, 2);\n"
                        "    for (int i = 0; i < table_size[part]; ++i) {\n"
-                       "        insert(p_partkey_id, int_table[part][p_partkey_id][i], i);\n"
+                       "        insert(p_partkey_hash_id, int_table[part][p_partkey_id][i], i);\n"
                        "    }\n"
                        "\n"
                        "    read_histogram_defaults_from_file(\"histograms.txt\");\n");

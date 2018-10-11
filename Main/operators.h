@@ -79,7 +79,10 @@ public:
     Node(string name){
         this->name = name;
     }
-
+    Node(string name, Node* parent) : Node(name){
+        this->parent = parent;
+        parent->child = this;
+    }
     virtual void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) {
         this->child->produce(a, tables, fixed_tables);
 //        while(!indent.empty()) {
@@ -111,9 +114,7 @@ public:
 
 class HashScanNode : public Node{
 public:
-    HashScanNode(string name, Node* parent, Attribute* sourceAtt,  Attribute* hashedAtt) : Node(name){
-        this->parent = parent;
-        parent->child = this;
+    HashScanNode(string name, Node* parent, Attribute* sourceAtt,  Attribute* hashedAtt) : Node(name, parent){
         this->sourceAtt = sourceAtt;
         this->hashedAtt = hashedAtt;
     }
@@ -129,7 +130,7 @@ class SelectNode : public Node{
 public:
     SelectNode(string name, Node* parent, vector<Attribute> int_variables[], int int_sub_conditions, vector<pair<int,int>> ranges[],
     int string_sub_conditions, vector<Attribute> string_variables[], vector<vector<string>> valid_strings[]) :
-    Node(name) {
+    Node(name, parent) {
         this->int_sub_conditions = int_sub_conditions;
         this->string_sub_conditions = string_sub_conditions;
         for (int i = 0; i < int_sub_conditions; ++i) {
@@ -140,8 +141,6 @@ public:
             this->string_variables[j] = string_variables[j];
             this->valid_strings[j] = valid_strings[j];
         }
-        this->parent = parent;
-        this->parent->child = this;
     }
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
@@ -157,9 +156,7 @@ private:
 
 class AggregateNode : public Node{
 public:
-    AggregateNode(string name, Node* parent, int type, int virtuality, Attribute op1, Attribute op2) : Node(name){
-        this->parent = parent;
-        this->parent->child = this;
+    AggregateNode(string name, Node* parent, int type, int virtuality, Attribute op1, Attribute op2) : Node(name, parent){
         this->type = type;
         this->virtuality = virtuality;
         this->op1 = op1;
@@ -205,6 +202,22 @@ private:
     set <Table> left_tables;
     set <Table> right_tables;
     bool parent_has_bracket = false;
+};
+
+class GroupNode : public Node{
+public:
+    GroupNode(string name, Node* parent, Attribute *GB_att, vector<ExpressionNode>* expressoins, vector<string>* result_names) : Node(name, parent){
+        this->GB_att = GB_att;
+        this->expressions = expressoins;
+        this->result_names = result_names;
+    }
+    void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
+    void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
+
+private:
+    Attribute *GB_att;
+    vector<ExpressionNode> *expressions;
+    vector<string> *result_names;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -452,7 +465,7 @@ void HashScanNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fi
             if(fixed_tables->find(i->table_name) == fixed_tables->end()) {
                 fixed_tables->insert(i->table_name);
                 fprintf(pfile,"%s", indent.c_str());
-                fprintf(pfile, "int %s_it = search(%s_id, %s)->data;\n", i->table_name.c_str(),
+                fprintf(pfile, "int %s_it = search(%s_hash_id, %s)->data;\n", i->table_name.c_str(),
                         hashedAtt->name.c_str(), sourceAtt->name.c_str());
                 fixed_tables->insert(hashedAtt->table_name);
                 fprintf(pfile,"%s{\n", indent.c_str());
@@ -1030,6 +1043,24 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
         }
     }
     fprintf(pfile,"%s}\n", indent.c_str());
+}
+
+void GroupNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) {
+    a->insert(*GB_att);
+    this->child->produce(a, tables, fixed_tables);
+}
+
+void GroupNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) {
+    auto in = indent.c_str();
+    for (int i = 0; i < expressions->size(); ++i) {
+        fprintf(pfile, "%sdouble %s = %s;\n", in, (*result_names)[i].c_str(), (*expressions)[i].run());
+    }
+    if(GB_att->virtuality = data_att)
+        fprintf(pfile, "%sint %s_id = search(%s_hash_id, %s)->data;", in, name.c_str(), name.c_str(), GB_att->name.c_str());
+    else
+        fprintf(pfile, "%sint %s_id = take_sample(%s_hist);", in, name.c_str(), GB_att->name.c_str());
+    fprintf(pfile, "%shash");
+    parent->consume(a, tables, this, fixed_tables);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
