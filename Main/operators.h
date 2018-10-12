@@ -160,7 +160,9 @@ public:
     }
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
-
+    int get_type(){
+        return type;
+    }
 private:
     int type = agg_set;
     int virtuality = hist_att;
@@ -201,7 +203,7 @@ private:
 
 class GroupNode : public Node{
 public:
-    GroupNode(string name, Node* parent, Attribute *GB_att, vector<ExpressionNode>* expressoins, vector<string>* result_names) : Node(name, parent){
+    GroupNode(string name, Node* parent, Attribute *GB_att, vector<ExpressionNode*>* expressoins, vector<string>* result_names) : Node(name, parent){
         this->GB_att = GB_att;
         this->expressions = expressoins;
         this->result_names = result_names;
@@ -211,7 +213,7 @@ public:
 
 private:
     Attribute *GB_att;
-    vector<ExpressionNode> *expressions;
+    vector<ExpressionNode*> *expressions;
     vector<string> *result_names;
 };
 
@@ -494,10 +496,10 @@ void HashScanNode::consume(set<Attribute> *a, set<Table> tables, Node *source, s
 
 void AggregateNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) {
 
-//    set<Attribute>* s = expression_root->scan_atts();
-//    for (auto i = s->begin(); i != s->end() ; ++i) {
-//        a->insert(*i);
-//    }
+    set<Attribute> s = expression_root->scan_atts();
+    for (auto i = s.begin(); i != s.end() ; ++i) {
+        a->insert(*i);
+    }
 //    a->insert(op2);
     auto in = indent.c_str();
     auto nm = name.c_str();
@@ -767,21 +769,47 @@ void JoinNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<s
 }
 
 void GroupNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) {
-    a->insert(*GB_att);
+//    a->insert(*GB_att);
     this->child->produce(a, tables, fixed_tables);
 }
 
 void GroupNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) {
+
+    fprintf(pfile,"%s//Grouping\n%s{\n", indent.c_str(), indent.c_str());
+    indent += "\t";
+
     auto in = indent.c_str();
-    for (int i = 0; i < expressions->size(); ++i) {
-        fprintf(pfile, "%sdouble %s = %s;\n", in, (*result_names)[i].c_str(), (*expressions)[i].run());
+//    for (int i = 0; i < expressions->size(); ++i) {
+//        fprintf(pfile, "%sdouble %s = %s;\n", in, (*result_names)[i].c_str(), (*expressions)[i]->run().c_str());
+//    }
+//    if(GB_att->virtuality == data_att)
+//        fprintf(pfile, "%sint %s_id = search(%s_hash_id, %s)->data;\n", in, name.c_str(), name.c_str(), GB_att->name.c_str());
+//    else
+//        fprintf(pfile, "%sint %s_id = take_sample(%s_hist);\n", in, name.c_str(), GB_att->name.c_str());
+
+    this->parent->name = "(" + this->name + "_d->data)";
+    if(GB_att->virtuality == data_att){
+
+        string identity_element = "0";
+        if (((AggregateNode*)(this->child))->get_type() == agg_mult)
+            identity_element = "1";
+
+//        fprintf(pfile, "DataItem* groupby_d = search(groupby_hash_id, GB_att);"
+//                       "if ( groupby_d == NULL )"
+//                       "\tgroupby_d = insert(groupby_hash_id, GB_att, 0/1);"
+//                       "");
+        fprintf(pfile, "%sDataItem* %s_d = search(%s_hash_id, %s);\n"
+                       "%sif (%s_d == NULL)\n"
+                       "%s\t%s_d = insert(%s_hash_id, %s, %s);\n",
+                in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(),
+        in, this->name.c_str(),
+        in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(), identity_element.c_str());
     }
-    if(GB_att->virtuality = data_att)
-        fprintf(pfile, "%sint %s_id = search(%s_hash_id, %s)->data;", in, name.c_str(), name.c_str(), GB_att->name.c_str());
-    else
-        fprintf(pfile, "%sint %s_id = take_sample(%s_hist);", in, name.c_str(), GB_att->name.c_str());
-    fprintf(pfile, "%shash");
+
     parent->consume(a, tables, this, fixed_tables);
+
+    indent = indent.substr(0, indent.size()-1);
+    fprintf(pfile, "%s}\n", indent.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

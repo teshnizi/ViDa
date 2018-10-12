@@ -30,7 +30,6 @@ void preprocess(){
 
 
 int main(){
-    cout << " ASDFFDFGGWE";
     try {
         preprocess();
         prep("HELLO.cpp");
@@ -60,9 +59,9 @@ int main(){
         Attribute p_size_att = Attribute("part", "p_size", data_att, att_int, p_size_id);
         Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", hist_att, att_string, l_shipmode_id);
         Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", hist_att, att_string, l_shipinstruct_id);
-        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", hist_att, att_int, l_quantity_id);
+        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
         Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
-        Attribute l_price_att = Attribute("lineitem", "l_price", hist_att, att_int, l_price_id);
+        Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
         Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
@@ -243,14 +242,22 @@ int main(){
         Attribute join_att2 = p_partkey_att;
 
 
-        OperandNode opd1("1");
+        OperandNode opd1("10");
         OperandNode opd2(&l_discount_att);
         OperatorNode opr1(&opd1, &opd2, false, "sub", false);
         OperandNode opd3(&l_price_att);
         OperatorNode opr2(&opd3, &opr1, false, "mult", false);
 
+        vector<ExpressionNode*> gb_exps;
+        gb_exps.push_back(&opr2);
+        vector<string> gb_names;
+        gb_names.push_back("sum_disc_price");
+
+        //////////////////////////////////////////////////////////////////////////////
+
         AggregateNode aggregateNode = AggregateNode("Revenue", &root, agg_sum, data_att, &opr2);
-        SelectNode selectNode = SelectNode("Select", &aggregateNode, var, 3, ranges, 3, strings, valid_strings);
+        GroupNode groupNode = GroupNode("groupby", &aggregateNode, &l_quantity_att, &gb_exps, &gb_names);
+        SelectNode selectNode = SelectNode("Select", &groupNode, var, 3, ranges, 3, strings, valid_strings);
         JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
 
         ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
@@ -282,8 +289,6 @@ int main(){
         root.produce(&attributes, tables, &x);
         fprintf(pfile, "\ncout << Revenue << endl;\n}\n");
 
-
-
         cout << opr2.run();
     }
 
@@ -291,4 +296,3 @@ int main(){
         cerr << massage << endl;
     }
 }
-

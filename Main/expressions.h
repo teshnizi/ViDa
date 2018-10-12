@@ -40,13 +40,13 @@ struct Attribute{
     int virtuality;
     int id;
 
-    bool operator<(const Attribute& a) const{
+    bool operator < (const Attribute& a) const{
         if(this->table_name == a.table_name){
             return this->name < a.name;
         }
         return this->table_name < a.table_name;
     }
-    bool operator==(const Attribute& a) const{
+    bool operator == (const Attribute& a) const{
         return (this->table_name == a.table_name) && (this->table_name == a.table_name);
     }
 };
@@ -114,7 +114,7 @@ public:
     }
     virtual string get_type(){};
     virtual string run(){};
-    virtual set<Attribute>* scan_atts(){};
+    virtual set<Attribute> scan_atts(){};
 protected:
     ExpressionNode* left;
     ExpressionNode* right;
@@ -144,16 +144,15 @@ public:
                + "(" + left->run() + ", " + right->run() + ")";
     }
 
-    set<Attribute>* scan_atts(){
-        cout << "AA";
-        set<Attribute>* s1 = left->scan_atts();
-        set<Attribute>* s2 = right->scan_atts();
-        set<Attribute>* ret;
-        for (auto i = s1->begin(); i != s1->end() ; ++i) {
-            ret->insert(*i);
+    set<Attribute> scan_atts(){
+        set<Attribute> s1 = left->scan_atts();
+        set<Attribute> s2 = right->scan_atts();
+        set<Attribute> ret;
+        for (auto i = s1.begin(); i != s1.end() ; ++i) {
+            ret.insert(*i);
         }
-        for (auto i = s2->begin(); i != s2->end() ; ++i) {
-            ret->insert(*i);
+        for (auto i = s2.begin(); i != s2.end() ; ++i) {
+            ret.insert(*i);
         }
         return ret;
     }
@@ -182,16 +181,20 @@ public:
             return "data";
     }
     string run(){
-        if (has_att)
-            return att->name;
+        if (has_att) {
+            if (att->virtuality == hist_att)
+                return att->name + "_hist";
+            else
+                return att->name;
+        }
         else
             return numeric;
     }
 
-    set<Attribute>* scan_atts(){
-        set<Attribute>* s;
-        if(!has_att)
-            s->insert(*att);
+    set<Attribute> scan_atts(){
+        set<Attribute> s;
+        if(has_att)
+            s.insert(*att);
         return s;
     }
 private:

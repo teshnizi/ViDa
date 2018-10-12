@@ -7,14 +7,14 @@
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_simple_random" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_sampling" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="file_editor" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_mixes" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="string_gen" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_histogram" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="find_hists" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="operators" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="tmp" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_LIWS" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_LIWOS" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19_mixes" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6_histogram" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -23,11 +23,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="277878c6-042e-4265-b27a-76c2908c086e" name="Default" comment="Lots of minor bugs - are hopefully! - fixed. Seems to be working for all of conditions now.">
+    <list default="true" id="277878c6-042e-4265-b27a-76c2908c086e" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/expressions.h" beforeDir="false" afterPath="$PROJECT_DIR$/expressions.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operators.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/operators.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operators.h" beforeDir="false" afterPath="$PROJECT_DIR$/operators.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/statistics.h" beforeDir="false" afterPath="$PROJECT_DIR$/statistics.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tmp.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,23 +45,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="operators.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="operators.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/operators.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="277">
-              <caret line="251" column="96" selection-start-line="251" selection-start-column="96" selection-end-line="251" selection-end-column="96" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="operators_backup.h" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/operators_backup.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="689" column="9" selection-start-line="689" selection-start-column="9" selection-end-line="689" selection-end-column="9" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="211">
+              <caret line="259" column="63" selection-start-line="259" selection-start-column="63" selection-end-line="259" selection-end-column="63" />
             </state>
           </provider>
         </entry>
@@ -67,24 +57,29 @@
       <file leaf-file-name="operators.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/operators.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="542" column="25" lean-forward="true" selection-start-line="542" selection-start-column="25" selection-end-line="542" selection-end-column="25" />
+            <state relative-caret-position="571">
+              <caret line="813" selection-start-line="813" selection-end-line="813" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#694#1159#0" />
-                <element signature="e#2297#2655#1" />
-                <element signature="e#2658#3152#1" />
-                <element signature="e#3155#4477#1" />
-                <element signature="e#5173#6188#1" />
-                <element signature="e#6191#6807#1" />
-                <element signature="e#6911#7055#0" />
-                <element signature="e#7057#12825#0" />
-                <element signature="e#12827#16162#0" />
-                <element signature="e#16270#19569#0" />
-                <element signature="e#34795#35369#0" />
-                <element signature="e#35371#41985#0" />
-                <element signature="e#41987#42080#0" />
-                <element signature="e#42082#42189#0" />
+                <element signature="e#198#253#1" />
+                <element signature="e#374#635#1" />
+                <element signature="e#638#1103#0" />
+                <element signature="e#1250#1375#0" />
+                <element signature="e#1478#2238#1" />
+                <element signature="e#2241#2599#1" />
+                <element signature="e#2602#3096#1" />
+                <element signature="e#3099#4421#1" />
+                <element signature="e#5072#6087#1" />
+                <element signature="e#6810#6954#0" />
+                <element signature="e#6956#12724#0" />
+                <element signature="e#12726#16061#0" />
+                <element signature="e#16169#19468#0" />
+                <element signature="e#19580#20272#0" />
+                <element signature="e#20283#21689#0" />
+                <element signature="e#21691#22265#0" />
+                <element signature="e#22267#28881#0" />
+                <element signature="e#28883#29050#0" />
+                <element signature="e#29052#29707#0" />
               </folding>
             </state>
           </provider>
@@ -93,12 +88,16 @@
       <file leaf-file-name="expressions.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/expressions.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-185">
-              <caret line="116" column="40" selection-start-line="116" selection-start-column="40" selection-end-line="116" selection-end-column="40" />
+            <state relative-caret-position="329">
+              <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
               <folding>
                 <element signature="e#218#237#0" expanded="true" />
                 <element signature="e#337#387#1" />
-                <element signature="e#390#445#1" />
+                <element signature="e#448#1134#1" />
+                <element signature="e#1137#1267#1" />
+                <element signature="e#1307#1352#1" />
+                <element signature="e#1391#2180#0" />
+                <element signature="e#2182#2509#0" />
               </folding>
             </state>
           </provider>
@@ -107,8 +106,8 @@
       <file leaf-file-name="statistics.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/statistics.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="80" column="22" selection-start-line="80" selection-start-column="22" selection-end-line="80" selection-end-column="22" />
+            <state relative-caret-position="22">
+              <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -117,7 +116,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>produce</find>
       <find>nullptr</find>
       <find>scanNode</find>
       <find>aggregate</find>
@@ -147,6 +145,7 @@
       <find>histogram</find>
       <find>string</find>
       <find>ASDF</find>
+      <find>ASDFF</find>
     </findStrings>
     <replaceStrings>
       <replace>double</replace>
@@ -186,17 +185,17 @@
         <option value="$PROJECT_DIR$/data_operators.h" />
         <option value="$PROJECT_DIR$/Q6_linear_iteration_with_save.cpp" />
         <option value="$PROJECT_DIR$/file_editor.cpp" />
-        <option value="$PROJECT_DIR$/tmp.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/Q19_linear_iteraion_with_save.cpp" />
         <option value="$PROJECT_DIR$/tuples2.h" />
         <option value="$PROJECT_DIR$/tuples.h" />
         <option value="$PROJECT_DIR$/find_histograms.cpp" />
-        <option value="$PROJECT_DIR$/statistics.h" />
-        <option value="$PROJECT_DIR$/operators.h" />
-        <option value="$PROJECT_DIR$/expressions.h" />
-        <option value="$PROJECT_DIR$/operators.cpp" />
         <option value="$PROJECT_DIR$/operators_backup.h" />
+        <option value="$PROJECT_DIR$/statistics.h" />
+        <option value="$PROJECT_DIR$/tmp.cpp" />
+        <option value="$PROJECT_DIR$/expressions.h" />
+        <option value="$PROJECT_DIR$/operators.h" />
+        <option value="$PROJECT_DIR$/operators.cpp" />
       </list>
     </option>
   </component>
@@ -231,11 +230,6 @@
             </path>
             <path>
               <item name="cmake-build-debug/CMakeFiles/ViDaG" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Main" type="462c0819:PsiDirectoryNode" />
-              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cmake-build-debug/CMakeFiles/ViDaG" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
@@ -254,6 +248,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Documents/Q6_data_distributions" />
       <recent name="$PROJECT_DIR$" />
@@ -368,7 +365,8 @@
       <workItem from="1538576004183" duration="675000" />
       <workItem from="1539105741506" duration="3071000" />
       <workItem from="1539168460110" duration="21316000" />
-      <workItem from="1539259987160" duration="11421000" />
+      <workItem from="1539259987160" duration="12148000" />
+      <workItem from="1539327395036" duration="10661000" />
     </task>
     <task id="LOCAL-00001" summary="week 5 tasks.">
       <created>1534097850194</created>
@@ -531,11 +529,18 @@
       <option name="project" value="LOCAL" />
       <updated>1539286424572</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="aggregate Node is now expression compatible.&#10;&#10;took a backup from database_preparation.h">
+      <created>1539293411122</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1539293411122</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="490440000" />
+    <option name="totallyTimeSpent" value="501828000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -550,13 +555,13 @@
     <frame x="67" y="27" width="1853" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.67310345" visible="true" weight="0.12513661" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.67310345" visible="true" weight="0.12513661" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32922733" />
       <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.895082" weight="0.25419933" />
       <window_info anchor="bottom" id="CMake" order="11" sideWeight="0.49945354" weight="0.33034715" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5038251" side_tool="true" weight="0.27099663" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.20380738" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8497268" visible="true" weight="0.1881299" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.8497268" visible="true" weight="0.1881299" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32922733" />
       <window_info id="Favorites" order="2" sideWeight="0.32689655" side_tool="true" visible="true" weight="0.12513661" />
@@ -577,7 +582,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="week 5 tasks." />
     <MESSAGE value="linear iteration,&#10;realData-based distributions" />
     <MESSAGE value="minor fixes." />
     <MESSAGE value="Histograms for Q6 TPC-H table data.&#10;Q19 hash.&#10;Q6 operator on data." />
@@ -602,7 +606,8 @@
     <MESSAGE value="Expression as trees." />
     <MESSAGE value="Expresions.h added" />
     <MESSAGE value="Expressions.h added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Expressions.h added" />
+    <MESSAGE value="aggregate Node is now expression compatible.&#10;&#10;took a backup from database_preparation.h" />
+    <option name="LAST_COMMIT_MESSAGE" value="aggregate Node is now expression compatible.&#10;&#10;took a backup from database_preparation.h" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -610,27 +615,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/string_generator.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1562">
-          <caret line="71" column="9" lean-forward="true" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file_editor.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1474">
-          <caret line="67" column="6" selection-start-line="67" selection-start-column="6" selection-end-line="67" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/statistics.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1254">
-          <caret line="57" column="34" selection-start-line="57" selection-start-column="34" selection-end-line="57" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Q6_simple_random_generation.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1760">
@@ -768,13 +752,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hist_operators.h" />
-    <entry file="file:///usr/include/c++/7/bits/stl_function.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="385" column="19" selection-start-line="385" selection-start-column="19" selection-end-line="385" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Analysis.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -848,13 +825,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tmp.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="214" lean-forward="true" selection-start-line="214" selection-end-line="214" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/c++/7/bits/stl_set.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
@@ -897,6 +867,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="797">
           <caret line="118" column="19" selection-start-line="118" selection-start-column="19" selection-end-line="118" selection-end-column="19" />
+          <folding>
+            <element signature="e#43#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -910,56 +883,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/statistics.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="80" column="22" selection-start-line="80" selection-start-column="22" selection-end-line="80" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/operators.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="542" column="25" lean-forward="true" selection-start-line="542" selection-start-column="25" selection-end-line="542" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#694#1159#0" />
-            <element signature="e#2297#2655#1" />
-            <element signature="e#2658#3152#1" />
-            <element signature="e#3155#4477#1" />
-            <element signature="e#5173#6188#1" />
-            <element signature="e#6191#6807#1" />
-            <element signature="e#6911#7055#0" />
-            <element signature="e#7057#12825#0" />
-            <element signature="e#12827#16162#0" />
-            <element signature="e#16270#19569#0" />
-            <element signature="e#34795#35369#0" />
-            <element signature="e#35371#41985#0" />
-            <element signature="e#41987#42080#0" />
-            <element signature="e#42082#42189#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/expressions.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-185">
-          <caret line="116" column="40" selection-start-line="116" selection-start-column="40" selection-end-line="116" selection-end-column="40" />
-          <folding>
-            <element signature="e#218#237#0" expanded="true" />
-            <element signature="e#337#387#1" />
-            <element signature="e#390#445#1" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/operators.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="251" column="96" selection-start-line="251" selection-start-column="96" selection-end-line="251" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/operators_backup.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -967,6 +890,94 @@
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database_preparation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8933" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/statistics.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///usr/include/c++/7/bits/basic_string.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="6006" selection-start-line="6006" selection-end-line="6009" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/7/bits/stl_function.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="385" selection-start-line="385" selection-end-line="385" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/7/bits/stl_tree.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="642" selection-start-line="642" selection-end-line="642" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/expressions.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="329">
+          <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+          <folding>
+            <element signature="e#218#237#0" expanded="true" />
+            <element signature="e#337#387#1" />
+            <element signature="e#448#1134#1" />
+            <element signature="e#1137#1267#1" />
+            <element signature="e#1307#1352#1" />
+            <element signature="e#1391#2180#0" />
+            <element signature="e#2182#2509#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/operators.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="571">
+          <caret line="813" selection-start-line="813" selection-end-line="813" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#198#253#1" />
+            <element signature="e#374#635#1" />
+            <element signature="e#638#1103#0" />
+            <element signature="e#1250#1375#0" />
+            <element signature="e#1478#2238#1" />
+            <element signature="e#2241#2599#1" />
+            <element signature="e#2602#3096#1" />
+            <element signature="e#3099#4421#1" />
+            <element signature="e#5072#6087#1" />
+            <element signature="e#6810#6954#0" />
+            <element signature="e#6956#12724#0" />
+            <element signature="e#12726#16061#0" />
+            <element signature="e#16169#19468#0" />
+            <element signature="e#19580#20272#0" />
+            <element signature="e#20283#21689#0" />
+            <element signature="e#21691#22265#0" />
+            <element signature="e#22267#28881#0" />
+            <element signature="e#28883#29050#0" />
+            <element signature="e#29052#29707#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/operators.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="259" column="63" selection-start-line="259" selection-start-column="63" selection-end-line="259" selection-end-column="63" />
         </state>
       </provider>
     </entry>
