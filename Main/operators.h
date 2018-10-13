@@ -54,9 +54,11 @@ string indent;
 
 class Node;
 class ScanNode;
+class HashScanNode;
 class SelectNode;
 class AggregateNode;
 class JoinNode;
+class GroupNode;
 
 FILE* pfile;
 map <string, int> table_names;
@@ -89,6 +91,13 @@ public:
     virtual void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) {
         return;
     }
+
+    void prep(){}
+
+    virtual string get_class(){
+        return "Node";
+    }
+
     void set_child(Node* child){
         this->child = child;
     }
@@ -105,6 +114,9 @@ public:
     }
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
+    string get_class(){
+        return "ScanNode";
+    }
 };
 
 class HashScanNode : public Node{
@@ -115,7 +127,14 @@ public:
     }
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
-
+    void prep(){
+        fprintf(pfile, "    for (int i = 0; i < table_size[%s]; ++i) {\n"
+               "        insert(%s_hash_id, int_table[%s][%s_id][i], i);\n"
+               "    }\n\n", hashedAtt->table_name.c_str(), hashedAtt->name.c_str(), hashedAtt->table_name.c_str(), hashedAtt->name.c_str());
+    }
+    string get_class(){
+        return "HashScanNode";
+    }
 private:
     Attribute* sourceAtt;
     Attribute* hashedAtt;
@@ -139,6 +158,9 @@ public:
     }
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
+    string get_class(){
+        return "SelectNode";
+    }
 
 private:
     int int_sub_conditions;
@@ -152,6 +174,7 @@ private:
 class AggregateNode : public Node{
 public:
     AggregateNode(string name, Node* parent, int type, int virtuality, ExpressionNode* expression_root) : Node(name, parent){
+        cout << "ASDF";
         this->type = type;
         this->virtuality = virtuality;
         this->expression_root = expression_root;
@@ -162,6 +185,42 @@ public:
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
     int get_type(){
         return type;
+    }
+    string get_class(){
+        return "AggregateNode";
+    }
+    void prep(){
+
+        string s = name.c_str();
+
+        if (this->child->get_class() == "GroupNode"){
+            s = s + "[max_table_size]";
+            auto nm = s.c_str();
+            if( virtuality == hist_att) {
+                fprintf(pfile, "\tint %s_bucket[BUCKET_COUNT];\n"
+                               "\tint %s_min;\n"
+                               "\tint %s_max;\n",
+                        nm,
+                        nm,
+                        nm);
+            }
+            if ( virtuality == data_att){
+                fprintf(pfile, "\tdouble %s;\n", nm);
+            }
+        } else {
+            auto nm = s.c_str();
+            if( virtuality == hist_att) {
+                fprintf(pfile, "\tint %s_bucket[BUCKET_COUNT];\n"
+                               "\tint %s_min;\n"
+                               "\tint %s_max;\n",
+                        nm,
+                        nm,
+                        nm);
+            }
+            if ( virtuality == data_att){
+                fprintf(pfile, "\tdouble %s = 0;\n", nm);
+            }
+        }
     }
 private:
     int type = agg_set;
@@ -188,7 +247,9 @@ public:
     }
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
-
+    string get_class(){
+        return "JoinNode";
+    }
 private:
     Attribute att1 = Attribute("NULL", "NULL", att_int, data_att, 0);
     Attribute att2 = Attribute("NULL", "NULL", att_int, data_att, 0);
@@ -203,18 +264,26 @@ private:
 
 class GroupNode : public Node{
 public:
-    GroupNode(string name, Node* parent, Attribute *GB_att, vector<ExpressionNode*>* expressoins, vector<string>* result_names) : Node(name, parent){
+    GroupNode(string name, Node* parent, Attribute *GB_att, vector<AggregateNode*>* aggregations) : Node(name, parent){
         this->GB_att = GB_att;
-        this->expressions = expressoins;
-        this->result_names = result_names;
+        this->aggregations = aggregations;
     }
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
 
+    string get_class(){
+        return "GroupNode";
+    }
+
+    void prep(){
+
+        fprintf(pfile,"\tint %s_it = 0;\n", this->name.c_str());
+
+    }
+
 private:
     Attribute *GB_att;
-    vector<ExpressionNode*> *expressions;
-    vector<string> *result_names;
+    vector<AggregateNode*> *aggregations;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -501,19 +570,7 @@ void AggregateNode::produce(set<Attribute> *a, set<Table> tables, set<string> *f
         a->insert(*i);
     }
 //    a->insert(op2);
-    auto in = indent.c_str();
-    auto nm = name.c_str();
-    if( virtuality == hist_att) {
-        fprintf(pfile, "%sint %s_bucket[BUCKET_COUNT];\n"
-               "%sint %s_min;\n"
-               "%sint %s_max;\n",
-               in, nm,
-               in, nm,
-               in, nm);
-    }
-    if ( virtuality == data_att){
-        fprintf(pfile, "%sdouble %s = 0;\n", in, nm);
-    }
+
     this->child->produce(a, tables, fixed_tables);
 }
 
@@ -779,34 +836,40 @@ void GroupNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<
     indent += "\t";
 
     auto in = indent.c_str();
-//    for (int i = 0; i < expressions->size(); ++i) {
-//        fprintf(pfile, "%sdouble %s = %s;\n", in, (*result_names)[i].c_str(), (*expressions)[i]->run().c_str());
-//    }
-//    if(GB_att->virtuality == data_att)
-//        fprintf(pfile, "%sint %s_id = search(%s_hash_id, %s)->data;\n", in, name.c_str(), name.c_str(), GB_att->name.c_str());
-//    else
-//        fprintf(pfile, "%sint %s_id = take_sample(%s_hist);\n", in, name.c_str(), GB_att->name.c_str());
 
-    this->parent->name = "(" + this->name + "_d->data)";
     if(GB_att->virtuality == data_att){
 
-        string identity_element = "0";
-        if (((AggregateNode*)(this->child))->get_type() == agg_mult)
-            identity_element = "1";
+//        string identity_element = "0";
+//        if (((AggregateNode*)(this->child))->get_type() == agg_mult)
+//            identity_element = "1";
 
-//        fprintf(pfile, "DataItem* groupby_d = search(groupby_hash_id, GB_att);"
-//                       "if ( groupby_d == NULL )"
-//                       "\tgroupby_d = insert(groupby_hash_id, GB_att, 0/1);"
-//                       "");
+//        fprintf(pfile, "%sDataItem* %s_d = search(%s_hash_id, %s);\n"
+//                       "%sif (%s_d == NULL)\n"
+//                       "%s\t%s_d = insert(%s_hash_id, %s, %s);\n",
+//                in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(),
+//        in, this->name.c_str(),
+//        in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(), identity_element.c_str());
+
         fprintf(pfile, "%sDataItem* %s_d = search(%s_hash_id, %s);\n"
                        "%sif (%s_d == NULL)\n"
-                       "%s\t%s_d = insert(%s_hash_id, %s, %s);\n",
+                       "%s\t%s_d = insert(%s_hash_id, %s, %s_it++);\n"
+                       "%sint %s_id = %s_d->data;\n",
                 in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(),
-        in, this->name.c_str(),
-        in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(), identity_element.c_str());
+                in, this->name.c_str(),
+                in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(), this->name.c_str(),
+                in, this->name.c_str(), this->name.c_str());
+
+        for (int i = 0; i < aggregations->size(); ++i) {
+            string tmp = (*aggregations)[i]->name;
+            (*aggregations)[i]->name += "[" + this->name + "_id]";
+            (*aggregations)[i]->consume(a, tables, this, fixed_tables);
+            (*aggregations)[i]->name = tmp;
+        }
+
     }
 
-    parent->consume(a, tables, this, fixed_tables);
+
+//    parent->consume(a, tables, this, fixed_tables);
 
     indent = indent.substr(0, indent.size()-1);
     fprintf(pfile, "%s}\n", indent.c_str());

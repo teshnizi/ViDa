@@ -248,15 +248,23 @@ int main(){
         OperandNode opd3(&l_price_att);
         OperatorNode opr2(&opd3, &opr1, false, "mult", false);
 
-        vector<ExpressionNode*> gb_exps;
-        gb_exps.push_back(&opr2);
-        vector<string> gb_names;
-        gb_names.push_back("sum_disc_price");
+        OperandNode opd4(&l_price_att);
+
+        vector<AggregateNode*> gb_aggs;
 
         //////////////////////////////////////////////////////////////////////////////
 
-        AggregateNode aggregateNode = AggregateNode("Revenue", &root, agg_sum, data_att, &opr2);
-        GroupNode groupNode = GroupNode("groupby", &aggregateNode, &l_quantity_att, &gb_exps, &gb_names);
+        AggregateNode aggregateNode1 = AggregateNode("sum_disc_price", &root, agg_sum, data_att, &opr2);
+        AggregateNode aggregateNode2 = AggregateNode("sum_price", &root, agg_sum, data_att, &opd4);
+
+        gb_aggs.push_back(&aggregateNode1);
+        gb_aggs.push_back(&aggregateNode2);
+
+        GroupNode groupNode = GroupNode("groupby", &root, &l_quantity_att, &gb_aggs);
+
+        aggregateNode1.child = &groupNode;
+        aggregateNode2.child = &groupNode;
+
         SelectNode selectNode = SelectNode("Select", &groupNode, var, 3, ranges, 3, strings, valid_strings);
         JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
 
@@ -265,13 +273,21 @@ int main(){
 //        ScanNode scanNode2 = ScanNode("ScanP", &joinNode);
         HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
 
+
         joinNode.setLeftChild(&scanNode1);
         joinNode.setRightChild(&scanNode2);
 
+
         fprintf(pfile, "\n#include \"database_preparation.h\"\n"
                        "\n"
-                       "using namespace std;\n\n"
-                       "int main(){\n"
+                       "using namespace std;\n\n");
+
+        groupNode.prep();
+        aggregateNode1.prep();
+        aggregateNode2.prep();
+
+        fprintf(pfile,
+                       "\nint main(){\n"
                        "\n"
                        "    int lineitem_ia[] = {l_discount_id, l_partkey_id, l_price_id, l_quantity_id};\n"
                        "    int lineitem_sa[] = {l_shipinstruct_id, l_shipmode_id};\n"
@@ -280,14 +296,16 @@ int main(){
                        "    int part_ia[] = {p_partkey_id, p_size_id};\n"
                        "    int part_sa[] = {p_container_id, p_brand_id};\n"
                        "    read_part_from_file(\"edited_part.tbl\", part_ia, 2, part_sa, 2);\n"
-                       "    for (int i = 0; i < table_size[part]; ++i) {\n"
-                       "        insert(p_partkey_hash_id, int_table[part][p_partkey_id][i], i);\n"
-                       "    }\n"
-                       "\n"
-                       "    read_histogram_defaults_from_file(\"histograms.txt\");\n");
+                       "    read_histogram_defaults_from_file(\"histograms.txt\");\n\n\n");
+
+        selectNode.prep();
+        joinNode.prep();
+        scanNode1.prep();
+        scanNode2.prep();
+
         set<string> x;
         root.produce(&attributes, tables, &x);
-        fprintf(pfile, "\ncout << Revenue << endl;\n}\n");
+        fprintf(pfile, "\n}\n");
 
         cout << opr2.run();
     }
