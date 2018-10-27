@@ -269,6 +269,13 @@ int hashCode(int key) {
     return key % hash_table_size;
 }
 
+int total_count(Histogram *h){
+    int ret = 0;
+    for (int i = 0 ; i < h->bucket_count; i++){
+        ret += h->bucket[i];
+    }
+    return ret;
+}
 
 struct DataItem *search(int id, int key) {
     //get the hash

@@ -85,7 +85,7 @@ int main(){
         table[l_price].push_back(int_tmp[l_price]);
         table[l_partkey].push_back(int_tmp[l_partkey]);
         table[l_quantity].push_back(int_tmp[l_quantity]);
-
+        table[l_shipdate].push_back(int_tmp[l_shipdate]);
     }
     fin.close();
     fin.open("edited_part.tbl");
@@ -126,17 +126,17 @@ int main(){
     sort(table[l_discount].begin(), table[l_discount].end());
     hist[l_discount] = quantize(table[l_discount], 11, block_size[l_discount], lower_bounds[l_discount]);
     fout << 0 << " " <<l_discount_id << " " << 11 << " " << lower_bounds[l_discount]
-         << " " << lower_bounds[l_discount] + 11 * block_size[l_discount] << " ";
+         << " " << lower_bounds[l_discount] + 11 * block_size[l_discount] + 1 << " ";
     for (int i = 0; i < 11; ++i) {
         fout << hist[l_discount][i] << " ";
     }fout << endl;
     cout << endl;
 
     sort(table[l_quantity].begin(), table[l_quantity].end());
-    hist[l_quantity] = quantize(table[l_quantity], 49, block_size[l_quantity], lower_bounds[l_quantity]);
-    fout << 0 << " " <<l_quantity_id << " " << 49 << " " << lower_bounds[l_quantity]
-         << " " << lower_bounds[l_quantity] + 49 * block_size[l_quantity] << " ";
-    for (int i = 0; i < 49; ++i) {
+    hist[l_quantity] = quantize(table[l_quantity], 50, block_size[l_quantity], lower_bounds[l_quantity]);
+    fout << 0 << " " << l_quantity_id << " " << 50 << " " << lower_bounds[l_quantity]
+         << " " << lower_bounds[l_quantity] + 50 * block_size[l_quantity] + 1 << " ";
+    for (int i = 0; i < 50; ++i) {
         fout << hist[l_quantity][i] << " ";
     }fout << endl;
     cout << endl;
@@ -144,16 +144,25 @@ int main(){
     sort(table[l_price].begin(), table[l_price].end());
     hist[l_price] = quantize(table[l_price], 70, block_size[l_price], lower_bounds[l_price]);
     fout << 0 << " " <<l_price_id << " " << 70 << " " << lower_bounds[l_price]
-         << " " << lower_bounds[l_price] + 70 * block_size[l_price] << " ";
+         << " " << lower_bounds[l_price] + 70 * block_size[l_price] + 1 << " ";
     for (int i = 0; i < 70; ++i) {
         fout << hist[l_price][i] << " ";
+    }fout << endl;
+    cout << endl;
+
+    sort(table[l_shipdate].begin(), table[l_shipdate].end());
+    hist[l_shipdate] = quantize(table[l_shipdate], 70, block_size[l_shipdate], lower_bounds[l_shipdate]);
+    fout << 0 << " " <<l_shipdate_id << " " << 70 << " " << lower_bounds[l_shipdate]
+         << " " << lower_bounds[l_shipdate] + 70 * block_size[l_shipdate] + 1 << " ";
+    for (int i = 0; i < 70; ++i) {
+        fout << hist[l_shipdate][i] << " ";
     }fout << endl;
     cout << endl;
 
     sort(table[l_partkey].begin(), table[l_partkey].end());
     hist[l_partkey] = quantize(table[l_partkey], 70, block_size[l_partkey], lower_bounds[l_partkey]);
     fout << 0 << " " <<l_partkey_id << " " << 70 << " " << lower_bounds[l_partkey]
-         << " " << lower_bounds[l_partkey] + 70 * block_size[l_partkey] << " ";
+         << " " << lower_bounds[l_partkey] + 70 * block_size[l_partkey] + 1 << " ";
     for (int i = 0; i < 70; ++i) {
         fout << hist[l_partkey][i] << " ";
     }fout << endl;
@@ -163,7 +172,7 @@ int main(){
     sort(table[p_partkey].begin(), table[p_partkey].end());
     hist[p_partkey] = quantize(table[p_partkey], 70, block_size[p_partkey], lower_bounds[p_partkey]);
     fout << 1 << " " <<p_partkey_id << " " << 70 << " " << lower_bounds[p_partkey]
-         << " " << lower_bounds[p_partkey] + 70 * block_size[p_partkey] << " ";
+         << " " << lower_bounds[p_partkey] + 70 * block_size[p_partkey] + 1 << " ";
     for (int i = 0; i < 70; ++i) {
         fout << hist[p_partkey][i] << " ";
     }fout << endl;
@@ -185,10 +194,10 @@ int main(){
     cout << endl;
 
     sort(table[p_size].begin(), table[p_size].end());
-    hist[p_size] = quantize(table[p_size], 49, block_size[p_size], lower_bounds[p_size]);
-    fout << 1 << " " <<p_size_id << " " << 49 << " " << lower_bounds[p_size]
-         << " " << lower_bounds[p_size] + 49 * block_size[p_size] << " ";
-    for (int i = 0; i < 49; ++i) {
+    hist[p_size] = quantize(table[p_size], 50, block_size[p_size], lower_bounds[p_size]);
+    fout << 1 << " " <<p_size_id << " " << 50 << " " << lower_bounds[p_size]
+         << " " << lower_bounds[p_size] + 50 * block_size[p_size] + 1 << " ";
+    for (int i = 0; i < 50; ++i) {
         fout << hist[p_size][i] << " ";
     }fout << endl;
     cout << endl;

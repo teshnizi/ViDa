@@ -172,15 +172,14 @@ private:
 };
 
 class AggregateNode : public Node{
+
 public:
     AggregateNode(string name, Node* parent, int type, int virtuality, ExpressionNode* expression_root) : Node(name, parent){
-        cout << "ASDF";
         this->type = type;
         this->virtuality = virtuality;
         this->expression_root = expression_root;
-//        this->op1 = op1;
-//        this->op2 = op2;
     }
+
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
     void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
     int get_type(){
@@ -222,10 +221,31 @@ public:
             }
         }
     }
+
+    void set_coefficient(string coeffiecient_name) {
+//        coefficient_operand = OperandNode(coeffiecient_name);
+//        coeffiecient_operator = OperatorNode(&coefficient_operand, expression_root, false, "mult", (expression_root->get_type() == "hist"));
+        has_coefficient = true;
+        coeff = coeffiecient_name;
+    }
+
+    void add_to_coefficient(string coeff){
+        this->coeff = this->coeff + coeff;
+    }
+
+    void remove_coefficient(){
+        has_coefficient = false;
+        coeff = "1";
+    }
 private:
     int type = agg_set;
     int virtuality = hist_att;
     ExpressionNode *expression_root;
+
+    bool has_coefficient = false;
+    string coeff = "1";
+    OperandNode coefficient_operand = OperandNode("NULL");
+    OperatorNode coefficient_operator = OperatorNode(nullptr, nullptr, false, "NULL", false);
 };
 
 class JoinNode : public Node{
@@ -576,6 +596,16 @@ void AggregateNode::produce(set<Attribute> *a, set<Table> tables, set<string> *f
 
 void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) {
 
+    string cftmp = coeff;
+    for (auto at = tables.begin(); at != tables.end(); at++) {
+        cftmp = cftmp + " * " + at->name + "_table_size ";
+    }
+    for (int i = 0; i < extra_ratios.size(); i++){
+        cftmp = cftmp + " * " + extra_ratios[i] + "_ratio";
+    }
+    coefficient_operand = OperandNode(cftmp);
+    coefficient_operator = OperatorNode(&coefficient_operand, expression_root, false, "mult", expression_root->get_type() == "hist");
+
     string op;
     if(virtuality == data_att){
         switch(type){
@@ -591,7 +621,8 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
             default:
                 op = "=";
         }
-        fprintf(pfile, "%s%s %s %s;\n", indent.c_str(), name.c_str(), op.c_str(), expression_root->run().c_str());
+
+        fprintf(pfile, "%s%s %s %s;\n", indent.c_str(), name.c_str(), op.c_str(), coefficient_operator.run().c_str());
     }
 
     if(virtuality == hist_att){
@@ -614,7 +645,7 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
             default:
                 op = "copy_hist";
         }
-        fprintf(pfile, "%s%s(*%s, *%s);\n", indent.c_str(), op.c_str(), name.c_str(), expression_root->run().c_str());
+        fprintf(pfile, "%s%s(*%s, *%s);\n", indent.c_str(), op.c_str(), name.c_str(), coefficient_operator.run().c_str());
 
     }
     parent->consume(a, tables, this, fixed_tables);
@@ -836,36 +867,46 @@ void GroupNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<
     indent += "\t";
 
     auto in = indent.c_str();
+    auto gb = GB_att->name.c_str();
+    auto nm = this->name.c_str();
 
-    if(GB_att->virtuality == data_att){
+    if (GB_att->virtuality == hist_att){
+        fprintf(pfile,
+        "%sint %s_total = total_count(&%s_hist);\n"
+        "%sfor ( int i = 0; i < %s_hist.bucket_count; i++){\n"
+        "%s\tint %s = %s_hist.minimum + i * %s_hist.bucket_size + %s_hist.bucket_size/2;\n"
+        "%s\tdouble ratio = (double)%s_hist.bucket[i]/%s_total;\n",
+        in, gb, gb,
+        in, gb,
+        in, gb, gb, gb, gb,
+        in, gb, gb
+        );
+        indent += "\t";
+    }
 
-//        string identity_element = "0";
-//        if (((AggregateNode*)(this->child))->get_type() == agg_mult)
-//            identity_element = "1";
+    fprintf(pfile, "%sDataItem* %s_d = search(%s_hash_id, %s);\n"
+                   "%sif (%s_d == NULL)\n"
+                   "%s\t%s_d = insert(%s_hash_id, %s, %s_it++);\n"
+                   "%sint %s_id = %s_d->data;\n",
+            in, nm, nm, gb,
+            in, nm,
+            in, nm, nm, gb, nm,
+            in, nm, nm);
 
-//        fprintf(pfile, "%sDataItem* %s_d = search(%s_hash_id, %s);\n"
-//                       "%sif (%s_d == NULL)\n"
-//                       "%s\t%s_d = insert(%s_hash_id, %s, %s);\n",
-//                in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(),
-//        in, this->name.c_str(),
-//        in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(), identity_element.c_str());
-
-        fprintf(pfile, "%sDataItem* %s_d = search(%s_hash_id, %s);\n"
-                       "%sif (%s_d == NULL)\n"
-                       "%s\t%s_d = insert(%s_hash_id, %s, %s_it++);\n"
-                       "%sint %s_id = %s_d->data;\n",
-                in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(),
-                in, this->name.c_str(),
-                in, this->name.c_str(), this->name.c_str(), GB_att->name.c_str(), this->name.c_str(),
-                in, this->name.c_str(), this->name.c_str());
-
-        for (int i = 0; i < aggregations->size(); ++i) {
-            string tmp = (*aggregations)[i]->name;
-            (*aggregations)[i]->name += "[" + this->name + "_id]";
-            (*aggregations)[i]->consume(a, tables, this, fixed_tables);
-            (*aggregations)[i]->name = tmp;
+    for (int i = 0; i < aggregations->size(); ++i) {
+        if (GB_att->virtuality == hist_att){
+            (*aggregations)[i] -> set_coefficient("ratio");
         }
+        string tmp = (*aggregations)[i]->name;
+        (*aggregations)[i]->name += "[" + this->name + "_id]";
+        (*aggregations)[i]->consume(a, tables, this, fixed_tables);
+        (*aggregations)[i]->name = tmp;
+        (*aggregations)[i] ->remove_coefficient();
+    }
 
+    if (GB_att->virtuality == hist_att) {
+        indent = indent.substr(0, indent.size() - 1);
+        fprintf(pfile, "%s}\n", indent.c_str());
     }
 
 

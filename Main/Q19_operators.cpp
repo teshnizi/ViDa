@@ -2,9 +2,11 @@
 // Created by teshnizi on 24/08/18.
 //
 
-#include "operators.h"
+#include "Q19_operators.h"
+#include <ginac/ginac.h>
 
 using namespace std;
+using namespace GiNaC;
 
 vector<int> table_ints[ENUM_COUNT];
 vector<string> table_strings[ENUM_COUNT];
@@ -53,13 +55,13 @@ int main(){
 
         vector<string> tmp[3][4];
 
-        Attribute p_container_att = Attribute("part", "p_container", data_att, att_string, p_container_id);
-        Attribute p_brand_att = Attribute("part", "p_brand", data_att, att_string, p_brand_id);
-        Attribute p_partkey_att = Attribute("part", "p_partkey", data_att, att_int, p_partkey_id);
-        Attribute p_size_att = Attribute("part", "p_size", data_att, att_int, p_size_id);
-        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", hist_att, att_string, l_shipmode_id);
-        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", hist_att, att_string, l_shipinstruct_id);
-        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
+//        Attribute p_container_att = Attribute("part", "p_container", data_att, att_string, p_container_id);
+//        Attribute p_brand_att = Attribute("part", "p_brand", data_att, att_string, p_brand_id);
+//        Attribute p_partkey_att = Attribute("part", "p_partkey", data_att, att_int, p_partkey_id);
+//        Attribute p_size_att = Attribute("part", "p_size", data_att, att_int, p_size_id);
+        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", data_att, att_string, l_shipmode_id);
+        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", data_att, att_string, l_shipinstruct_id);
+        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", hist_att, att_int, l_quantity_id);
         Attribute l_discount_att = Attribute("lineitem", "l_discount", data_att, att_int, l_discount_id);
         Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
         Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
@@ -146,10 +148,10 @@ int main(){
 
         set<Attribute> attributes;
 
-        attributes.insert(p_container_att);
-        attributes.insert(p_brand_att);
-        attributes.insert(p_partkey_att);
-        attributes.insert(p_size_att);
+//        attributes.insert(p_container_att);
+//        attributes.insert(p_brand_att);
+//        attributes.insert(p_partkey_att);
+//        attributes.insert(p_size_att);
         attributes.insert(l_shipmode_att);
         attributes.insert(l_shipinstruct_att);
         attributes.insert(l_quantity_att);
@@ -162,84 +164,86 @@ int main(){
         tables.insert(Table("part"));
 
         //////////////////////////////////////////////////////////////////////////////
-        strings[0].push_back(p_container_att);
-        tmp[0][0].push_back("SM_CASE");
-        tmp[0][0].push_back("SM_BOX");
-        tmp[0][0].push_back("SM_PACK");
-        tmp[0][0].push_back("SM_PKG");
-        valid_strings[0].push_back(tmp[0][0]);
-
-        strings[0].push_back(p_brand_att);
-        tmp[0][1].push_back("Brand#12");
-        valid_strings[0].push_back(tmp[0][1]);
-
-        strings[0].push_back(l_shipmode_att);
-        tmp[0][2].push_back("AIR");
-        tmp[0][2].push_back("REG_AIR");
-        valid_strings[0].push_back(tmp[0][2]);
-
-        strings[0].push_back(l_shipinstruct_att);
-        tmp[0][3].push_back("DELIVER_IN_PERSON");
-        valid_strings[0].push_back(tmp[0][3]);
+//        strings[0].push_back(p_container_att);
+//        tmp[0][0].push_back("SM_CASE");
+//        tmp[0][0].push_back("SM_BOX");
+//        tmp[0][0].push_back("SM_PACK");
+//        tmp[0][0].push_back("SM_PKG");
+//        valid_strings[0].push_back(tmp[0][0]);
+//
+//        strings[0].push_back(p_brand_att);
+//        tmp[0][1].push_back("Brand#12");
+//        valid_strings[0].push_back(tmp[0][1]);
+//
+//        strings[0].push_back(l_shipmode_att);
+//        tmp[0][2].push_back("AIR");
+//        tmp[0][2].push_back("REG_AIR");
+//        valid_strings[0].push_back(tmp[0][2]);
+//
+//        strings[0].push_back(l_shipinstruct_att);
+//        tmp[0][3].push_back("DELIVER_IN_PERSON");
+//        valid_strings[0].push_back(tmp[0][3]);
 
         var[0].push_back(l_quantity_att);
-        ranges[0].push_back(make_pair(1,12));
-        var[0].push_back(p_size_att);
-        ranges[0].push_back(make_pair(2,5));
+//        ranges[0].push_back(make_pair(1,12));
+        ranges[0].push_back(make_pair(1,20));
+//        var[0].push_back(p_size_att);
+//        ranges[0].push_back(make_pair(2,5));
+
         //////////////////////////////////////////////////////////////////////////////
 
-        strings[1].push_back(p_container_att);
-        tmp[1][0].push_back("MED_BAG");
-        tmp[1][0].push_back("MED_BOX");
-        tmp[1][0].push_back("MED_PKG");
-        valid_strings[1].push_back(tmp[1][0]);
-
-        strings[1].push_back(p_brand_att);
-        tmp[1][1].push_back("Brand#23");
-        valid_strings[1].push_back(tmp[1][1]);
-
-        strings[1].push_back(l_shipmode_att);
-        tmp[1][2].push_back("AIR");
-        tmp[1][2].push_back("REG_AIR");
-        valid_strings[1].push_back(tmp[1][2]);
-
-        strings[1].push_back(l_shipinstruct_att);
-        tmp[1][3].push_back("DELIVER_IN_PERSON");
-        valid_strings[1].push_back(tmp[1][3]);
-
-        var[1].push_back(l_quantity_att);
-        ranges[1].push_back(make_pair(10,21));
-        var[1].push_back(p_size_att);
-        ranges[1].push_back(make_pair(2,10));
+//        strings[1].push_back(p_container_att);
+//        tmp[1][0].push_back("MED_BAG");
+//        tmp[1][0].push_back("MED_BOX");
+//        tmp[1][0].push_back("MED_PKG");
+//        valid_strings[1].push_back(tmp[1][0]);
+//
+//        strings[1].push_back(p_brand_att);
+//        tmp[1][1].push_back("Brand#23");
+//        valid_strings[1].push_back(tmp[1][1]);
+//
+//        strings[1].push_back(l_shipmode_att);
+//        tmp[1][2].push_back("AIR");
+//        tmp[1][2].push_back("REG_AIR");
+//        valid_strings[1].push_back(tmp[1][2]);
+//
+//        strings[1].push_back(l_shipinstruct_att);
+//        tmp[1][3].push_back("DELIVER_IN_PERSON");
+//        valid_strings[1].push_back(tmp[1][3]);
+//
+//        var[1].push_back(l_quantity_att);
+//        ranges[1].push_back(make_pair(10,21));
+//        var[1].push_back(p_size_att);
+//        ranges[1].push_back(make_pair(2,10));
         //////////////////////////////////////////////////////////////////////////////
-        strings[2].push_back(p_container_att);
-        tmp[2][0].push_back("LG_CASE");
-        tmp[2][0].push_back("LG_BOX");
-        tmp[2][0].push_back("LG_PACK");
-        tmp[2][0].push_back("LG_PKG");
-        valid_strings[2].push_back(tmp[2][0]);
+//        strings[2].push_back(p_container_att);
+//        tmp[2][0].push_back("LG_CASE");
+//        tmp[2][0].push_back("LG_BOX");
+//        tmp[2][0].push_back("LG_PACK");
+//        tmp[2][0].push_back("LG_PKG");
+//        valid_strings[2].push_back(tmp[2][0]);
+//
+//        strings[2].push_back(p_brand_att);
+//        tmp[2][1].push_back("Brand#34");
+//        valid_strings[2].push_back(tmp[2][1]);
+//
+//        strings[2].push_back(l_shipmode_att);
+//        tmp[2][2].push_back("AIR");
+//        tmp[2][2].push_back("REG_AIR");
+//        valid_strings[2].push_back(tmp[2][2]);
+//
+//        strings[2].push_back(l_shipinstruct_att);
+//        tmp[2][3].push_back("DELIVER_IN_PERSON");
+//        valid_strings[2].push_back(tmp[2][3]);
 
-        strings[2].push_back(p_brand_att);
-        tmp[2][1].push_back("Brand#34");
-        valid_strings[2].push_back(tmp[2][1]);
-
-        strings[2].push_back(l_shipmode_att);
-        tmp[2][2].push_back("AIR");
-        tmp[2][2].push_back("REG_AIR");
-        valid_strings[2].push_back(tmp[2][2]);
-
-        strings[2].push_back(l_shipinstruct_att);
-        tmp[2][3].push_back("DELIVER_IN_PERSON");
-        valid_strings[2].push_back(tmp[2][3]);
-
-        var[2].push_back(l_quantity_att);
-        ranges[2].push_back(make_pair(20,31));
-        var[2].push_back(p_size_att);
-        ranges[2].push_back(make_pair(2,15));
+//        var[2].push_back(l_quantity_att);
+//        ranges[2].push_back(make_pair(20,31));
+//        var[2].push_back(p_size_att);
+//        ranges[2].push_back(make_pair(2,15));
         //////////////////////////////////////////////////////////////////////////////
 
-        Attribute join_att1 = l_partkey_att;
-        Attribute join_att2 = p_partkey_att;
+//        Attribute join_att1 = l_partkey_att;
+//        Attribute join_att2 = p_partkey_att;
 
 
         OperandNode opd1("10");
@@ -247,7 +251,6 @@ int main(){
         OperatorNode opr1(&opd1, &opd2, false, "sub", false);
         OperandNode opd3(&l_price_att);
         OperatorNode opr2(&opd3, &opr1, false, "mult", false);
-
         OperandNode opd4(&l_price_att);
 
         vector<AggregateNode*> gb_aggs;
@@ -265,17 +268,17 @@ int main(){
         aggregateNode1.child = &groupNode;
         aggregateNode2.child = &groupNode;
 
-        SelectNode selectNode = SelectNode("Select", &groupNode, var, 3, ranges, 3, strings, valid_strings);
-        JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
+        SelectNode selectNode = SelectNode("Select", &groupNode, var, 1, ranges, 0, strings, valid_strings);
+//        JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
 
-        ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
+        ScanNode scanNode1 = ScanNode("ScanL", &selectNode);
 
-//        ScanNode scanNode2 = ScanNode("ScanP", &joinNode);
-        HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
+        ScanNode scanNode2 = ScanNode("ScanP", &selectNode);
+//        HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
 
 
-        joinNode.setLeftChild(&scanNode1);
-        joinNode.setRightChild(&scanNode2);
+//        joinNode.setLeftChild(&scanNode1);
+//        joinNode.setRightChild(&scanNode2);
 
 
         fprintf(pfile, "\n#include \"database_preparation.h\"\n"
@@ -298,19 +301,26 @@ int main(){
                        "    read_part_from_file(\"edited_part.tbl\", part_ia, 2, part_sa, 2);\n"
                        "    read_histogram_defaults_from_file(\"histograms.txt\");\n\n\n");
 
-        selectNode.prep();
-        joinNode.prep();
+//        selectNode.prep();
+//        joinNode.prep();
         scanNode1.prep();
         scanNode2.prep();
 
         set<string> x;
         root.produce(&attributes, tables, &x);
+        fprintf(pfile, "\tdouble sum = 0;\n"
+                       "\tfor (int i = 0 ; i < 50 ; i ++ ){\n"
+                       "\t    cout << i + 1 << \" \" << sum_disc_price[i] << endl;\n"
+                       "\t    sum += sum_disc_price[i];\n"
+                       "\t}\n"
+                       "\tcout << sum << endl;");
         fprintf(pfile, "\n}\n");
-
-        cout << opr2.run();
     }
 
     catch (const char* massage){
         cerr << massage << endl;
     }
 }
+
+// javaba kheili fargh daran. hist 1.7e9 data 3e8. bayad ino check konam ke be khatere expressione fargh ya na.
+// l_quantity tooye shart ham oomade va bayad bebinam tafavote rad kardane shart beyn data o hist cheghadre.

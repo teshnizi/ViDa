@@ -115,7 +115,7 @@ public:
     virtual string get_type(){};
     virtual string run(){};
     virtual set<Attribute> scan_atts(){};
-protected:
+//protected:
     ExpressionNode* left;
     ExpressionNode* right;
 
@@ -156,6 +156,7 @@ public:
         }
         return ret;
     }
+
 private:
     bool is_unary;
     bool has_hist_output;
@@ -196,6 +197,10 @@ public:
         if(has_att)
             s.insert(*att);
         return s;
+    }
+
+    string num(){
+        return numeric;
     }
 private:
     bool has_att = false;
