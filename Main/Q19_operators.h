@@ -7,6 +7,7 @@
 #include "statistics.h"
 #include <map>
 #include "expressions.h"
+#include "transmitter.h"
 
 using namespace std;
 
@@ -35,20 +36,53 @@ struct Table{
     }
 };
 
-vector<string> expression_parser(string expression){
-    replace(expression.begin(), expression.end(),'*', ' ');
-    replace(expression.begin(), expression.end(),'+', ' ');
-    replace(expression.begin(), expression.end(),'(', ' ');
-    replace(expression.begin(), expression.end(),')', ' ');
-    istringstream iss(expression);
-    vector<string> v;
-    string s;
-    while (!iss.eof()){
-        iss >> s;
-        v.push_back(s);
-    } v.pop_back();
-    return v;
+bool is_operand(char ch){
+    return ch == '(' ||
+        ch == ')' ||
+           ('A' <= ch && ch <= 'Z') ||
+           ('a' <= ch && ch <= 'z') ||
+           ('0' <= ch && ch <= '9');
 }
+
+string make_expression_standard(string s){
+    for (int i = 1 ; i < s.size()-1; i++){
+        int pre_it = i-1;
+        int post_it = i+1;
+        if (s[pre_it] == ' ')pre_it--;
+        if (s[post_it] == ' ')post_it++;
+        if (s[i] == ' ' && is_operand(s[pre_it]) && is_operand(s[post_it])){
+            s[i] = '*';
+        }
+        if (s[i] == '^'){
+            int it1 = i-1;
+            int par_cnt = 0;
+            while (it1 >= 0 && (par_cnt != 0 || is_operand(s[it1]))){
+                if (s[it1] == ')')par_cnt++;
+                if (s[it1] == '(')par_cnt--;
+                it1--;
+            }
+            it1++;
+
+            par_cnt = 0;
+            int it2 = i+1;
+            while (it2 < s.size() && (par_cnt != 0 || is_operand(s[it2]))){
+                if (s[it2] == '(')par_cnt++;
+                if (s[it2] == ')')par_cnt--;
+                it2++;
+            }
+            it2--;
+
+            string rep = "pow(";
+            rep += s.substr(it1, i - it1);
+            rep += ",";
+            rep += s.substr(i+1, it2 - i);
+            rep += ")";
+            s.replace(it1, it2 - it1 + 1, rep);
+        }
+    }
+    return s;
+}
+
 
 string indent;
 
@@ -59,6 +93,7 @@ class SelectNode;
 class AggregateNode;
 class JoinNode;
 class GroupNode;
+class WolframAggregateNode;
 
 FILE* pfile;
 map <string, int> table_names;
@@ -142,8 +177,9 @@ private:
 
 class SelectNode : public Node{
 public:
-    SelectNode(string name, Node* parent, vector<Attribute> int_variables[], int int_sub_conditions, vector<pair<int,int>> ranges[],
-    int string_sub_conditions, vector<Attribute> string_variables[], vector<vector<string>> valid_strings[]) :
+    SelectNode(string name, Node *parent, vector<Attribute> int_variables[], int int_sub_conditions,
+                   vector<pair<int, int>> ranges[], vector<Attribute> string_variables[], int string_sub_conditions,
+                   vector<vector<string>> valid_strings[]) :
     Node(name, parent) {
         this->int_sub_conditions = int_sub_conditions;
         this->string_sub_conditions = string_sub_conditions;
@@ -306,6 +342,74 @@ private:
     vector<AggregateNode*> *aggregations;
 };
 
+class WolframAggregateNode : public Node{
+public:
+    WolframAggregateNode(string name, Node* parent, string expression, vector<Attribute*> attributes, vector<string> symbols, int type, int virtuality) : Node(name, parent){
+
+        this->attributes = attributes;
+        this->expression = expression;
+        this->symbols = symbols;
+        this->type = type;
+        this->virtuality = virtuality;
+
+        string assumptions = "";
+        for (int i = 0; i < attributes.size(); i++)
+            if(attributes[i]->virtuality == dist_att){
+                assumptions += ", " + symbols[i] + "\\[Distributed]" + attributes[i]->distribution;
+            }
+        string query = expression;
+        if ( assumptions.size() > 0){
+            assumptions[0] = ' '; // removing the redundant comma.
+            query = "TransformedDistribution[" + query + ",{" + assumptions + "}]";
+        }
+
+        cout << "\nThis is sent to Wolfram:\n" << query << "\n\n";
+        answer = wolfram_compute(query);
+        cout << "\nThis is received from Wolfram:\n" << answer << endl;
+        answer = make_expression_standard(answer);
+        cout << "\nThis is the answer after regulation:\n" << answer << endl;
+        for (int i = 0; i < answer.size(); ++i) {
+            for (int j = 0; j < symbols.size(); ++j) {
+                if (answer.substr(i, symbols[j].size()) == symbols[j])
+                    answer.replace(i, symbols[j].size(), attributes[j]->name);
+            }
+        }
+        cout << "\nThis is the answer after replacing symbols with attribute names:\n" << answer << endl;
+    }
+
+    void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
+    void consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables) override;
+
+    string get_class(){
+        return "WolframAggregateNode";
+    }
+    void prep(){
+
+        string s = name.c_str();
+
+        if (this->child->get_class() == "GroupNode"){
+            s = s + "[max_table_size]";
+            auto nm = s.c_str();
+            if ( virtuality == data_att){
+                fprintf(pfile, "\tdouble %s;\n", nm);
+            }
+        } else {
+            auto nm = s.c_str();
+            if ( virtuality == data_att){
+                fprintf(pfile, "\tdouble %s = 0;\n", nm);
+            }
+        }
+    }
+
+private:
+    string expression;
+    vector<Attribute*> attributes;
+    vector<string> symbols;
+    string answer;
+    int type;
+    int virtuality;
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void SelectNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) {
@@ -388,7 +492,7 @@ void SelectNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set
                             string_id[string_variables[k][i].id][valid_strings[k][i][l].c_str()]);
                 }
             }
-            if ( string_variables[k][i].virtuality == data_att) {
+            if (string_variables[k][i].virtuality == data_att) {
                 fprintf(pfile,"%sif(\n",indent.c_str());
                 for (int l = 0; l < valid_strings[k][i].size(); ++l) {
                     fprintf(pfile, "%s   (%s == \"%s\")" , indent.c_str(), string_variables[k][i].name.c_str(), valid_strings[k][i][l].c_str());
@@ -648,7 +752,7 @@ void AggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, 
         fprintf(pfile, "%s%s(*%s, *%s);\n", indent.c_str(), op.c_str(), name.c_str(), coefficient_operator.run().c_str());
 
     }
-    parent->consume(a, tables, this, fixed_tables);
+//    parent->consume(a, tables, this, fixed_tables);
 }
 
 void JoinNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) {
@@ -909,11 +1013,22 @@ void GroupNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<
         fprintf(pfile, "%s}\n", indent.c_str());
     }
 
-
-//    parent->consume(a, tables, this, fixed_tables);
+    cout << parent->get_class() << endl;
+    parent->consume(a, tables, this, fixed_tables);
 
     indent = indent.substr(0, indent.size()-1);
     fprintf(pfile, "%s}\n", indent.c_str());
+}
+
+void WolframAggregateNode::produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables){
+    this->child->produce(a, tables, fixed_tables);
+}
+
+void WolframAggregateNode::consume(set<Attribute> *a, set<Table> tables, Node *source, set<string> *fixed_tables){
+    OperandNode op = OperandNode(answer);
+    AggregateNode inner_Aggregate(name, this, this->type, this->virtuality, &op);
+//    cout << answer << endl;
+    inner_Aggregate.consume(a, tables, this, fixed_tables);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

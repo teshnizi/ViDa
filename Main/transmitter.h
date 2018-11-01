@@ -20,7 +20,7 @@ string WolframAppID = "H4K447-WA9Y2J6P79";
 #define codeopenpar "%28"
 #define codeclosepar "%29"
 
-string wolfram_compute(string message);
+string send_to_wolfram(string message);
 
 struct buffer {
     char *ptr;
@@ -51,7 +51,7 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct buffer *s) {
     return size*nmemb;
 }
 
-string normalize_expression(string expression){
+string cast_to_URL(string expression){
 
     string ret = "";
 
@@ -103,14 +103,20 @@ void replaceAll(string& str, const string& from, const string& to) {
 
 string integrate(string expression){
     string ret = "http://api.wolframalpha.com/v2/result?appid=" + WolframAppID + "&i=integrate%20";
-    ret += normalize_expression(expression);
-    return wolfram_compute(ret);
+    ret += cast_to_URL(expression);
+    return send_to_wolfram(ret);
 }
 
 string convolve(string exp1, string exp2){
     string ret = "http://api.wolframalpha.com/v2/result?appid=" + WolframAppID + "&i=";
-    ret += normalize_expression("convolve(" + exp1 + "," + exp2 + ")");
-    return wolfram_compute(ret);
+    ret += cast_to_URL("convolve(" + exp1 + "," + exp2 + ")");
+    return send_to_wolfram(ret);
+}
+
+string wolfram_compute(string x){
+    string ret = "http://api.wolframalpha.com/v2/result?appid=" + WolframAppID + "&i=";
+    ret += cast_to_URL(x);
+    return send_to_wolfram(ret);
 }
 
 void prepare_curl(){
@@ -124,7 +130,7 @@ void cleanup(){
 
 buffer b;
 
-string wolfram_compute(string message){
+string send_to_wolfram(string message){
 
     CURLcode res;
     string ans = "";

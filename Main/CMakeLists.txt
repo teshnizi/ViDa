@@ -26,4 +26,4 @@ add_executable(tmp tmp.cpp)
 
 target_link_libraries(Q19operators ginac)
 target_link_libraries(GiNaC_sample ginac)
-target_link_libraries(tmp curl)
+target_link_libraries(Q19operators curl)

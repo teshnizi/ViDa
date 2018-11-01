@@ -23,7 +23,8 @@ enum attribute_type{
 
 enum attribute_virtuality{
     data_att,
-    hist_att
+    hist_att,
+    dist_att
 };
 
 struct Attribute{
@@ -34,11 +35,16 @@ struct Attribute{
         this->virtuality = virtuality;
         this->id = id;
     }
+    Attribute(string table_name, string name, int virtuality, string distribution, int type, int id)
+            : Attribute(table_name, name, virtuality, type, id){
+        this->distribution = distribution;
+    }
     string name;
     string table_name;
     int type;
     int virtuality;
     int id;
+    string distribution;
 
     bool operator < (const Attribute& a) const{
         if(this->table_name == a.table_name){

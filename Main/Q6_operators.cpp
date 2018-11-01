@@ -105,7 +105,7 @@ int main(){
 
         AggregateNode aggregateNode1 = AggregateNode("Revenue", &root, agg_sum, data_att, &opr);
 
-        SelectNode selectNode = SelectNode("Select", &aggregateNode1, var, 1, ranges, 0, strings, valid_strings);
+        SelectNode selectNode = SelectNode("Select", &aggregateNode1, var, 1, ranges, strings, 0, valid_strings);
 
         ScanNode scanNode1 = ScanNode("ScanL", &selectNode);
 
