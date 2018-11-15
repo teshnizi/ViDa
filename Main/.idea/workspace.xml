@@ -2,11 +2,12 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="find_hists" />
-      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="GiNaC_sample" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q6operators" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="tmp" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="GiNaC_sample" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="find_hists" />
       <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="Q19operators" />
+      <config projectName="cmake-build-debug/CMakeFiles/ViDaG" targetName="wolfram_test" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -19,11 +20,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Q19_operators.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Q19_operators.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Q19_operators.h" beforeDir="false" afterPath="$PROJECT_DIR$/Q19_operators.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Q6_operators.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Q6_operators.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/expressions.h" beforeDir="false" afterPath="$PROJECT_DIR$/expressions.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tmp.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transmitter.h" beforeDir="false" afterPath="$PROJECT_DIR$/transmitter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/wolfram_test.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,52 +36,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Q19_operators.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Q19_operators.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Q19_operators.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="50" column="66" lean-forward="true" selection-start-line="50" selection-start-column="66" selection-end-line="50" selection-end-column="66" />
+            <state relative-caret-position="483">
+              <caret line="292" column="21" selection-start-line="292" selection-start-column="21" selection-end-line="292" selection-end-column="21" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tuples2.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tuples2.h">
+      <file leaf-file-name="wolfram_test.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wolfram_test.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="expressions.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/expressions.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="880">
-              <caret line="40" column="5" selection-start-line="40" selection-start-column="5" selection-end-line="40" selection-end-column="5" />
+            <state relative-caret-position="176">
+              <caret line="14" column="70" selection-start-line="9" selection-start-column="4" selection-end-line="14" selection-end-column="70" />
               <folding>
-                <element signature="e#218#237#0" expanded="true" />
+                <element signature="e#1#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Q6_simple_hist_random_generation.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Q6_simple_hist_random_generation.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1452">
-              <caret line="66" column="5" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tmp.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="tmp.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tmp.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="132">
-              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            <state relative-caret-position="269">
+              <caret line="70" column="33" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
               <folding>
-                <element signature="e#1#18#0" expanded="true" />
+                <element signature="e#43#62#0" expanded="true" />
+                <element signature="e#342#365#0" />
               </folding>
             </state>
           </provider>
@@ -93,7 +73,7 @@
       <file leaf-file-name="Q19_operators.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Q19_operators.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1070">
+            <state relative-caret-position="7942">
               <caret line="361" column="50" selection-start-line="361" selection-start-column="50" selection-end-line="361" selection-end-column="50" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -121,20 +101,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="operators_backup.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/operators_backup.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11660">
-              <caret line="530" column="8" selection-start-line="530" selection-start-column="8" selection-end-line="530" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="616">
-              <caret line="28" column="36" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
+            <state relative-caret-position="420">
+              <caret line="30" column="34" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -142,7 +113,7 @@
       <file leaf-file-name="transmitter.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/transmitter.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
+            <state relative-caret-position="1166">
               <caret line="53" column="18" selection-start-line="53" selection-start-column="18" selection-end-line="53" selection-end-column="18" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -236,13 +207,13 @@
         <option value="$PROJECT_DIR$/find_histograms.cpp" />
         <option value="$PROJECT_DIR$/Q6_operators.cpp" />
         <option value="$PROJECT_DIR$/GiNaC_sample.cpp" />
-        <option value="$PROJECT_DIR$/tmp.cpp" />
         <option value="$PROJECT_DIR$/operators_backup.h" />
         <option value="$PROJECT_DIR$/expressions.h" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/transmitter.h" />
         <option value="$PROJECT_DIR$/Q19_operators.h" />
         <option value="$PROJECT_DIR$/Q19_operators.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/tmp.cpp" />
       </list>
     </option>
   </component>
@@ -257,10 +228,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="180" />
+    <option name="x" value="993" />
     <option name="y" value="27" />
-    <option name="width" value="1350" />
-    <option name="height" value="1026" />
+    <option name="width" value="927" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -268,7 +239,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -280,6 +250,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -291,11 +262,11 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Documents/Q6_data_distributions" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -311,13 +282,14 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Q19operators">
-    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19operators" EXPLICIT_BUILD_TARGET_NAME="all" />
-    <configuration name="GiNaC_sample" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="GiNaC_sample" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19operators" />
-    <configuration name="Q19operators" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q19operators" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19operators" />
+  <component name="RunManager" selected="Application.tmp">
+    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" EXPLICIT_BUILD_TARGET_NAME="all" />
+    <configuration name="GiNaC_sample" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="GiNaC_sample" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="Q19operators" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q19operators" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
     <configuration name="Q6operators" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="Q6operators" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
-    <configuration name="find_hists" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="find_hists" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="Q19operators" />
+    <configuration name="find_hists" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="find_hists" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
     <configuration name="tmp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="tmp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="tmp" />
+    <configuration name="wolfram_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" TARGET_NAME="wolfram_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cmake-build-debug/CMakeFiles/ViDaG" RUN_TARGET_NAME="wolfram_test" />
     <list>
       <item itemvalue="Application.Build All" />
       <item itemvalue="Application.find_hists" />
@@ -325,6 +297,7 @@
       <item itemvalue="Application.Q19operators" />
       <item itemvalue="Application.Q6operators" />
       <item itemvalue="Application.tmp" />
+      <item itemvalue="Application.wolfram_test" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -404,7 +377,8 @@
       <workItem from="1539793875188" duration="153000" />
       <workItem from="1540547392730" duration="36944000" />
       <workItem from="1540961725244" duration="25719000" />
-      <workItem from="1541079287247" duration="4902000" />
+      <workItem from="1541079287247" duration="8005000" />
+      <workItem from="1542266967214" duration="12620000" />
     </task>
     <task id="LOCAL-00001" summary="week 5 tasks.">
       <created>1534097850194</created>
@@ -602,11 +576,18 @@
       <option name="project" value="LOCAL" />
       <updated>1540905446989</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="WolframAggregateNode.">
+      <created>1541084376354</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1541084376354</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="634043000" />
+    <option name="totallyTimeSpent" value="649766000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -621,16 +602,16 @@
     <frame x="67" y="27" width="1853" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.659375" visible="true" weight="0.12513661" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6567164" visible="true" weight="0.12513661" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32922733" />
       <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.7961749" weight="0.32586786" />
       <window_info anchor="bottom" id="CMake" order="11" sideWeight="0.4967213" weight="0.33034715" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5027322" side_tool="true" weight="0.3180291" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.20380738" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.75136614" visible="true" weight="0.28331468" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.75136614" visible="true" weight="0.47480404" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49945354" weight="0.32922733" />
-      <window_info id="Favorites" order="2" sideWeight="0.340625" side_tool="true" visible="true" weight="0.12513661" />
+      <window_info id="Favorites" order="2" sideWeight="0.3432836" side_tool="true" visible="true" weight="0.12513661" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49617487" weight="0.2900336" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -648,7 +629,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Q19 scan select and map." />
     <MESSAGE value="join." />
     <MESSAGE value="previous commit doesn't compile :)&#10;use this one." />
     <MESSAGE value="dependency on data virtuality removed from nodes." />
@@ -673,31 +653,15 @@
     <MESSAGE value="group for data implemented." />
     <MESSAGE value="wolfram api query implemented." />
     <MESSAGE value="wolfram convolution" />
-    <option name="LAST_COMMIT_MESSAGE" value="wolfram convolution" />
+    <MESSAGE value="WolframAggregateNode." />
+    <option name="LAST_COMMIT_MESSAGE" value="WolframAggregateNode." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="58" />
+      <option name="time" value="59" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gradient_descent.cpp" />
-    <entry file="file:///usr/include/c++/7/cmath">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="13" selection-start-line="7" selection-end-line="7" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CSV_generator.cpp" />
-    <entry file="file://$PROJECT_DIR$/main.cpp" />
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" lean-forward="true" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/c++/7/iosfwd">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -957,33 +921,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="28" column="36" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tmp.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-          <folding>
-            <element signature="e#1#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tuples2.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
+        <state relative-caret-position="814">
           <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/transmitter.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
+        <state relative-caret-position="1166">
           <caret line="53" column="18" selection-start-line="53" selection-start-column="18" selection-end-line="53" selection-end-column="18" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -993,7 +940,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Q19_operators.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1070">
+        <state relative-caret-position="7942">
           <caret line="361" column="50" selection-start-line="361" selection-start-column="50" selection-end-line="361" selection-end-column="50" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -1020,10 +967,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///usr/include/stdlib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="90" column="8" selection-start-line="90" selection-start-column="8" selection-end-line="90" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wolfram_test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="14" column="70" selection-start-line="9" selection-start-column="4" selection-end-line="14" selection-end-column="70" />
+          <folding>
+            <element signature="e#1#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="30" column="34" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Q19_operators.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="50" column="66" lean-forward="true" selection-start-line="50" selection-start-column="66" selection-end-line="50" selection-end-column="66" />
+        <state relative-caret-position="483">
+          <caret line="292" column="21" selection-start-line="292" selection-start-column="21" selection-end-line="292" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/x86_64-linux-gnu/bits/types/FILE.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="20" lean-forward="true" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/x86_64-linux-gnu/bits/libio.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-344">
+          <caret line="244" column="7" selection-start-line="244" selection-start-column="7" selection-end-line="244" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/stdio.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="799" column="8" selection-start-line="799" selection-start-column="8" selection-end-line="799" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="70" column="33" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
+          <folding>
+            <element signature="e#43#62#0" expanded="true" />
+            <element signature="e#342#365#0" />
+          </folding>
         </state>
       </provider>
     </entry>

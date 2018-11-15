@@ -299,15 +299,16 @@ int main(){
 
         set<string> x;
         root.produce(&attributes, tables, &x);
-        fprintf(pfile, "\tdouble sum = 0;\n"
-                       "\tcout << endl;\n"
-                       "\tfor (int i = 1 ; i < 50 ; i ++ ){\n"
-                       "\t\tif(search(groupby_hash_id, i) != NULL){\n"
-                       "\t\t\tcout << i << \" \" << sum_disc_price[search(groupby_hash_id, i) -> data] << endl;\n"
-                       "\t\t\t\tsum += sum_disc_price[search(groupby_hash_id, i) -> data];\n"
-                       "\t\t}\n"
-                       "\t}\n"
-                       "\tcout << sum << endl;");
+        fprintf(pfile,
+//                "\tdouble sum = 0;\n"
+//                       "\tcout << endl;\n"
+//                       "\tfor (int i = 1 ; i < 50 ; i ++ ){\n"
+//                       "\t\tif(search(groupby_hash_id, i) != NULL){\n"
+//                       "\t\t\tcout << i << \" \" << sum_disc_price[search(groupby_hash_id, i) -> data] << endl;\n"
+//                       "\t\t\t\tsum += sum_disc_price[search(groupby_hash_id, i) -> data];\n"
+//                       "\t\t}\n"
+//                       "\t}\n"
+                       "\tcout << wolf << endl;");
         fprintf(pfile, "\n}\n");
         cleanup();
     }
