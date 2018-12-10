@@ -2,7 +2,7 @@
 // Created by teshnizi on 24/08/18.
 //
 
-#include "Q19_operators.h"
+#include "operators.h"
 #include <ginac/ginac.h>
 
 using namespace std;
@@ -39,16 +39,16 @@ int main(){
         vector<vector<string>> valid_strings[10];
         vector<string> tmp[3][4];
 
-        Attribute p_container_att = Attribute("part", "p_container", data_att, att_string, p_container_id);
-        Attribute p_brand_att = Attribute("part", "p_brand", data_att, att_string, p_brand_id);
-        Attribute p_partkey_att = Attribute("part", "p_partkey", data_att, att_int, p_partkey_id);
-        Attribute p_size_att = Attribute("part", "p_size", dist_att, "NormalDistribution[0,1]", att_int, p_size_id);
-        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", data_att, att_string, l_shipmode_id);
-        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", data_att, att_string, l_shipinstruct_id);
-        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
-        Attribute l_discount_att = Attribute("lineitem", "l_discount", dist_att, "NormalDistribution[0,2]", att_int, l_discount_id);
-        Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
+        Attribute p_container_att = Attribute("part", "pContainer", data_att, att_string, p_container_id);
+        Attribute p_brand_att = Attribute("part", "pBrand", data_att, att_string, p_brand_id);
+        Attribute p_partkey_att = Attribute("part", "pPartkey", data_att, att_int, p_partkey_id);
+        Attribute p_size_att = Attribute("part", "pSize", dist_att, "NormalDistribution[4,1]", att_int, p_size_id);
+        Attribute l_shipmode_att = Attribute("lineitem", "lShipmode", data_att, att_string, l_shipmode_id);
+        Attribute l_shipinstruct_att = Attribute("lineitem", "lShipinstruct", data_att, att_string, l_shipinstruct_id);
+        Attribute l_quantity_att = Attribute("lineitem", "lQuantity", data_att, att_int, l_quantity_id);
+        Attribute l_discount_att = Attribute("lineitem", "lDiscount", dist_att, "NormalDistribution[2,2]", att_int, l_discount_id);
+        Attribute l_price_att = Attribute("lineitem", "lPrice", data_att, att_int, l_price_id);
+        Attribute l_partkey_att = Attribute("lineitem", "lPartkey", data_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -254,9 +254,10 @@ int main(){
 
 
         vector<Attribute*> vect{&l_price_att, &l_discount_att, &p_size_att};
-        vector<string> symbols{"X"        , "Y"           , "Z"};
+//        vector<string> symbols{"X"        , "Y"           , "Z"};
 
-        WolframAggregateNode wolframAggregateNode("wolf", &root, "X^2 * (1 - 3Y) + Z", vect, symbols, agg_sum, data_att);
+        WolframAggregateNode wolframAggregateNode("wolf", &root, "(lPrice ^ 2 ) * ((1 + lDiscount)) + pSize", vect, agg_sum, data_att);
+
 
         SelectNode selectNode = SelectNode("Select", &wolframAggregateNode, var, 3, ranges, strings, 3, valid_strings);
 

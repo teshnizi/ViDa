@@ -207,7 +207,7 @@ private:
     vector<vector<string>> valid_strings[condition_max_subconditions];
 };
 
-class AggregateNode : public Node{
+class  AggregateNode : public Node{
 
 public:
     AggregateNode(string name, Node* parent, int type, int virtuality, ExpressionNode* expression_root) : Node(name, parent){
@@ -344,37 +344,37 @@ private:
 
 class WolframAggregateNode : public Node{
 public:
-    WolframAggregateNode(string name, Node* parent, string expression, vector<Attribute*> attributes, vector<string> symbols, int type, int virtuality) : Node(name, parent){
+    WolframAggregateNode(string name, Node* parent, string expression, vector<Attribute*> attributes, int type, int virtuality) : Node(name, parent){
 
         this->attributes = attributes;
         this->expression = expression;
-        this->symbols = symbols;
+//        this->symbols = symbols;
         this->type = type;
         this->virtuality = virtuality;
 
         string assumptions = "";
         for (int i = 0; i < attributes.size(); i++)
             if(attributes[i]->virtuality == dist_att){
-                assumptions += ", " + symbols[i] + "\\[Distributed]" + attributes[i]->distribution;
+                assumptions += ", " + attributes[i]->name + "\\[Distributed]" + attributes[i]->distribution;
             }
         string query = expression;
-        if ( assumptions.size() > 0){
+        if ( assumptions.size() > 0) {
             assumptions[0] = ' '; // removing the redundant comma.
-            query = "TransformedDistribution[" + query + ",{" + assumptions + "}]";
+            query = get_ExpectedValue_query(query, assumptions);
         }
 
         cout << "\nThis is sent to Wolfram:\n" << query << "\n\n";
         answer = wolfram_compute(query);
         cout << "\nThis is received from Wolfram:\n" << answer << endl;
-        answer = make_expression_standard(answer);
-        cout << "\nThis is the answer after regulation:\n" << answer << endl;
-        for (int i = 0; i < answer.size(); ++i) {
-            for (int j = 0; j < symbols.size(); ++j) {
-                if (answer.substr(i, symbols[j].size()) == symbols[j])
-                    answer.replace(i, symbols[j].size(), attributes[j]->name);
-            }
-        }
-        cout << "\nThis is the answer after replacing symbols with attribute names:\n" << answer << endl;
+//        answer = make_expression_standard(answer);
+//        cout << "\nThis is the answer after regulation:\n" << answer << endl;
+//        for (int i = 0; i < answer.size(); ++i) {
+//            for (int j = 0; j < symbols.size(); ++j) {
+//                if (answer.substr(i, symbols[j].size()) == symbols[j])
+//                    answer.replace(i, symbols[j].size(), attributes[j]->name);
+//            }
+//        }
+//        cout << "\nThis is the answer after replacing symbols with attribute names:\n" << answer << endl;
     }
 
     void produce(set<Attribute> *a, set<Table> tables, set<string> *fixed_tables) override;
@@ -404,7 +404,7 @@ public:
 private:
     string expression;
     vector<Attribute*> attributes;
-    vector<string> symbols;
+//    vector<string> symbols;
     string answer;
     int type;
     int virtuality;

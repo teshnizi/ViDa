@@ -27,6 +27,27 @@ struct buffer {
     size_t len;
 };
 
+string GetStdoutFromCommand(string cmd) {
+
+    string data;
+    FILE *stream;
+    const int max_buffer = 256;
+    char buffer[max_buffer];
+    cmd.append(" 2>&1");
+
+    stream = popen(cmd.c_str(), "r");
+
+    if (stream) {
+        while (!feof(stream)) {
+            if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+        }
+        pclose(stream);
+    }
+    return data;
+}
+
+
+
 void init_buffer(struct buffer *s) {
     s->len = 0;
     s->ptr = (char*)malloc(s->len+1);
@@ -114,9 +135,11 @@ string convolve(string exp1, string exp2){
 }
 
 string wolfram_compute(string x){
-    string ret = "http://api.wolframalpha.com/v2/result?appid=" + WolframAppID + "&i=";
-    ret += cast_to_URL(x);
-    return send_to_wolfram(ret);
+    string ret = "ssh pi@192.168.43.187 \"wolframscript -format CForm -c '";
+    ret += x;
+    ret += "'\"";
+    cout << ret << endl;
+    return GetStdoutFromCommand(ret);
 }
 
 void prepare_curl(){

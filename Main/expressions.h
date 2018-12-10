@@ -213,3 +213,16 @@ private:
     Attribute* att;
     string numeric;
 };
+
+
+string get_Transform_query(string query, string assumptions){
+    return "TransformedDistribution[ " + query + ",{" + assumptions + "}]";
+}
+
+string get_CDF_query(string query, string assumptions){
+    return "\\[Integral]PDF[" + get_Transform_query(query, assumptions) + "}],x]\\[DifferentialD]x";
+}
+
+string get_ExpectedValue_query(string query, string assumptions){
+    return "Expectation[" + query + ", {" + assumptions + "}]";
+}

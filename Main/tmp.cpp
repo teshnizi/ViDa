@@ -1,92 +1,39 @@
-//
-// Created by teshnizi on 15/11/18.
-//
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <iostream>
 #include <chrono>
-#include <sstream>
 
 using namespace std;
 
-auto start = chrono::system_clock::now();
-auto finish = chrono::system_clock::now();
-chrono::duration<double> diff = finish - start;
 
-FILE *Maxima;
-FILE *Sage;
+string GetStdoutFromCommand(string cmd) {
 
-char buffer[1024];
-string result = "";
+    string data;
+    FILE * stream;
+    const int max_buffer = 256;
+    char buffer[max_buffer];
+    cmd.append(" 2>&1");
 
-int startMaxima(){
-    Maxima = popen("maxima", "w");
-    if (!Maxima)
-    {
-        fprintf (stderr,
-                 "incorrect parameters or too many files.\n");
-        return EXIT_FAILURE;
+    stream = popen(cmd.c_str(), "r");
+
+    if (stream) {
+        chrono::high_resolution_clock::time_point st = chrono::high_resolution_clock::now();
+        while (!feof(stream) && chrono::duration_cast<chrono::milliseconds>( chrono::high_resolution_clock::now() - st ).count() < 1000) {
+            if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+        }
+        pclose(stream);
     }
+    return data;
 }
 
-int startSage(){
-    Sage = popen("sage", "w");
-    if (!Sage)
-    {
-        fprintf (stderr,
-                 "incorrect parameters or too many files.\n");
-        return EXIT_FAILURE;
-    }
-}
 
-void CASExecute (FILE * stream, const char* command) {
-//    ofstream of(stream);
-    fprintf (stream, command);
-    if (ferror (stream))
-    {
-        fprintf (stderr, "Output to stream failed.\n");
-        exit (EXIT_FAILURE);
-    }
-}
 
-chrono::duration<double> MaximaST;
-chrono::duration<double> MaximaET;
 
-int main (void)
-{
+int main() {
 
-    start = chrono::system_clock::now();
-    startMaxima();
-    CASExecute(Maxima, "display2d:false;\n");
-    CASExecute(Maxima, "load(\"distrib\");\n");
+    cout << GetStdoutFromCommand("ssh pi@192.168.43.187 \"wolframscript -format CForm -c 'Expectation[(lPrice * lDiscount), {  lDiscount\\[Distributed]UniformDistribution[{0,10}]}]'\"");
 
-    MaximaST = chrono::system_clock::now() - start;
-
-    start = chrono::system_clock::now();
-//    integrate("7/t + 3(t^2)ln(t) over t from 1 to 10")
-    CASExecute (Maxima, "f(x) := pdf_normal(x,0,3);\n");
-    CASExecute (Maxima, "g(x) := pdf_normal(x,0,4);\n");
-    CASExecute (Maxima, "fCONVg(x) := integrate(f(t) * g(x-t), t, -inf, inf);\n");
-    CASExecute (Maxima, "fCONVg(x);\n");
-
-//    CASExecute (Maxima, "integrate(f(x), x, -inf, inf);\n");
-    MaximaST = chrono::system_clock::now() - start;
-
-    if (pclose (Maxima) != 0) {
-        fprintf (stderr,
-                 "Could not run more or other error.\n");
-    }
-
-    cout << "\n\nMaxima Starting Time: " << MaximaST.count();
-    cout << "\nMaxima Execution Time: " << MaximaET.count() << "\n\n";
-    cout << endl << endl << endl;
-
-//    startSage();
-//    CASExecute(Sage, "1 + 2\n");
-//    if (pclose (Sage) != 0) {
-//        fprintf (stderr,
-//                 "Could not run more or other error.\n");
-//    }
-//    return EXIT_SUCCESS;
+    return 0;
 }
