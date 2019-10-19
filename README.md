@@ -180,7 +180,7 @@ You can take a look at [the generator code](https://gitlab.com/teshnizi/ViDaG/bl
 When working with histograms, performance and precision highly depend on number of buckets of the histograms. **The key point is that using virtual data 
 has a constant overhead, regardless of the scale factor, and it eliminates the need for iterating over large tables**. We used histograms with 100 buckets. Addition and subtraction operations on such histograms
 are almost 100 times slower than similar operations on real data. Multiplication and division operations are roughly 5000 times slower. Distributions, however, have almost no runtime overhead. 
-After testing our code on tables of size `6e6` and setting input data to be virtual, we observed a speed up of up to `246x` for query 6 and up to `92x` for query 19.
+After testing our code on tables of size `6e6` and setting input data to be virtual, we observed a `246x` speed up for query 6 and a `92x` speed up for query 19.
 
 here you can see how output results changed for several virtuality configurations:
 
