@@ -12,6 +12,18 @@
 <img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/sample.png" title="sample code" alt="sample code">
 
 
+## Table of Contents ()
+
+> If you're `README` has a lot of info, section headers might be nice.
+
+- [What is VIDA?](#what-is-vida?)
+- [How Does it Work?](#How Does it Work?)
+- [Examples](#Examples)
+- [Evaluation and Testing](#evaluation-and-testing)
+- [License](#license)
+
+
+
 ## What is VIDA?
 
 VIDA is a platform for converting sql queries into efficient c++ code. Beside conversion, it can use hostograms and distributions to do computations on data. This could be really helpful for large queries.
@@ -170,7 +182,7 @@ sum_price += data_data_mult_data(1 * lineitem_table_size  * part_table_size , 4 
 
 You can take a look at [the generator code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Q19_operators.cpp) or [the generated code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Sample%20Generated%20Codes/Q9.cpp) for more details.
 
-##Evaluation and Testing
+## Evaluation and Testing
 When working with histograms, performance and estimation precision highly depend on number of buckets of the hsitograms. **The key point is that using virtual data eliminates the need for iterating over large tables, and 
 has a constant overhead, regardless of the size of the tables**. We used histograms with 100 buckets. Addition and subtraction operations on such histograms
 are 100 times slowe than similar operations on real data. Multiplication and division operations are roughly 5000 times slower. Using distributions, however, has almost no overhead. 
@@ -179,7 +191,16 @@ After testing our code on tables of size `6e6` and setting input data to be virt
 here you can see how output results changed when we used virtual data:
 
 
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/white.png" width = "25%">
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/Documents/q6_precision.png" width ="50%">
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/Documents/q19_precision.png" width ="100%">
 
+
+As it could be seen in the charts, precision is more than `90%` for most of the cases, which is absolutely acceptable when we take the drastic speed ups into consideration.
+
+
+---
+Please let me know if you have any questions!
 
 
 
