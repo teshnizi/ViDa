@@ -27,7 +27,7 @@ void preprocess(string x){
 int main(){
     try {
         prepare_curl();
-        preprocess("HELLO.cpp");
+        preprocess("Q9.cpp");
         read_lineitem_from_file("edited_lineitem.tbl", table_ints, table_strings, lineitem_ints, lineitem_strings);
 
         Node root = Node("Root");
@@ -39,16 +39,17 @@ int main(){
         vector<vector<string>> valid_strings[10];
         vector<string> tmp[3][4];
 
-        Attribute p_container_att = Attribute("part", "pContainer", data_att, att_string, p_container_id);
-        Attribute p_brand_att = Attribute("part", "pBrand", data_att, att_string, p_brand_id);
-        Attribute p_partkey_att = Attribute("part", "pPartkey", data_att, att_int, p_partkey_id);
-        Attribute p_size_att = Attribute("part", "pSize", dist_att, "NormalDistribution[4,1]", att_int, p_size_id);
-        Attribute l_shipmode_att = Attribute("lineitem", "lShipmode", data_att, att_string, l_shipmode_id);
-        Attribute l_shipinstruct_att = Attribute("lineitem", "lShipinstruct", data_att, att_string, l_shipinstruct_id);
-        Attribute l_quantity_att = Attribute("lineitem", "lQuantity", data_att, att_int, l_quantity_id);
-        Attribute l_discount_att = Attribute("lineitem", "lDiscount", dist_att, "NormalDistribution[2,2]", att_int, l_discount_id);
-        Attribute l_price_att = Attribute("lineitem", "lPrice", data_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "lPartkey", data_att, att_int, l_partkey_id);
+        Attribute p_container_att = Attribute("part", "pcontainer", data_att, att_string, p_container_id);
+        Attribute p_brand_att = Attribute("part", "pbrand", data_att, att_string, p_brand_id);
+        Attribute p_partkey_att = Attribute("part", "ppartkey", data_att, att_int, p_partkey_id);
+        Attribute p_size_att = Attribute("part", "psize", dist_att, "NormalDistribution[4,1]", att_int, p_size_id);
+        Attribute l_shipmode_att = Attribute("lineitem", "lshipmode", data_att, att_string, l_shipmode_id);
+        Attribute l_shipinstruct_att = Attribute("lineitem", "lshipinstruct", data_att, att_string, l_shipinstruct_id);
+        Attribute l_quantity_att = Attribute("lineitem", "lquantity", data_att, att_int, l_quantity_id);
+        Attribute l_discount_att = Attribute("lineitem", "ldiscount", dist_att, "NormalDistribution[2,2]", att_int, l_discount_id);
+//        Attribute l_discount_att = Attribute("lineitem", "ldiscount", data_att, att_int, l_discount_id);
+        Attribute l_price_att = Attribute("lineitem", "lprice", data_att, att_int, l_price_id);
+        Attribute l_partkey_att = Attribute("lineitem", "lpartkey", data_att, att_int, l_partkey_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -234,41 +235,35 @@ int main(){
         OperatorNode opr1(&opd1, &opd2, false, "sub", false);
         OperandNode opd3(&l_price_att);
         OperatorNode opr2(&opd3, &opr1, false, "mult", false);
-        OperandNode opd4(&l_price_att);
+//        OperandNode opd4(&l_price_att);
 
         vector<AggregateNode*> gb_aggs;
 
         //////////////////////////////////////////////////////////////////////////////
 
         AggregateNode aggregateNode1 = AggregateNode("sum_disc_price", &root, agg_sum, data_att, &opr2);
-        AggregateNode aggregateNode2 = AggregateNode("sum_price", &root, agg_sum, data_att, &opd4);
+//        AggregateNode aggregateNode2 = AggregateNode("sum_price", &root, agg_sum, data_att, &opd4);
 
-        gb_aggs.push_back(&aggregateNode1);
-        gb_aggs.push_back(&aggregateNode2);
+//        gb_aggs.push_back(&aggregateNode1);
+//        gb_aggs.push_back(&aggregateNode2);
 
-        GroupNode groupNode = GroupNode("groupby", &root, &l_quantity_att, &gb_aggs);
+//        GroupNode groupNode = GroupNode("groupby", &root, &l_quantity_att, &gb_aggs);
 
-
-        aggregateNode1.child = &groupNode;
-        aggregateNode2.child = &groupNode;
+//        aggregateNode1.child = &groupNode;
+//        aggregateNode2.child = &groupNode;
 
 
         vector<Attribute*> vect{&l_price_att, &l_discount_att, &p_size_att};
-//        vector<string> symbols{"X"        , "Y"           , "Z"};
+        vector<string> symbols{"X"        , "Y"           , "Z"};
 
-        WolframAggregateNode wolframAggregateNode("wolf", &root, "(lPrice ^ 2 ) * ((1 + lDiscount)) + pSize", vect, agg_sum, data_att);
-
+        WolframAggregateNode wolframAggregateNode("sum_price", &root, "(lprice ^ 2 ) * ((1 + ldiscount)) + psize", vect, agg_sum, data_att);
 
         SelectNode selectNode = SelectNode("Select", &wolframAggregateNode, var, 3, ranges, strings, 3, valid_strings);
-
+        aggregateNode1.child = &selectNode;
         JoinNode joinNode = JoinNode("Join", &selectNode, join_att1, join_att2);
-
         ScanNode scanNode1 = ScanNode("ScanL", &joinNode);
-
-//        ScanNode scanNode2 = ScanNode("ScanP", &selectNode);
+//        ScanNode scanNode2 = ScanNode("ScanP", &joinNode);
         HashScanNode scanNode2 = HashScanNode("ScanP", &joinNode, &l_partkey_att, &p_partkey_att);
-
-
         joinNode.setLeftChild(&scanNode1);
         joinNode.setRightChild(&scanNode2);
 
@@ -276,31 +271,32 @@ int main(){
                        "\n"
                        "using namespace std;\n\n");
 
-        groupNode.prep();
+//        groupNode.prep();
         wolframAggregateNode.prep();
         aggregateNode1.prep();
-        aggregateNode2.prep();
+//        aggregateNode2.prep();
+        selectNode.prep();
 
         fprintf(pfile,
                        "\nint main(){\n"
                        "\n"
-                       "    int lineitem_ia[] = {l_discount_id, l_partkey_id, l_price_id, l_quantity_id};\n"
-                       "    int lineitem_sa[] = {l_shipinstruct_id, l_shipmode_id};\n"
+                       "    int lineitem_ia[] = {ldiscount_id, lpartkey_id, lprice_id, lquantity_id};\n"
+                       "    int lineitem_sa[] = {lshipinstruct_id, lshipmode_id};\n"
                        "    read_lineitems_from_file(\"edited_lineitem.tbl\", lineitem_ia, 4, lineitem_sa, 2);\n"
                        "\n"
-                       "    int part_ia[] = {p_partkey_id, p_size_id};\n"
-                       "    int part_sa[] = {p_container_id, p_brand_id};\n"
+                       "    int part_ia[] = {ppartkey_id, psize_id};\n"
+                       "    int part_sa[] = {pcontainer_id, pbrand_id};\n"
                        "    read_part_from_file(\"edited_part.tbl\", part_ia, 2, part_sa, 2);\n"
-                       "    read_histogram_defaults_from_file(\"histograms.txt\");\n\n\n");
+                       "    read_histogram_defaults_from_file(\"histograms.txt\");\n\n\n"
+                       "    ");
 
-        selectNode.prep();
         joinNode.prep();
         scanNode1.prep();
         scanNode2.prep();
 
         set<string> x;
         root.produce(&attributes, tables, &x);
-        fprintf(pfile,
+//        fprintf(pfile,
 //                "\tdouble sum = 0;\n"
 //                       "\tcout << endl;\n"
 //                       "\tfor (int i = 1 ; i < 50 ; i ++ ){\n"
@@ -308,8 +304,8 @@ int main(){
 //                       "\t\t\tcout << i << \" \" << sum_disc_price[search(groupby_hash_id, i) -> data] << endl;\n"
 //                       "\t\t\t\tsum += sum_disc_price[search(groupby_hash_id, i) -> data];\n"
 //                       "\t\t}\n"
-//                       "\t}\n"
-                       "\tcout << wolf << endl;");
+//                       "\t}\n");
+//                       "\tcout << wolf << endl;");
         fprintf(pfile, "\n}\n");
         cleanup();
     }
