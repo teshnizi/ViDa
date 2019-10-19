@@ -64,9 +64,9 @@ For more details, you could refer to [operators header file](https://gitlab.com/
 
 *   **Node**: Generalized Node class. All other node classes inherit from this class.
 *   **ScanNode**: Used for scanning a table.
-*   **HashScanNode**: Used for scanning two tables jointly, based on a common value. For instance, assume that you want to find the total cargo size needed for sending all orders. 
+*   **HashScanNode**: Used for scanning two tables jointly, based on a common value. For instance, assume that you want to find the total cargo size required for sending all orders. 
         For each product, you need to find entries related to it in both part table and lineitem table. Then you should calculate *peartkey\_size \* lineitem\_quantity* and sum up all such values. 
-        Here you can keep a hash table so you know which entry of the lineitem table is related to which entry of the part table, without itereating over the whole table for each product.
+        Here you can keep a hash table so you know which entry of the lineitem table is related to which entry of the part table, without iterating over the whole table for each product.
 *   **SelectNode**: Used for conditioning on values.
 *   **AggregateNode**: Used for calculating functions of multiple entries (a trivial example is the summation of all quantities).
 *   **JoinNode**: Used for generating a new table by joining two different tables.
@@ -110,7 +110,7 @@ public:
 };
 ```
 
-To generate code for a specific SQL query, first, we define database column names as a set of `Attribute`s. Then we define needed nodes and make the tree by connecting nodes to each other. 
+To generate code for a specific SQL query, first, we define database column names as a set of `Attribute`s. Then we define needed nodes and create the tree by connecting nodes to each other. 
 After tree definition, we print library inclusion codes, main header, and database loading codes. Then we call `.prep()` function for each node. This function generates the prerequisite codes (things like variable definition,  hash tables creation, memory allocation, ...). Finally, we generate the main body of the code by calling `root.produce(&attributes, tables, &x);` where `tables` is a set of all tables and x is an empty set of strings.
 ## Examples
 In this section, we discuss two TPCH queries: query 6 and query 19. You can find SQL codes [here](https://examples.citusdata.com/tpch_queries.html). Let's see how does the code work for query 6 first. The corresponding tree is:
