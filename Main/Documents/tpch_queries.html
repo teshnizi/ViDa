@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="gr__examples_citusdata_com"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"></head><body data-gr-c-s-loaded="true">
+<h1>TPC-H Queries</h1>
+<h2 id="query-1">Query 1</h2>
+<pre>SELECT
+    l_returnflag,
+    l_linestatus,
+    sum(l_quantity) as sum_qty,
+    sum(l_extendedprice) as sum_base_price,
+    sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,
+    sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,
+    avg(l_quantity) as avg_qty,
+    avg(l_extendedprice) as avg_price,
+    avg(l_discount) as avg_disc,
+    count(*) as count_order
+FROM
+    lineitem
+WHERE
+    l_shipdate &lt;= date '1998-12-01' - interval '90' day
+GROUP BY
+    l_returnflag,
+    l_linestatus
+ORDER BY
+    l_returnflag,
+    l_linestatus;</pre><br>
+<h2 id="query-3">Query 3</h2>
+<pre>SELECT
+    l_orderkey,
+    sum(l_extendedprice * (1 - l_discount)) as revenue,
+    o_orderdate,
+    o_shippriority
+FROM
+    customer,
+    orders,
+    lineitem
+WHERE
+    c_mktsegment = 'BUILDING'
+    AND c_custkey = o_custkey
+    AND l_orderkey = o_orderkey
+    AND o_orderdate &lt; date '1995-03-15'
+    AND l_shipdate &gt; date '1995-03-15'
+GROUP BY
+    l_orderkey,
+    o_orderdate,
+    o_shippriority
+ORDER BY
+    revenue desc,
+    o_orderdate
+LIMIT 20;</pre><br>
+<h2 id="query-5">Query 5</h2>
+<pre>SELECT
+    n_name,
+    sum(l_extendedprice * (1 - l_discount)) as revenue
+FROM
+    customer,
+    orders,
+    lineitem,
+    supplier,
+    nation,
+    region
+WHERE
+    c_custkey = o_custkey
+    AND l_orderkey = o_orderkey
+    AND l_suppkey = s_suppkey
+    AND c_nationkey = s_nationkey
+    AND s_nationkey = n_nationkey
+    AND n_regionkey = r_regionkey
+    AND r_name = 'ASIA'
+    AND o_orderdate &gt;= date '1994-01-01'
+    AND o_orderdate &lt; date '1994-01-01' + interval '1' year
+GROUP BY
+    n_name
+ORDER BY
+    revenue desc;</pre><br>
+<h2 id="query-6">Query 6</h2>
+<pre>SELECT
+    sum(l_extendedprice * l_discount) as revenue
+FROM
+    lineitem
+WHERE
+    l_shipdate &gt;= date '1994-01-01'
+    AND l_shipdate &lt; date '1994-01-01' + interval '1' year
+    AND l_discount between 0.06 - 0.01 AND 0.06 + 0.01
+    AND l_quantity &lt; 24;</pre><br>
+<h2 id="query-10">Query 10</h2>
+<pre>SELECT
+    c_custkey,
+    c_name,
+    sum(l_extendedprice * (1 - l_discount)) as revenue,
+    c_acctbal,
+    n_name,
+    c_address,
+    c_phone,
+    c_comment
+FROM
+    customer,
+    orders,
+    lineitem,
+    nation
+WHERE
+    c_custkey = o_custkey
+    AND l_orderkey = o_orderkey
+    AND o_orderdate &gt;= date '1993-10-01'
+    AND o_orderdate &lt; date '1993-10-01' + interval '3' month
+    AND l_returnflag = 'R'
+    AND c_nationkey = n_nationkey
+GROUP BY
+    c_custkey,
+    c_name,
+    c_acctbal,
+    c_phone,
+    n_name,
+    c_address,
+    c_comment
+ORDER BY
+    revenue desc
+LIMIT 20;</pre><br>
+<h2 id="query-12">Query 12</h2>
+<pre>SELECT
+    l_shipmode,
+    sum(case
+        when o_orderpriority = '1-URGENT'
+            OR o_orderpriority = '2-HIGH'
+            then 1
+        else 0
+    end) as high_line_count,
+    sum(case
+        when o_orderpriority &lt;&gt; '1-URGENT'
+            AND o_orderpriority &lt;&gt; '2-HIGH'
+            then 1
+        else 0
+    end) AS low_line_count
+FROM
+    orders,
+    lineitem
+WHERE
+    o_orderkey = l_orderkey
+    AND l_shipmode in ('MAIL', 'SHIP')
+    AND l_commitdate &lt; l_receiptdate
+    AND l_shipdate &lt; l_commitdate
+    AND l_receiptdate &gt;= date '1994-01-01'
+    AND l_receiptdate &lt; date '1994-01-01' + interval '1' year
+GROUP BY
+    l_shipmode
+ORDER BY
+    l_shipmode;</pre><br>
+<h2 id="query-14">Query 14</h2>
+<pre>SELECT
+    100.00 * sum(case
+        when p_type like 'PROMO%'
+            then l_extendedprice * (1 - l_discount)
+        else 0
+    end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue
+FROM
+    lineitem,
+    part
+WHERE
+    l_partkey = p_partkey
+    AND l_shipdate &gt;= date '1995-09-01'
+    AND l_shipdate &lt; date '1995-09-01' + interval '1' month;</pre><br>
+<h2 id="query-19">Query 19</h2>
+<pre>SELECT
+    sum(l_extendedprice* (1 - l_discount)) as revenue
+FROM
+    lineitem,
+    part
+WHERE
+    (
+        p_partkey = l_partkey
+        AND p_brand = 'Brand#12'
+        AND p_container in ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG')
+        AND l_quantity &gt;= 1 AND l_quantity &lt;= 1 + 10
+        AND p_size between 1 AND 5
+        AND l_shipmode in ('AIR', 'AIR REG')
+        AND l_shipinstruct = 'DELIVER IN PERSON'
+    )
+    OR
+    (
+        p_partkey = l_partkey
+        AND p_brand = 'Brand#23'
+        AND p_container in ('MED BAG', 'MED BOX', 'MED PKG', 'MED PACK')
+        AND l_quantity &gt;= 10 AND l_quantity &lt;= 10 + 10
+        AND p_size between 1 AND 10
+        AND l_shipmode in ('AIR', 'AIR REG')
+        AND l_shipinstruct = 'DELIVER IN PERSON'
+    )
+    OR
+    (
+        p_partkey = l_partkey
+        AND p_brand = 'Brand#34'
+        AND p_container in ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG')
+        AND l_quantity &gt;= 20 AND l_quantity &lt;= 20 + 10
+        AND p_size between 1 AND 15
+        AND l_shipmode in ('AIR', 'AIR REG')
+        AND l_shipinstruct = 'DELIVER IN PERSON'
+    );</pre><br>
+
+
+</body></html>
