@@ -15,7 +15,7 @@
 
 ## What is VIDA?
 
-- VIDA is a platform for converting sql queries into efficient c++ code. Beside conversion, it can use hostograms and distributions to do computations on data. This could be really helpful for large queries.
+VIDA is a platform for converting sql queries into efficient c++ code. Beside conversion, it can use hostograms and distributions to do computations on data. This could be really helpful for large queries.
 For instance, assume that you are going to find sum of all values of an integer column in a table. 
 In a classic scenario, you have to iterate over all values and sum them up. In ViDa, you can assume the data is uniformly or normally distributed. You can even give a histogram as distribution input.
 We call this data *virtual*. Now for calculating summation of all entries, you simply have to multiply the table size in mean of the distribution. 
@@ -28,7 +28,21 @@ Working with virtual data could be generalized to a large domain of computations
 
 ## How Does it Work?
 
-- The approach is similar to [Neumann, 2011](https://www.vldb.org/pvldb/vol4/p539-neumann.pdf). We represent each query with a tree. For more details, you could refer to [operators header file](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/operators.h). Here is a list of implemented nodes:
+ The approach is similar to [Neumann, 2011](https://www.vldb.org/pvldb/vol4/p539-neumann.pdf). We represent each query with a tree, where each node stands for an operation. For instance, a sample tree for this query:
+  
+   `select *
+    from R1,R3,
+   (select R2.z,count(*)
+    from R2
+    where R2.y=3
+    group by R2.z) R2
+    where R1.x=7 and R1.a=R3.b and R2.z=R3.c`
+
+could be this (Example is from the article):
+
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/tree.png" width= "40%">
+
+For more details, you could refer to [operators header file](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/operators.h). Here is a list of implemented nodes:
 
 *   **Node**: Generalized Node class. All other node classes inherit from this class.
 *   **ScanNode**: Used for scanning a table.
