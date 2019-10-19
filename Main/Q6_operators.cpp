@@ -37,17 +37,18 @@ int main(){
         vector<vector<string>> valid_strings[10];
         vector<string> tmp[3][4];
 
-        Attribute p_container_att = Attribute("part", "pContainer", data_att, att_string, p_container_id);
-        Attribute p_brand_att = Attribute("part", "pBrand", data_att, att_string, p_brand_id);
-        Attribute p_partkey_att = Attribute("part", "pPartkey", data_att, att_int, p_partkey_id);
-        Attribute p_size_att = Attribute("part", "pSize", dist_att, "NormalDistribution[4,1]", att_int, p_size_id);
-        Attribute l_shipmode_att = Attribute("lineitem", "lShipmode", data_att, att_string, l_shipmode_id);
-        Attribute l_shipinstruct_att = Attribute("lineitem", "lShipinstruct", data_att, att_string, l_shipinstruct_id);
-        Attribute l_quantity_att = Attribute("lineitem", "lQuantity", data_att, att_int, l_quantity_id);
-        Attribute l_discount_att = Attribute("lineitem", "lDiscount", dist_att, "UniformDistribution[{0,10}]", att_int, l_discount_id);
-        Attribute l_price_att = Attribute("lineitem", "lPrice", data_att, att_int, l_price_id);
-        Attribute l_partkey_att = Attribute("lineitem", "lPartkey", data_att, att_int, l_partkey_id);
-        Attribute l_shipdate_att = Attribute("lineitem", "lShipdate", data_att, att_int, l_shipdate_id);
+        Attribute p_container_att = Attribute("part", "p_container", data_att, att_string, p_container_id);
+        Attribute p_brand_att = Attribute("part", "p_brand", data_att, att_string, p_brand_id);
+        Attribute p_partkey_att = Attribute("part", "p_partkey", data_att, att_int, p_partkey_id);
+        Attribute p_size_att = Attribute("part", "p_size", dist_att, "NormalDistribution[4,1]", att_int, p_size_id);
+        Attribute l_shipmode_att = Attribute("lineitem", "l_shipmode", data_att, att_string, l_shipmode_id);
+        Attribute l_shipinstruct_att = Attribute("lineitem", "l_shipinstruct", data_att, att_string, l_shipinstruct_id);
+        Attribute l_quantity_att = Attribute("lineitem", "l_quantity", data_att, att_int, l_quantity_id);
+//        Attribute l_discount_att = Attribute("lineitem", "l_discount", dist_att, "UniformDistribution[{0,10}]", att_int, l_discount_id);
+        Attribute l_discount_att = Attribute("lineitem", "l_discount", hist_att, att_int, l_discount_id);
+        Attribute l_price_att = Attribute("lineitem", "l_price", data_att, att_int, l_price_id);
+        Attribute l_partkey_att = Attribute("lineitem", "l_partkey", data_att, att_int, l_partkey_id);
+        Attribute l_shipdate_att = Attribute("lineitem", "l_shipdate", data_att, att_int, l_shipdate_id);
 
         string_id[l_shipmode_id]["AIR"] = 1;
         string_id[l_shipmode_id]["FOB"] = 2;
@@ -161,18 +162,20 @@ int main(){
 
         vector<Attribute*> vect{&l_price_att, &l_discount_att};
 
-        WolframAggregateNode wolframAggregateNode("wolf", &root, "(lPrice * lDiscount)", vect, agg_sum, data_att);
+        OperandNode opd2(&l_discount_att);
+        OperandNode opd3(&l_price_att);
+        OperatorNode opr2(&opd3, &opd2, false, "mult", false);
 
-        SelectNode selectNode = SelectNode("Select", &wolframAggregateNode, var, 1, ranges, strings, 0, valid_strings);
-
+        AggregateNode aggregateNode = AggregateNode("sum_price", &root, agg_sum, data_att, &opr2);
+        SelectNode selectNode = SelectNode("Select", &aggregateNode, var, 1, ranges, strings, 0, valid_strings);
         ScanNode scanNode1 = ScanNode("ScanL", &selectNode);
 
         fprintf(pfile, "\n#include \"database_preparation.h\"\n"
                        "\n"
                        "using namespace std;\n\n");
 
-        wolframAggregateNode.prep();
-
+//        wolframAggregateNode.prep();
+        aggregateNode.prep();
         string s = "\n";
         s += "\tint lineitem_ia[] = {" + l_discount_att.name + "_id, " + l_price_att.name + "_id, " + l_shipdate_att.name + "_id, " +
                 l_quantity_att.name + "_id};\n";
@@ -181,14 +184,15 @@ int main(){
         fprintf(pfile,
                 "\nint main(){\n"
                 "\n%s\n"
-                "    read_lineitems_from_file(\"edited_lineitem.tbl\", lineitem_ia, 4, lineitem_sa, 2);\n",
+                "    read_lineitems_from_file(\"edited_lineitem.tbl\", lineitem_ia, 4, lineitem_sa, 2);\n"
+                "    read_histogram_defaults_from_file(\"histograms.txt\");\n",
         s.c_str());
         selectNode.prep();
         scanNode1.prep();
 
         set<string> x;
         root.produce(&attributes, tables, &x);
-        fprintf(pfile,
+//        fprintf(pfile,
 //                "\tdouble sum = 0;\n"
 //                       "\tcout << endl;\n"
 //                       "\tfor (int i = 1 ; i < 50 ; i ++ ){\n"
@@ -197,7 +201,7 @@ int main(){
 //                       "\t\t\t\tsum += sum_disc_price[search(groupby_hash_id, i) -> data];\n"
 //                       "\t\t}\n"
 //                       "\t}\n"
-                "\tcout << wolf << endl;");
+//                "\tcout << wolfram << endl;");
         fprintf(pfile, "\n}\n");
         cleanup();
     }
@@ -206,6 +210,3 @@ int main(){
         cerr << massage << endl;
     }
 }
-
-// javaba kheili fargh daran. hist 1.7e9 data 3e8. bayad ino check konam ke be khatere expressione fargh ya na.
-// l_quantity tooye shart ham oomade va bayad bebinam tafavote rad kardane shart beyn data o hist cheghadre.
