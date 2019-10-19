@@ -136,6 +136,15 @@ In the other example, you can see how does VIDA use distributions. The tree for 
 <img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/Q19_tree.png">
 
 As you can see, we are using a hash scan node rather than a scan node, as we are going to join two tables based on a common attribute. 
+We compute some more complex expression instead of `sum(l_price* (1 - l_discount)` to show how useful distributions could be. Our computation target is `(l_price ^ 2 ) * ((1 + l_discount)) + psize`.
+Let 
+```math
+psize \sim \mathcal{N}ormal(4,1)
+```
+
+```math
+ldiscount \sim \mathcal{N}ormal(2,2)
+```
 ## License
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
