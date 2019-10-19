@@ -4,7 +4,7 @@
 
 > A platform for converting SQL queries to C++ code and doing calculations on virtual data.
 
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+<!--[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)-->
 
 ***A part of a sample code, generated with VIDA:***
 
@@ -127,7 +127,9 @@ So we can define the following nodes:
 
 Then we call `prep()` function for each node, which generates code for defining variables and coing preprocess. Then we print code for loading tables into the file (which could be easily automated if databases are generalized). 
 and call `root.produce(&attributes, tables, &x);`. You can read [the generator code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Q6_operators.cpp) or [the generated code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Sample%20Generated%20Codes/Q6.cpp) (comment generation is autonomous too) 
-for more details. (We have assumed l_discount to be a histogram rather than real data in this sample)
+for more details. (We have assumed l_discount to be a histogram rather than real data in this sample). It might be interesting to see how does code take conditions into consiedration, when we are working with histograms:
+
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/Condition.png" width="100%">
 
 
 In the other example, you can see how does VIDA use distributions. The tree for query 19 is something like this:
@@ -168,6 +170,9 @@ sum_price += data_data_mult_data(1 * lineitem_table_size  * part_table_size , 4 
 
 You can take a look at [the generator code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Q19_operators.cpp) or [the generated code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Sample%20Generated%20Codes/Q9.cpp) for more details.
 
+
+## Evaluation and Testing
+In 
 
 ## License
 
