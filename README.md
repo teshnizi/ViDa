@@ -22,7 +22,8 @@ Working with virtual data could be generalized to a large domain of computations
 
 The platform is implemented based on the TPCH database, but is easily generalizable to any database.
 
-<a><img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/Documents/database_schema.png" title="sample code" alt="sample code" width="70%"></a>
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/white.png" width= "15%">
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/Documents/database_schema.png" title="sample code" alt="sample code" width="70%">
 
 
 ## How Does it Work?
@@ -44,6 +45,7 @@ The platform is implemented based on the TPCH database, but is easily generaliza
   
 could be this (Example is from the article):
 
+<img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/white.png" width= "30%">
 <img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/tree.png" width= "40%">
 
 For more details, you could refer to [operators header file](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/operators.h). Here is a list of implemented nodes:
@@ -103,7 +105,7 @@ public:
 In order to generate code for a specific sql query, first we define database column names as a set of `Attribute`s. Then we define needed nodes and make the tree by connecting nodes to each other. 
 After tree definition, we print librarly inclusion codes, main header, and database loading codes. Then we call `.prep()` function for each node. This function generates 
 the prerequisite codes (things like variable definition, creating hash table, allocating memory, ...). Finally we generate the main body of the code by calling `root.produce(&attributes, tables, &x);` where tables is set of all tables and x is an empty set of strings.
-## Example
+## Examples
  We evaluate VIDA on two tpch queries: query 6 and query 19. You can find SQL codes [here](https://examples.citusdata.com/tpch_queries.html). Let's look how does the code work for query 6 first. The corresponding tree is:
 
 <img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/white.png" width = "40%">
@@ -167,6 +169,18 @@ sum_price += data_data_mult_data(1 * lineitem_table_size  * part_table_size , 4 
 ```
 
 You can take a look at [the generator code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Q19_operators.cpp) or [the generated code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Sample%20Generated%20Codes/Q9.cpp) for more details.
+
+##Evaluation and Testing
+When working with histograms, performance and estimation precision highly depend on number of buckets of the hsitograms. **The key point is that using virtual data eliminates the need for iterating over large tables, and 
+has a constant overhead, regardless of the size of the tables**. We used histograms with 100 buckets. Addition and subtraction operations on such histograms
+are 100 times slowe than similar operations on real data. Multiplication and division operations are roughly 5000 times slower. Using distributions, however, has almost no overhead. 
+After testing our code on tables of size `6e6` and setting input data to be virtual, we observed a speed up of up to `246x` for query 6 and up to `92x` for query 19.
+
+here you can see how output results changed when we used virtual data:
+
+
+
+
 
 
 ## License
