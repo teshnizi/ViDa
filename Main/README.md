@@ -6,7 +6,7 @@
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
-***A sample code, generated with VIDA:***
+***A part of a sample code, generated with VIDA:***
 
 
 <img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/sample.png" title="sample code" alt="sample code">
@@ -39,10 +39,12 @@ Working with virtual data could be generalized to a large domain of computations
 *   **AggregateNode**: Used for calculating functions of multiple entries (an example could be summation of all quantities).
 *   **JoinNode**: Used for generating a new table by joining two different tables.
 *   **GroupNode**: Used for grouping values based on a specific condition.
-*   **WolframAggregateNode**: This node is not working properly yet, but is intended to send distribution-related calculations to Wolfram API, receive equivalent expressions and place them in the generated code.
----
+*   **WolframAggregateNode**: Used for sending distribution-related calculations to Wolfram API, receiveving equivalent expressions and incorporating them into the generated code. Wolfram Alpha web API is not strong enough for calculating complex expressions,
+    so we have used Mathematica instead. Mathematica is available for free on Raspberry Pi boards, and this node sends a bash command to a Raspberry Pi board via ssh:\
+    `string ret = "ssh pi@192.168.43.187 \"wolframscript -format CForm -c '";`
+    Therefore, in order to use distributions as data inputs, a Raspberry Pi board should be connected to your PC and ssh keys for connection should be already set up. You can take a look at [transmitter.h](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/transmitter.h) for more details.
 ## Example
-
+- We evaluate VIDA on two tpch queries: query 6 and query 19. You can find SQL codes [here](https://examples.citusdata.com/tpch_queries.html). The generated trees are as follows:
 ---
 
 ## License
