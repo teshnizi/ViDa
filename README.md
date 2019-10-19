@@ -12,12 +12,10 @@
 <img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/sample.png" title="sample code" alt="sample code">
 
 
-## Table of Contents ()
-
-> If you're `README` has a lot of info, section headers might be nice.
+## Table of Contents
 
 - [What is VIDA?](#what-is-vida)
-- [How Does it Work?](#How%20Does%20it%20Work?)
+- [How Does it Work?](#how-does-it-work)
 - [Examples](#examples)
 - [Evaluation and Testing](#evaluation-and-testing)
 - [License](#license)
