@@ -145,6 +145,30 @@ psize \sim \mathcal{N}ormal(4,1)
 ```math
 ldiscount \sim \mathcal{N}ormal(2,2)
 ```
+The desired expression could be simplified to
+
+```math
+4+3 lprice^2
+```
+
+Our code executes the following command in bash:
+```bash
+ssh pi@192.168.43.187 "wolframscript -format CForm -c 'Expectation[(lprice ^ 2 ) * ((1 + ldiscount)) + psize, {  ldiscount\[Distributed]NormalDistribution[2,2], psize\[Distributed]NormalDistribution[4,1]}]'"
+```
+
+to send the expression to Mathematica on the raspberry board and get the result. Result is the following C code (as we used CForm option):
+```cpp
+4 + 3*Power(lprice,2)
+```
+
+which will be incorporated in the generated code:
+```cpp
+sum_price += data_data_mult_data(1 * lineitem_table_size  * part_table_size , 4 + 3*Power(lprice,2));
+```
+
+You can take a look at [the generator code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Q19_operators.cpp) or [the generated code](https://gitlab.com/teshnizi/ViDaG/blob/master/Main/Sample%20Generated%20Codes/Q9.cpp) for more details.
+
+
 ## License
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
