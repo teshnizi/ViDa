@@ -16,9 +16,9 @@
 
 > If you're `README` has a lot of info, section headers might be nice.
 
-- [What is VIDA?](#what-is-vida?)
-- [How Does it Work?](#How Does it Work?)
-- [Examples](#Examples)
+- [What is VIDA?](#what-is-vida)
+- [How Does it Work?](#How%20Does%20it%20Work?)
+- [Examples](#examples)
 - [Evaluation and Testing](#evaluation-and-testing)
 - [License](#license)
 
