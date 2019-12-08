@@ -190,7 +190,7 @@ here you can see how output results changed for several virtuality configuration
 <img src="https://gitlab.com/teshnizi/ViDaG/raw/master/Main/Documents/q19_precision.png" width ="100%">
 
 
-As it could be seen in the charts, precision is more than `90%` for most of the cases, which is absolutely acceptable when we take the drastic speed ups into consideration.
+As it could be seen in the charts, precision is more than `90%` for most of the cases, which is absolutely acceptable when we take the drastic speedups into consideration.
 
 
 ---
